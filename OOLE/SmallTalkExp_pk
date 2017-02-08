@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+
+<st-source>
+<time-stamp>From VisualWorks® Personal Use Edition, 8.2 of July 15, 2016 on February 3, 2017 at 7:53:33 PM</time-stamp>
+
+
+<component-created>
+<name>SmallTalkExp</name> <type>package</type>
+</component-created><!-- Package SmallTalkExp* -->
+
+
+<component-created>
+<name>SmallTalkExp</name> <type>package</type>
+</component-created>
+
+<class>
+<name>SimpleCounter</name>
+<environment>Smalltalk</environment>
+<super>UI.ApplicationModel</super>
+<private>false</private>
+<indexed-type>none</indexed-type>
+<inst-vars>counter </inst-vars>
+<class-inst-vars></class-inst-vars>
+<imports></imports>
+<category></category>
+<attributes>
+<package>SmallTalkExp</package>
+</attributes>
+</class>
+
+<class>
+<name>Stack</name>
+<environment>Smalltalk</environment>
+<super>Core.Object</super>
+<private>false</private>
+<indexed-type>none</indexed-type>
+<inst-vars>items </inst-vars>
+<class-inst-vars></class-inst-vars>
+<imports></imports>
+<category></category>
+<attributes>
+<package>SmallTalkExp</package>
+</attributes>
+</class>
+
+<class>
+<name>Queue</name>
+<environment>Smalltalk</environment>
+<super>Core.Object</super>
+<private>false</private>
+<indexed-type>none</indexed-type>
+<inst-vars>items </inst-vars>
+<class-inst-vars></class-inst-vars>
+<imports></imports>
+<category></category>
+<attributes>
+<package>SmallTalkExp</package>
+</attributes>
+</class>
+
+<class>
+<name>Node</name>
+<environment>Smalltalk</environment>
+<super>Core.Object</super>
+<private>false</private>
+<indexed-type>none</indexed-type>
+<inst-vars>value next </inst-vars>
+<class-inst-vars></class-inst-vars>
+<imports></imports>
+<category></category>
+<attributes>
+<package>SmallTalkExp</package>
+</attributes>
+</class>
+
+<methods>
+<class-id>Stack class</class-id> <category>instance creation</category>
+
+<body package="SmallTalkExp" selector="new">new	"Answer a newly created and initialized instance."	^super new initialize</body>
+</methods>
+
+
+<methods>
+<class-id>Stack</class-id> <category>StackOperations</category>
+
+<body package="SmallTalkExp" selector="push:">push: x	items addFirst: x.^self</body>
+
+<body package="SmallTalkExp" selector="contains:">contains: val(items isEmpty) ifTrue:[^False]. "Check if the collection is empty"items do: [:y | (y=val) ifTrue: [^True]].^false</body>
+
+<body package="SmallTalkExp" selector="pop">pop 	(items isEmpty) 	ifTrue: [self error: 'Stack is empty!'.]	ifFalse: [^items removeFirst.]</body>
+
+<body package="SmallTalkExp" selector="top">top 	(items isEmpty) 	ifTrue: [self error: 'Stack is empty!'.]	ifFalse: [^items first.]</body>
+</methods>
+
+<methods>
+<class-id>Stack</class-id> <category>accessing</category>
+
+<body package="SmallTalkExp" selector="items:">items: anObject	items := anObject</body>
+
+<body package="SmallTalkExp" selector="items">items	^items</body>
+</methods>
+
+<methods>
+<class-id>Stack</class-id> <category>initialize-release</category>
+
+<body package="SmallTalkExp" selector="initialize">initialize	"Initialize a newly created instance. This method must answer the receiver."	super initialize.	" Initializing an Ordered Collection"	items := OrderedCollection new.	" *** And replace this comment with additional initialization code *** "	^self</body>
+</methods>
+
+
+<methods>
+<class-id>SimpleCounter class</class-id> <category>interface specs</category>
+
+<body package="SmallTalkExp" selector="windowSpec">windowSpec	"Tools.UIPainter new openOnClass: self andSelector: #windowSpec"	&lt;resource: #canvas&gt;	^#(#{UI.FullSpec} 		#window: 		#(#{UI.WindowSpec} 			#label: 'Simple Counter' 			#bounds: #(#{Graphics.Rectangle} 627 265 1321 684 ) ) 		#component: 		#(#{UI.SpecCollection} 			#collection: #(				#(#{UI.ActionButtonSpec} 					#layout: #(#{Graphics.LayoutFrame} 120 0 153 0 172 0 174 0 ) 					#name: #ActionButton1 					#model: #increment 					#label: 'Up' 					#defaultable: true ) 				#(#{UI.ActionButtonSpec} 					#layout: #(#{Graphics.LayoutFrame} 122 0 195 0 174 0 216 0 ) 					#name: #ActionButton2 					#model: #decrement 					#label: 'Down' 					#defaultable: true ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 481 0 152 0 ) 					#name: #Label1 					#label: '0' ) 				#(#{UI.SliderSpec} 					#layout: #(#{Graphics.LayoutFrame} 247 0 178 0 501 0 197 0 ) 					#name: #Slider1 					#model: #counter 					#orientation: #horizontal 					#start: 0 					#stop: 100 					#step: 1 ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 230 0 153 0 ) 					#name: #Label2 					#label: '100' ) 				#(#{UI.InputFieldSpec} 					#layout: #(#{Graphics.LayoutFrame} 291 0 116 0 422 0 136 0 ) 					#name: #InputField1 					#model: #counter 					#alignment: #center 					#isReadOnly: true 					#type: #number 					#formatString: '0' ) ) ) )</body>
+</methods>
+
+
+<methods>
+<class-id>SimpleCounter</class-id> <category>aspects</category>
+
+<body package="SmallTalkExp" selector="counter">counter	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^counter isNil		ifTrue:			[counter := 0 asValue]		ifFalse:			[counter]</body>
+</methods>
+
+<methods>
+<class-id>SimpleCounter</class-id> <category>actions</category>
+
+<body package="SmallTalkExp" selector="increment">increment	"This stub method was generated by UIDefiner"counter value: (counter value) +1.	^self</body>
+
+<body package="SmallTalkExp" selector="decrement">decrement	"This stub method was generated by UIDefiner"counter value: (counter value) -1.	^self</body>
+</methods>
+
+
+<methods>
+<class-id>Node class</class-id> <category>instance creation</category>
+
+<body package="SmallTalkExp" selector="new">new	"Answer a newly created and initialized instance."	^super new initialize</body>
+</methods>
+
+
+<methods>
+<class-id>Node</class-id> <category>initialize-release</category>
+
+<body package="SmallTalkExp" selector="initialize">initialize	"Initialize a newly created instance. This method must answer the receiver."	super initialize.	" *** Edit the following to properly initialize instance variables ***"	value := nil.	next := nil.	" *** And replace this comment with additional initialization code *** "	^self</body>
+</methods>
+
+<methods>
+<class-id>Node</class-id> <category>accessing</category>
+
+<body package="SmallTalkExp" selector="next:">next: anObject	next := anObject</body>
+
+<body package="SmallTalkExp" selector="value:">value: anObject	value := anObject</body>
+
+<body package="SmallTalkExp" selector="value">value	^value</body>
+
+<body package="SmallTalkExp" selector="next">next	^next</body>
+</methods>
+
+
+<methods>
+<class-id>Queue class</class-id> <category>instance creation</category>
+
+<body package="SmallTalkExp" selector="new">new	"Answer a newly created and initialized instance."	^super new initialize</body>
+</methods>
+
+
+<methods>
+<class-id>Queue</class-id> <category>accessing</category>
+
+<body package="SmallTalkExp" selector="items:">items: anObject	items := anObject</body>
+
+<body package="SmallTalkExp" selector="items">items	^items</body>
+</methods>
+
+<methods>
+<class-id>Queue</class-id> <category>QueueOperations</category>
+
+<body package="SmallTalkExp" selector="insert:">insert: val	items add: val.	^self.</body>
+
+<body package="SmallTalkExp" selector="remove">remove	"comment stating purpose of message"	^items removeLast.</body>
+</methods>
+
+<methods>
+<class-id>Queue</class-id> <category>initialize-release</category>
+
+<body package="SmallTalkExp" selector="initialize">initialize	"Initialize a newly created instance. This method must answer the receiver."	super initialize.	" *** Edit the following to properly initialize instance variables ***"	items := OrderedCollection new.	" *** And replace this comment with additional initialization code *** "	^self</body>
+</methods>
+
+
+
+</st-source>
