@@ -1,0 +1,3827 @@
+initial State:[2, 1, 2, 2, 1, 1, 0, 0]
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:1.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 1, 2, 1, 0]
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 1, 2, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 1, 2, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+initial State:[1, 1, 1, 2, 2, 0, 2, 0]
+tempVal:0.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:1.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:2.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+tempVal:2.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+tempVal:2.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:2.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:3.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:3.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:3.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:3.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+tempVal:3.0
+State:[1, 1, 0, 2, 1, 2, 2, 0]
+in Expander
+tempVal:3.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:3.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+tempVal:3.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:3.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:4.0
+State:[1, 0, 1, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+tempVal:4.0
+State:[1, 0, 1, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 0, 2, 0, 2, 1, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 0, 1, 2, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[0, 1, 1, 2, 1, 2, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 0, 2, 0, 2, 1, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 0, 1, 2, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 2, 0, 2]
+[0, 1, 1, 2, 1, 2, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Expander
+20.
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+in Move Left
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Expander
+8.
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 1, 0, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+in Move Left
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 0, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[0, 1, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 2, 0, 1, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 0, 1, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+tempVal:5.0
+State:[1, 1, 0, 2, 1, 2, 2, 0]
+in Expander
+tempVal:5.0
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+in Expander
+28.
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+in Expander
+28.
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+tempVal:5.0
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+in Expander
+28.
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+in Expander
+28.
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+tempVal:5.0
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 0, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[0, 1, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 2, 0, 1, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 0, 1, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+tempVal:5.0
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+in Expander
+28.
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[0, 1, 1, 1, 2, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+State:[1, 0, 1, 1, 2, 2, 0, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 0, 2, 2, 2]
+[1, 0, 1, 1, 0, 2, 2, 2] Added to Frontier
+tempVal:5.0
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 0, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[0, 1, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 2, 0, 1, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 0, 1, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 2, 1, 0, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[0, 1, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 0, 0, 2, 1, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+tempVal:5.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:6.0
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 2, 1, 0, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 0, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[0, 1, 1, 1, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 0, 1, 0, 2, 2, 2] Added to Frontier
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+[1, 1, 0, 0, 2, 1, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+State:[1, 1, 0, 1, 2, 0, 2, 2]
+tempVal:6.0
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 0, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[0, 1, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 2, 0, 1, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 0, 1, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+tempVal:6.0
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 2, 1, 0, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 0, 2, 1, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 0, 2, 1, 2] Added to Frontier
+in Move Left
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 2, 2, 0] Added to Frontier
+tempVal:6.0
+State:[1, 0, 1, 2, 1, 2, 0, 2]
+tempVal:6.0
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+in Expander
+13.
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 0, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[0, 1, 1, 2, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 2, 0, 1, 2, 2] Added to Frontier
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+[1, 1, 0, 0, 1, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+State:[1, 1, 0, 2, 1, 0, 2, 2]
+tempVal:6.0
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 1, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 2, 1, 0, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 0, 2, 1, 1, 2, 0, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 0, 2, 2] Added to Frontier
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 0, 2, 1, 2] Added to Frontier
+in Move Left
+State:[1, 1, 2, 0, 1, 2, 0, 2]
+[1, 1, 2, 0, 1, 2, 2, 0] Added to Frontier
+tempVal:6.0
+State:[1, 0, 1, 2, 1, 2, 0, 2]
+Solution Found using UCS!!
+Solution is:
+[1, 0, 1, 2, 1, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2]
+[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 2, 2, 0]
+---------------------------------------
+initial State:[1, 2, 2, 2, 1, 1, 0, 0]
+tempVal:0.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:1.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:2.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:2.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:3.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:3.0
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:3.0
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 1, 0, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 0, 2, 2, 1, 2, 1, 0] Added to Frontier
+tempVal:3.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:3.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[1, 2, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[1, 2, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+tempVal:4.0
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 1, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 0, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+tempVal:4.0
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 1, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 0, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+tempVal:5.0
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+[1, 2, 2, 1, 1, 2, 0, 0] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+[1, 2, 0, 1, 2, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+[1, 2, 2, 1, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 1, 0]
+[1, 2, 2, 1, 0, 0, 1, 2] Added to Frontier
+tempVal:5.0
+State:[1, 2, 0, 2, 1, 2, 1, 0]
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+[1, 2, 2, 0, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+in Expander
+8.
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+[1, 2, 0, 2, 1, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+[1, 2, 2, 1, 0, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+[1, 2, 2, 0, 1, 1, 0, 2] Added to Frontier
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+[1, 0, 2, 2, 1, 0, 1, 2] Added to Frontier
+State:[1, 2, 2, 0, 1, 0, 1, 2]
+tempVal:5.0
+State:[1, 0, 2, 2, 1, 2, 1, 0]
+in Expander
+tempVal:5.0
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 1, 0, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 0, 2, 2, 1, 2, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:5.0
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 0, 2, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:5.0
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 0, 2, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 0, 1, 2, 2, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 0, 0, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 1, 2, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[0, 2, 1, 2, 1, 2, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 0, 2, 1, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 2, 1, 0, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 0, 2, 2, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 2, 0, 1, 1, 2, 0] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 0, 1, 2, 2, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 0, 0, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 2, 1, 2, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 1, 2, 0, 1]
+[0, 2, 1, 2, 1, 2, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 0, 2, 1, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 2, 1, 0, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 0, 2, 2, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 0, 2, 1]
+[1, 2, 2, 0, 1, 1, 2, 0] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 1, 2, 0, 1, 0]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 0, 1, 2, 2, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 2, 0, 0, 1] Added to Frontier
+State:[1, 2, 2, 1, 0, 2, 0, 1]
+[1, 2, 2, 1, 0, 0, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Expander
+20.
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+in Move Left
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 1, 0, 1]
+[0, 2, 1, 2, 2, 1, 0, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Expander
+8.
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+in Move Left
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+in Expander
+13.
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[0, 2, 1, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 0, 2, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+in Expander
+13.
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[0, 2, 1, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 0, 2, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[0, 1, 2, 2, 1, 2, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[1, 2, 0, 2, 1, 2, 0, 1] Added to Frontier
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 0, 2, 1, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+[1, 0, 2, 2, 0, 2, 1, 1] Added to Frontier
+tempVal:6.0
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[0, 1, 2, 2, 1, 2, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 1, 0, 2, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+State:[1, 0, 2, 2, 1, 2, 0, 1]
+[1, 0, 2, 2, 0, 2, 1, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 2, 1, 1]
+[1, 0, 2, 2, 0, 2, 1, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 1, 2, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 1, 1, 2, 0, 0]
+[1, 2, 2, 1, 1, 0, 2, 0] Added to Frontier
+State:[1, 2, 2, 1, 1, 2, 0, 0]
+tempVal:6.0
+State:[1, 2, 0, 1, 2, 2, 1, 0]
+in Expander
+tempVal:6.0
+State:[1, 2, 2, 1, 0, 0, 1, 2]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 1, 0, 0, 1, 2]
+[1, 2, 2, 1, 0, 1, 0, 2] Added to Frontier
+State:[1, 2, 2, 1, 0, 0, 1, 2]
+State:[1, 2, 2, 1, 0, 0, 1, 2]
+State:[1, 2, 2, 1, 0, 0, 1, 2]
+[1, 2, 0, 1, 2, 0, 1, 2] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+tempVal:6.0
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+in Expander
+15.
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 1, 0, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 1, 0, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+[1, 2, 2, 0, 0, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 0, 1]
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[0, 1, 2, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[0, 1, 2, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+in Expander
+13.
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[0, 2, 1, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 0, 2, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[0, 1, 2, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[0, 1, 2, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+in Expander
+13.
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[0, 2, 1, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 0, 2, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+State:[1, 2, 2, 1, 2, 0, 0, 1]
+tempVal:6.0
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+in Expander
+28.
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[0, 1, 2, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+State:[1, 0, 2, 2, 2, 1, 0, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+in Expander
+3.
+in Move Left
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 2, 0, 2, 0, 1, 2, 1] Added to Frontier
+State:[1, 2, 2, 0, 0, 1, 2, 1]
+[1, 0, 2, 2, 0, 1, 2, 1] Added to Frontier
+tempVal:6.0
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+in Expander
+13.
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 0, 2, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[0, 2, 1, 2, 2, 0, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 2, 0, 2, 1, 1] Added to Frontier
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+[1, 2, 0, 0, 2, 2, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+State:[1, 2, 0, 2, 2, 0, 1, 1]
+tempVal:6.0
+State:[1, 2, 0, 2, 1, 0, 1, 2]
+Solution Found using UCS!!
+Solution is:
+[1, 2, 0, 2, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+initial State:[2, 1, 2, 2, 1, 1, 0, 0]
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:1.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 1, 2, 1, 0]
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 1, 2, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 1, 2, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+Solution Cost:3.0
+Nodes Expanded:15
+initial State:[1, 1, 1, 2, 2, 0, 2, 0]
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+tempVal:4.0
+State:[1, 1, 0, 2, 1, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+tempVal:5.0
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 2, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0]
+---------------------------------------
+Solution Cost:4.0
+Nodes Expanded:41
+initial State:[1, 2, 2, 2, 1, 1, 0, 0]
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 1, 0, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 0, 2, 2, 1, 2, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+in Expander
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 2, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+Solution Cost:4.0
+Nodes Expanded:56
+initial State:[2, 1, 2, 2, 1, 1, 0, 0]
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+0.0
+in Expander
+5.
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 1, 0, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:1.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+1.0
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+2.0
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:2.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+2.0
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+2.0
+in Expander
+4.
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 1, 2, 1, 0]
+tempVal:3.0
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+3.0
+in Expander
+10.
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+State:[2, 1, 2, 2, 1, 0, 1, 0]
+[2, 1, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:3.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+3.0
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+3.0
+in Expander
+21.
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 0, 2, 1, 2, 1, 1, 0] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+State:[2, 1, 2, 2, 0, 1, 0, 1]
+[2, 1, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+4.0
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+4.0
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+4.0
+in Expander
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+4.0
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 0, 1, 2, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 1, 2, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+Solution Cost:3.0
+Nodes Expanded:15
+initial State:[1, 1, 1, 2, 2, 0, 2, 0]
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+0.0
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+1.0
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+1.0
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+1.0
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+2.0
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+2.0
+in Expander
+10.
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+State:[1, 1, 1, 2, 2, 0, 2, 0]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+2.0
+in Expander
+21.
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 1, 2, 2, 0, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 1, 0, 1, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 2, 0]
+[1, 0, 1, 1, 2, 2, 2, 0] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+2.0
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+2.0
+in Expander
+10.
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 0, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 0, 2, 1, 2, 0, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+State:[1, 1, 1, 2, 0, 2, 0, 2]
+[1, 1, 1, 2, 0, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+3.0
+in Expander
+5.
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+State:[1, 1, 1, 2, 2, 2, 0, 0]
+tempVal:4.0
+State:[1, 1, 0, 2, 1, 2, 2, 0]
+3.0
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+3.0
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+3.0
+in Expander
+16.
+in Move Left
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 2, 2, 2, 0, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 1, 0, 2, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+[1, 1, 0, 2, 1, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+State:[1, 1, 1, 2, 0, 2, 2, 0]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+3.0
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+3.0
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+3.0
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+3.0
+in Expander
+4.
+in Move Left
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+State:[1, 1, 1, 2, 2, 0, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+3.0
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 2, 2, 0, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 0, 1, 2, 2, 2, 0]
+3.0
+in Expander
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+3.0
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+3.0
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 2, 0, 2, 2, 0] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+3.0
+in Expander
+15.
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 0, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 0, 1, 1, 2, 2, 0, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+[1, 1, 1, 0, 0, 2, 2, 2] Added to Frontier
+in Move Left
+State:[1, 1, 1, 0, 2, 2, 0, 2]
+tempVal:4.0
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+3.0
+in Expander
+3.
+in Move Left
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 1, 0, 2, 0, 2, 2] Added to Frontier
+State:[1, 1, 1, 2, 0, 0, 2, 2]
+[1, 1, 0, 2, 1, 0, 2, 2] Added to Frontier
+tempVal:4.0
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+4.0
+in Expander
+16.
+in Move Left
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+State:[2, 1, 2, 2, 0, 1, 1, 0]
+tempVal:5.0
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+4.0
+in Expander
+4.
+in Move Left
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+State:[2, 1, 2, 2, 1, 0, 0, 1]
+[2, 1, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+4.0
+in Expander
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 2, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0]
+---------------------------------------
+Solution Cost:4.0
+Nodes Expanded:41
+initial State:[1, 2, 2, 2, 1, 1, 0, 0]
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+0.0
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+1.0
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+2.0
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 1, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+2.0
+in Expander
+16.
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 1, 0]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+2.0
+in Expander
+5.
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+State:[1, 2, 2, 2, 1, 1, 0, 0]
+[1, 2, 2, 2, 0, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+2.0
+in Expander
+4.
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 2, 0, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 0, 1]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+3.0
+in Expander
+21.
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 2, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 0, 1, 0, 1, 2] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 2, 1, 0, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 2, 0, 2, 1, 2, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 1, 2, 1, 0]
+[1, 0, 2, 2, 1, 2, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+3.0
+in Expander
+10.
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 0, 1, 2, 1, 0] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 1, 0, 0] Added to Frontier
+State:[1, 2, 2, 2, 1, 0, 1, 0]
+[1, 2, 2, 2, 1, 0, 0, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+3.0
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+3.0
+in Expander
+21.
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 0, 2, 0, 1, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 2, 1, 2, 0, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 2, 0, 2, 2, 1, 1, 0] Added to Frontier
+State:[1, 2, 2, 0, 2, 1, 1, 0]
+[1, 0, 2, 2, 2, 1, 1, 0] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+3.0
+in Expander
+10.
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 0, 2, 1, 0, 1] Added to Frontier
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 0, 2, 2, 1, 0, 1] Added to Frontier
+in Move Left
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+State:[1, 2, 2, 2, 0, 1, 0, 1]
+[1, 2, 2, 2, 0, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+4.0
+in Expander
+3.
+in Move Left
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 2, 0, 1, 1, 0] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 2, 0, 2, 0, 1, 1] Added to Frontier
+State:[2, 1, 2, 2, 0, 0, 1, 1]
+[2, 1, 0, 2, 2, 0, 1, 1] Added to Frontier
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+tempVal:5.0
+State:[2, 1, 0, 2, 2, 1, 1, 0]
+4.0
+in Expander
+tempVal:5.0
+State:[2, 1, 2, 0, 2, 1, 0, 1]
+Solution Found using UCS!!
+Solution is:
+[2, 1, 2, 0, 2, 1, 0, 1]
+[2, 1, 2, 0, 2, 1, 1, 0]
+[2, 1, 2, 2, 0, 1, 1, 0]
+[2, 1, 2, 2, 1, 0, 1, 0]
+---------------------------------------
+Solution Cost:4.0
+Nodes Expanded:56

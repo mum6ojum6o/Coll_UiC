@@ -1,22 +1,59 @@
 package aima.core.search.framework;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+class ASNode{
+	private String state;
+	private ASNode parent;
+	private int pathCost;
+	private int fn;
 
-//import aima.core.search.framework.problem.GoalTest;
+	public String getState() {
+		return this.state;
+	}
 
+	public int getPathCost() {
+		return this.pathCost;
+	}
 
-public class Ring {
-	// possible values 1 for red, 2 for green and 0 for star
+	public void setParent(ASNode n) {
+		this.parent = n;
+	}
+
+	public void setState(String stte) {
+		this.state = stte;
+	}
+
+	public void setPathCost(int cost) {
+		this.pathCost = cost;
+	}
+
+	public ASNode getParent() {
+		return this.parent;
+	}
+	public void setfn(int heuristicVal){
+		fn=this.getPathCost()+heuristicVal;
+	}
+	public int getfn(){
+		return this.fn;
+	}
+}
+
+public class RingAStar {
+	static int TotalPathCost=0;
+	static int TotalNodesGenerated=0;
 	public int items[];
-	public ArrayList<ANode> exploredSet; // Arraylist to hold the explored
-											// nodes.
-	public ArrayList<ANode> frontier; // Arraylist to hold the frontier.
-	public int nodeCounter=0;
-	ANode root;
+	public ArrayList<ASNode> exploredSet; // Arraylist to hold the explored
+	public ArrayList<ASNode> frontierAStar;										// nodes.
+	public ArrayList<ASNode> frontier; // Arraylist to hold the frontier.
+	public static int nodeCounter;
+	ASNode root;
 
-	Ring() {
-		frontier = new ArrayList<ANode>();
-		exploredSet = new ArrayList<ANode>();
+	RingAStar() {
+		frontier = new ArrayList<ASNode>();
+		frontierAStar= new ArrayList<ASNode>();
+		exploredSet = new ArrayList<ASNode>();
 	}
 
 	/***************************************************
@@ -46,30 +83,28 @@ public class Ring {
 			green--;
 		}
 	temp=temp/10;
-	//System.out.println(temp);
+	
 	index++;
 	}
-	/*for (int i=0;i<items.length;i++)
-		System.out.println(items[i]);*/
 	System.out.println("initial State:"+Arrays.toString(items) );
-	root = new ANode();
+	root = new ASNode();
 	root.setParent(null);
 	root.setPathCost(0);
 	root.setState(Arrays.toString(items));
 	addToFrontier(root);
-	ANode result=uniformCostSearch();
-	if(uniformCostSearch()!=null){
-		System.out.println("Solution Found using UCS!!");
+	ASNode result=aStar();
+	if(result!=null){
+		System.out.println("Solution Found found using A Star!!");
 		System.out.println("Solution is:");
+		
 		printSolution(result);
 		System.out.println("Solution Cost:"+result.getPathCost());
 		System.out.println("Nodes Expanded:"+nodeCounter);
 	}
 	else
 		System.out.println("Solution no found");
-	
-	
 	}
+
 	public void initialize(int sizeOfElem) {
 		//System.out.println("in initialize");
 		items = new int[(sizeOfElem*2)+2];
@@ -81,11 +116,11 @@ public class Ring {
 		// keeps track of the number of tiles to placed.
 		int tiles[] = { 2, rCount, gCount };
 		while (i < items.length) {
-			System.out.println("in while");
+			//System.out.println("in while");
 			// iterate each element of the array and generate either 0,1,2 and
 			// then decrement the count of the respective
 			int rIndex = r.nextInt(3);
-			 System.out.println(rIndex);
+			 //System.out.println(rIndex);
 
 			if (tiles[rIndex] > 0) {
 				items[i] = rIndex;
@@ -96,20 +131,24 @@ public class Ring {
 		}
 		System.out.println("System initialized");
 		System.out.println("Initial State:"+Arrays.toString(items));
-		root = new ANode();
+		root = new ASNode();
 		root.setParent(null);
 		root.setPathCost(0);
 		root.setState(Arrays.toString(items));
 		addToFrontier(root);
-		ANode result=uniformCostSearch();
-		if(uniformCostSearch()!=null){
-			System.out.println("Solution Found!!");
+		
+		ASNode result=aStar();
+		if(result!=null){
+			System.out.println("Solution Found found using A Star!!");
 			System.out.println("Solution is:");
+			//System.out.println("Cost:");
 			printSolution(result);
+			TotalPathCost=TotalPathCost+result.getPathCost();
+			//TotalNodeGenerated=TotalNodesExplored+nodeCounter;
+			//System.out.println("Nodes generated:"+nodeCounter);
 		}
 		else
 			System.out.println("Solution no found");
-
 	}
 
 	/*****************************
@@ -117,10 +156,10 @@ public class Ring {
 	 * 
 	 * @param n
 	 ***********************************/
-	public void addToFrontier(ANode n) {
-		// System.out.println("In Frontier");
-		// System.out.println("frontier path cost"+n.getPathCost());
+	public void addToFrontier(ASNode n) {
+		
 		frontier.add(n);
+		
 	}
 
 	/***************************************************
@@ -129,7 +168,7 @@ public class Ring {
 	 * @param n
 	 * @return
 	 ***************************************************/
-	public int[] convert(ANode n) {
+	public int[] convert(ASNode n) {
 		// System.out.println("In Convert:");
 		System.out.println("State:" + n.getState());
 		String st = n.getState();
@@ -155,13 +194,13 @@ public class Ring {
 	 * Print the frontier
 	 *******************************/
 	void printFrontier() {
-		for (ANode temp : frontier) {
+		for (ASNode temp : frontier) {
 			System.out.println(temp.getState());
 		}
 	}
 
-	boolean isInFrontier(ANode n) {
-		for (ANode temp : frontier) {
+	boolean isInFrontier(ASNode n) {
+		for (ASNode temp : frontier) {
 			if (n.getState().equals(temp.getState()))
 				return true;
 		}
@@ -176,7 +215,23 @@ public class Ring {
 	 * @return the heuristic value
 	 ********************************************/
 
+	public int heuristic(ASNode n) {
+		/* My heuristic function value is determined on the basis of the number of similar
+		 * adjacent tiles.
+		 */
+		int heuVal=0;
+		int []items = convert(n);
+		for(int i=0;i<items.length-2;i++){
+			if (items[i]==items[i+1] && items[i]!=0)
+				heuVal++;
+		}
+		if (items[0]==items[items.length-1])
+				heuVal++;
+		return heuVal;
+		}
+		
 	
+
 	/**********************************************
 	 * Method to display the initial state.
 	 *********************************************/
@@ -191,7 +246,7 @@ public class Ring {
 	 * @param state
 	 * @return
 	 *******************************************/
-	boolean isGoalTest(ANode popped) {
+	boolean isGoalTest(ASNode popped) {
 		int[] items = convert(popped);
 		//System.out.println("In goal test");
 		if (items[0] == items[items.length-1])
@@ -205,35 +260,47 @@ public class Ring {
 		}
 	}
 
-	public static void main(String[] args) {
-		Ring r = new Ring();
+	
 
+	public static void main(String[] args) {
+		RingAStar r = new RingAStar();
+		for (int i=0;i<2;i++){
+		r.initialize(6);
+		}
+		System.out.println( "Total Path Cost:"+RingAStar.TotalPathCost);
+		System.out.println("Total Nodes Explored:"+ RingAStar.nodeCounter);
 		//r.init(1);
 		//r.init(3);
-		r.init(4);
-		}
+		//r.init(4);
+		//System.out.println("Problem initialized.");
+		//r.displayConfig();
+		//r.printFrontier();
+		// System.out.println("Goal Test of "+ "is "+ r.isGoalTest(testItems));
+	}
 
 	/**************************************
 	 * Function to generate the nodes
 	 * 
-	 * @param ANode
+	 * @param ASNode
 	 *            n
 	 **********************************/
-	ANode generateNode(String state, double pathCost, ANode Parent) {
-		ANode temp = new ANode();
+	ASNode generateNode(String state, int pathCost, ASNode Parent) {
+		ASNode temp = new ASNode();
 		temp.setParent(Parent);// check this
-		temp.setPathCost(pathCost + Parent.getPathCost());
 		temp.setState(state);
+		temp.setPathCost(pathCost + Parent.getPathCost());
+		System.out.println("PathCost"+ temp.getPathCost());
+		nodeCounter++;
 		return temp;
 	}
 
 	/**************************************
 	 * Funtion to expand the nodes
 	 * 
-	 * @param ANode
+	 * @param ASNode
 	 *            n
 	 **********************************/
-	public void expander(ANode n) {
+	public void expander(ASNode n) {
 		System.out.println("in Expander");
 		String s = n.getState();
 		s = s.replace(",", "");
@@ -452,76 +519,81 @@ public class Ring {
 			moveRight(n, zL);
 			moveRight(n, zL);
 			hopRight(n, zL);
-		} // 1101122022 1101122022
+		} // 1101122022 1101122022 // 1101122022 1101122022
 		else if (zL==0 && zLc==zL+6 && zLc<s.length()-2){
-			System.out.println("25.");
-			moveLeft(n,zL);
-			moveLeft(n,zLc);
-			hopLeft(n,zL);
-			hopRight(n,zLc);
-			moveRight(n,zLc);
-			
-		}
-		else if (zL==0 && zLc==zL+6 && zLc==s.length()-2){
-			System.out.println("26.");
-			moveLeft(n,zL);
-			moveLeft(n,zLc);
-			hopLeft(n,zL);
-			hopRight(n,zLc);
-			moveRight(n,zLc);
-		}
-		else if (zL==1 && zLc==zL+6 && zLc==s.length()-2){
-			System.out.println("27.");
-			moveLeft(n,zL);
-			moveLeft(n,zLc);
-			hopLeft(n,zL);
-			hopRight(n,zLc);
-			moveRight(n,zLc);
-		}
-		else if(zL==1 && zLc==s.length()-2 && (zLc-zL)>=3){
-			System.out.println("28.");
-			moveRight(n,zL);
-		//hopRight(n,zL);
-		moveLeft(n,zL);
-		hopLeft(n,zL);
-		moveRight(n,zLc);
-		moveLeft(n,zLc);
-		hopRight(n,zLc);
-		}
-		else if(zL>1 && zLc==s.length()-2 && (zLc-zL)>=3){
-			System.out.println("29.");
-			moveRight(n,zL);
-		hopRight(n,zL);
-		moveLeft(n,zL);
-		hopLeft(n,zL);
-		moveRight(n,zLc);
-		moveLeft(n,zLc);
-		hopRight(n,zLc);
-		}
-		else if(zL==0 && zLc==s.length()-1 && (zLc-zL)>=3){
-			System.out.println("30.");
-			moveRight(n,zL);
-		hopRight(n,zL);
-		//moveLeft(n,zL);
-		//hopLeft(n,zL);
-		moveRight(n,zLc);
-		moveLeft(n,zLc);
-		hopRight(n,zLc);
-		}
+				System.out.println("25.");
+				moveLeft(n, zL);
+				moveLeft(n, zLc);;
+				hopLeft(n, zL);
+				hopRight(n, zLc);
+				moveRight(n, zLc);
+				
+			}
+			else if (zL==0 && zLc==zL+6 && zLc==s.length()-2){
+				System.out.println("26.");
+				moveLeft(n, zL);
+				moveLeft(n, zLc);;
+				hopLeft(n, zL);
+				hopRight(n, zLc);
+				moveRight(n, zLc);
+			}
+			else if (zL==1 && zLc==zL+6 && zLc==s.length()-2){
+				System.out.println("27.");
+				moveLeft(n, zL);
+				moveLeft(n, zLc);;
+				hopLeft(n, zL);
+				hopRight(n, zLc);
+				moveRight(n, zLc);
+			}
+			else if(zL==1 && zLc==s.length()-2 && (zLc-zL)>=3){
+				System.out.println("28.");
+				moveRight(n, zL);
+			//hopRight(n,zL);
+			moveLeft(n, zL);
+			hopLeft(n, zL);
+			moveRight(n, zLc);
+			moveLeft(n, zLc);;
+			hopRight(n, zLc);
+			}
+			else if(zL>1 && zLc==s.length()-2 && (zLc-zL)>=3){
+				System.out.println("29.");
+				moveRight(n, zL);
+			hopRight(n,zL);
+			moveLeft(n, zL);
+			hopLeft(n, zL);
+			moveRight(n, zLc);
+			moveLeft(n, zLc);;
+			hopRight(n, zLc);
+			}
+			else if(zL==0 && zLc==s.length()-1 && (zLc-zL)>=3){
+				System.out.println("30.");
+				moveRight(n, zLc);
+				hopRight(n,zLc);
+				moveLeft(n, zL);;
+				hopLeft(n, zL);
+			}
+			else if(zL==0 && zLc==s.length()-1){
+				System.out.println("31.");
+				moveLeft(n,zL);
+				hopLeft(n,zL);
+				moveRight(n,zLc);
+				hopRight(n,zLc);
+			}
 	}
 
 	// moves digit to the left
-	public void moveLeft(ANode n, int blankLoc){
-		System.out.println("in Move Left");
+	public void moveLeft(ASNode n, int blankLoc){
+		//System.out.println("in Move Left");
 		int items[] = convert(n);
 		int temp;
 		temp = items[blankLoc];
 		items[blankLoc] = items[blankLoc + 1];
 		items[blankLoc + 1] = temp;
-		ANode successor = generateNode(Arrays.toString(items), 1.0, n);
+		
+		ASNode successor = generateNode(Arrays.toString(items), 1, n);
+		successor.setfn(successor.getPathCost()+heuristic(successor));//generated heuristic
 		if (!isInExploredSet(successor)||!isInFrontier(successor)){
 			addToFrontier(successor);
-			
 			System.out.println(successor.getState()+" Added to Frontier");
 		}
 		else if(frontier.indexOf(successor.getState())!=-1 && successor.getPathCost() < frontier.get(frontier.indexOf(successor.getState())).getPathCost()){
@@ -531,13 +603,14 @@ public class Ring {
 	}
 
 	// hop digit to left
-	public void hopLeft(ANode n, int blankLoc) {
+	public void hopLeft(ASNode n, int blankLoc) {
 		int items[] = convert(n);
 		int temp;
 		temp = items[blankLoc];
 		items[blankLoc] = items[blankLoc + 2];
 		items[blankLoc + 2] = temp;
-		ANode successor = generateNode(Arrays.toString(items), 2.0, n);
+		ASNode successor = generateNode(Arrays.toString(items), 2, n);
+		successor.setfn(successor.getPathCost()+heuristic(successor));//generated heuristic
 		/*
 		 * n.setParent(successor); successor.setPathCost(n.getPathCost()+2.0);
 		 * System.out.println("Shifted:"+Arrays.toString(items));
@@ -554,13 +627,14 @@ public class Ring {
 	}
 
 	// hop digit to right
-	public void hopRight(ANode n, int blankLoc) {
+	public void hopRight(ASNode n, int blankLoc) {
 		int items[] = convert(n);
 		int temp;
 		temp = items[blankLoc];
 		items[blankLoc] = items[blankLoc - 2];
 		items[blankLoc - 2] = temp;
-		ANode successor = generateNode(Arrays.toString(items), 2.0, n);
+		ASNode successor = generateNode(Arrays.toString(items), 2, n);
+		successor.setfn(successor.getPathCost()+heuristic(successor));//generated heuristic
 		if (!isInExploredSet(successor)||!isInFrontier(successor)){
 			addToFrontier(successor);
 			System.out.println(successor.getState()+" Added to Frontier");
@@ -572,13 +646,14 @@ public class Ring {
 	}
 
 	// move digit to right
-	public void moveRight(ANode n, int blankLoc) {
+	public void moveRight(ASNode n, int blankLoc) {
 		int items[] = convert(n);
 		int temp;
 		temp = items[blankLoc];
 		items[blankLoc] = items[blankLoc - 1];
 		items[blankLoc - 1] = temp;
-		ANode successor = generateNode(Arrays.toString(items), 1.0, n);
+		ASNode successor = generateNode(Arrays.toString(items), 1, n);
+		successor.setfn(successor.getPathCost()+heuristic(successor));//generated heuristic
 		if (!isInExploredSet(successor)||!isInFrontier(successor)){
 			addToFrontier(successor);
 			System.out.println(successor.getState()+" Added to Frontier");
@@ -589,10 +664,13 @@ public class Ring {
 		}
 	}
 
-	public ANode popFrontier() {
-		if (frontier.size() == 1)
+	public ASNode popFrontier() {
+		if (frontier.size() == 1){
+			System.out.println("Only one element in the frontier");
+			System.out.println(frontier.get(0));
 			return frontier.get(0);
-		double tempVal = frontier.get(1).getPathCost();
+		}
+		int tempVal = frontier.get(1).getfn();
 		System.out.println("tempVal:"+tempVal);
 		int smallestIndex = 1;
 
@@ -603,12 +681,12 @@ public class Ring {
 			}
 
 		}
-		ANode ret = frontier.get(smallestIndex);
+		ASNode ret = frontier.get(smallestIndex);
 		frontier.remove(smallestIndex);
 		return (ret);
 	}
 
-	void printSolution(ANode n) {
+	void printSolution(ASNode n) {
 		
 		if (n.getParent() != null){
 			System.out.println(n.getState());
@@ -618,28 +696,27 @@ public class Ring {
 			System.out.println("---------------------------------------");
 	}
 
-	public ANode uniformCostSearch() {
-
+	public ASNode aStar(){
+		System.out.println("Starting A Star Search");
 		while (!frontier.isEmpty()) {
-			ANode popped = popFrontier();
+			ASNode popped = popFrontier();
 			if (isGoalTest(popped)) {
 				//printSolution(popped);
 				return popped;
 			}
 			exploredSet.add(popped);
-			System.out.println(popped.getPathCost());
 			expander(popped);
-			nodeCounter++;
+			
 			
 		}
 		return null;
 	}
-	public boolean isInExploredSet(ANode n){
-		ANode temp;
+	public boolean isInExploredSet(ASNode n){
+		ASNode temp;
 		for (int i=0;i<exploredSet.size();i++) {
 			if (n.getState().equals(exploredSet.get(i).getState()))
 				return true;
 		}
 		return false;
-	}
-}//class ends
+}
+}
