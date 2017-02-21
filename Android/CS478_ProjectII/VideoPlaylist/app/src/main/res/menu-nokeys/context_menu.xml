@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ctx_play"
+        android:title="Play Song"
+    />
+    <item
+        android:id="@+id/ctx_web"
+        android:title="Song Wiki Page"
+        />
+    <item
+        android:id="@+id/ctx_artist"
+        android:title="Artist Wiki Page"
+        />
+
+</menu>

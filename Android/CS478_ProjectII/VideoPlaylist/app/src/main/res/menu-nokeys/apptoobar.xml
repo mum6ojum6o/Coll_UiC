@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+    android:id="@+id/action_favorite"
+    android:title="@string/action_menu"
+        android:visible="true"
+    app:showAsAction="always"/>
+    <item
+        android:id="@+id/act_clear"
+        android:title="@string/action_clear"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/act_invert"
+        android:title="@string/action_invert"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/act_checkall"
+        android:title="@string/action_checkall"
+        app:showAsAction="ifRoom|withText" />
+</menu>
