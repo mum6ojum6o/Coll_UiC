@@ -4,6 +4,7 @@
     <string name="action_clear">Clear Selections</string>
     <string name="action_invert">Invert Selections</string>
     <string name="action_checkall">Check All</string>
+    <string name="action_gv">Grid View</string>
     <string name="ctx_play">Play Song</string>
     <string name="ctx_web">Official Page</string>
     <string name="ctx_artist">Artist Page</string>

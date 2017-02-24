@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,11 +22,14 @@ public class Playlist extends AppCompatActivity {
     ArrayList<Uri> songPage = new ArrayList<Uri>();
     ArrayList<Uri> artistPage = new ArrayList<Uri>();
     private ArrayList<Uri> UriList = new ArrayList<Uri>();
+    Toolbar myToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_view);
+        myToolbar = (Toolbar) findViewById(R.id.activityToolbar);
+        setSupportActionBar(myToolbar);
         selectedSongs=getIntent().getStringArrayListExtra("selectedSongs");
         initializeUris();
 
@@ -68,6 +71,10 @@ public class Playlist extends AppCompatActivity {
                 return true;
         }
         return true;
+    }
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.gridapptoolbar,menu);
+        return super.onCreateOptionsMenu(menu);
     }
     public void initializeUris() {
         for (int i = 0; i < selectedSongs.size(); i++) {

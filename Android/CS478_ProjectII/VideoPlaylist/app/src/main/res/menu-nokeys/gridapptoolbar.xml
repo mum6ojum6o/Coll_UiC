@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
+   <!-- <item
     android:id="@+id/action_favorite"
     android:title="@string/action_menu"
         android:visible="true"
@@ -17,9 +17,5 @@
     <item
         android:id="@+id/act_checkall"
         android:title="@string/action_checkall"
-        app:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/act_gv"
-        android:title="@string/action_gv"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText" /> -->
 </menu>

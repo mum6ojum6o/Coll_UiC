@@ -18,8 +18,8 @@ import java.util.List;
 
 public class ImageAdapter extends BaseAdapter {
     private static final int PADDING = 4;
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 300;
     private Context c;
     private ArrayList<String> s;
     private ArrayList<Integer>picIds;

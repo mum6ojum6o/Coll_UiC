@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-<android.support.v7.widget.Toolbar android:id="@+id/activityToolbar"
+<android.support.v7.widget.Toolbar
+    android:logo="@drawable/electric_guitar"
+    android:id="@+id/activityToolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
@@ -12,13 +14,21 @@
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" />
-<ListView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    />
+    <ListView
     android:id="@+id/listview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="0dp"
+        android:layout_weight="6"
     android:gravity="center">
-
 </ListView>
 
-    </LinearLayout>
+    <Button
+        android:text="Create Playlist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/button"
+         />
+</LinearLayout>
