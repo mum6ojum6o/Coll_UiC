@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">A3</string>
+    <string name="title_activity_baseball">Baseball</string>
+    <string-array name="basketballlist">
+        <item>Chicago Bulls</item>
+        <item>San Antonio Spurs</item>
+        <item>LA Lakers</item>
+        <item>Phoenix Suns</item>
+        <item>Utah Jazz</item>
+        <item>Boston Celtics</item>
+        <item>Miami Heat</item>
+        <item>Dallas Mavericks</item>
+    </string-array>
+    <string-array name="nbaUrls">
+        <item>http://www.nba.com/bulls/</item>
+        <item>http://www.nba.com/spurs/</item>
+        <item>http://www.nba.com/lakers/</item>
+        <item>http://www.nba.com/suns/</item>
+        <item>http://www.nba.com/jazz/</item>
+        <item>http://www.nba.com/celtics/</item>
+        <item>http://www.nba.com/heat/</item>
+        <item>http://www.nba.com/mavericks/</item>
+    </string-array>
+    <string-array name="baseballlist">
+        <item>Chicago Cubs</item>
+        <item>Boston Red Sox</item>
+        <item>New York Yankees</item>
+        <item>Cleveland Indians</item>
+        <item>Pittsburg Pirates</item>
+        <item>LA Dodgers</item>
+        <item>Chicago White Sox</item>
+        <item>Texas Rangers</item>
+    </string-array>
+    <string-array name="mlbUrls">
+        <item>http://chicago.cubs.mlb.com/index.jsp?c_id=chc</item>
+        <item>http://boston.redsox.mlb.com/index.jsp?c_id=bos</item>
+        <item>http://newyork.yankees.mlb.com/index.jsp?c_id=nyy</item>
+        <item>http://cleveland.indians.mlb.com/index.jsp?c_id=cle</item>
+        <item>http://pittsburgh.pirates.mlb.com/index.jsp?c_id=pit</item>
+        <item>http://losangeles.dodgers.mlb.com/index.jsp?c_id=la</item>
+        <item>http://chicago.whitesox.mlb.com/index.jsp?c_id=cws</item>
+        <item>http://texas.rangers.mlb.com/index.jsp?c_id=tex</item>
+    </string-array>
+</resources>
