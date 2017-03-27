@@ -1,0 +1,12 @@
+import java.util.*;
+
+import aima.core.learning.framework.DataSet;
+import aima.core.learning.framework.DataSetFactory;
+
+public class FileReader {
+	try {
+		DataSet ds = DataSetFactory.getRestaurantDataSet();
+		
+
+
+}

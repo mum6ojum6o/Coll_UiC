@@ -1,0 +1,166 @@
+package aima.core.assignments.decisionTree;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import aima.core.learning.framework.DataSet;
+import aima.core.learning.framework.DataSetFactory;
+import aima.core.learning.framework.DataSetSpecification;
+import aima.core.learning.framework.Example;
+import aima.core.learning.learners.DecisionTreeLearner;
+
+public class DecTreeWithDiscretizedData {
+	public static void main(String[]args){
+		decisionTreeDemo();
+		
+	}
+	public static void decisionTreeDemo(){
+		try {
+			ArrayList <DataSet>partitions = new ArrayList<DataSet>();
+			
+			DataSet ds = getDiabetesDataSetDisc();
+			//DataSet dsNoDisc = TestDecTree.getDiabetesDataSet();
+			
+			DecisionTreeLearner learnerWithGR = new DecisionTreeLearner();
+			//learnerWithGR.trainWithGR(ds);
+			DecisionTreeLearner learner = new DecisionTreeLearner();
+			
+		//partitions=datasetSCV(ds,5);
+			partitions=datasetSCV(ds,5);
+			
+			Example e;
+			double avgErrRate=0.0;
+			double avgErrRateGR=0.0;
+			
+			for (int i=0;i<partitions.size();i++){
+				DataSet learnData = new DataSet(createDiabetesDataSetSpecDiscretized());
+			DataSet testData=partitions.get(i);
+				for (int j=0;j<partitions.size();j++){
+					if (j==i)
+						continue;
+					DataSet d=partitions.get(j);
+					Iterator<Example> itr = d.iterator();
+					while (itr.hasNext()){
+						learnData.add(itr.next());
+					}
+				
+				
+			}
+				System.out.println("LearnData Size:"+learnData.size());
+				learner.train(learnData);
+				learnerWithGR.trainWithGR(learnData);
+				int results[]=learner.test(testData);
+				
+			System.out.println("results length"+results.length);
+			System.out.println("The Induced Decision Tree is with Gain");
+			System.out.println(learner.getDecisionTree());
+			System.out.println("\nThis Decision Tree classifies the data set "+ results[0]+ " successes"+ " and "	+ results[1]+ " failures");
+			System.out.println("Error Rate:"+ (double)results[1]/testData.size());
+			avgErrRate+=(double)results[1]/testData.size();
+			System.out.println("\n");
+			int resultsGR[]=learnerWithGR.test(testData);
+			//System.out.println("resultsGR length"+resultsGR.length);
+			System.out.println("The Induced Decision Tree with Gain Ratio is ");
+			System.out.println(learnerWithGR.getDecisionTree());
+			System.out.println("\nThis Decision Tree(with Gain Ratio) classifies the data set with "
+					+ resultsGR[0]+ " successes"+ " and "	+ resultsGR[1]+ " failures ");
+			avgErrRateGR+=((double)resultsGR[1]/testData.size());
+			System.out.println("\n");
+			
+			}
+			//System.out.println("Average Error Rate with Information Gain:"+avgErrRate/partitions.size());
+			System.out.println("Average Error Rate with Gain Ratio:"+ avgErrRateGR/partitions.size());
+			
+		}catch (Exception e) {
+			System.out.println("Decision Tree Demo Failed  ");
+			e.printStackTrace();
+		}
+	}
+	
+	static ArrayList<DataSet> datasetSCV(DataSet ds, int numberOfPartitions){
+		ArrayList<DataSet> partitions=new ArrayList<DataSet>();
+		int dataSetSize=ds.size();
+		System.out.println("DataSet Size"+dataSetSize);
+		int partitionSize=(int)dataSetSize/numberOfPartitions;
+		List<String> targetAttributeValues= new ArrayList<String>();
+		int positiveCount=0;
+		//System.out.println("Attributevalue Size"+targetAttributeValues.size());
+		for (Example e: ds.examples){
+			if (e.getAttributeValueAsString("diabetes").equals("1"))
+				positiveCount++;
+		}
+		System.out.println("Positive Count:"+positiveCount);
+		int positiveCountInPartition = (int)(((double)positiveCount/dataSetSize)*partitionSize);
+		System.out.println("Partition Size:"+partitionSize);
+		System.out.println("positiveCountInPartition:"+positiveCountInPartition);
+		/*  Making the partitions*/
+		
+		for (int i=0;i<numberOfPartitions;i++){
+			int posCount=0;//pos result counter
+			int totalExpCount=0;//neg result counter
+			int curParSize=0; //total examples in the partition
+			DataSet testDataSet= new DataSet(createDiabetesDataSetSpecDiscretized());
+			int exampleCheck[] = new int[dataSetSize]; //array tracks examples already added in a partition
+			Random rand = new Random();
+		while (curParSize<dataSetSize){ //loop until current partition size < permissible partition size
+			int n = rand.nextInt(768); //generate a random number 
+			if (exampleCheck[n]==0){ //if the example has not been added to the partition.. proceed
+				Example e=ds.getExample(n); //extract the partition.
+				
+				if (curParSize>=partitionSize)//could be neglected
+					break;
+				//if the target value of the example is 1
+				if (e.getAttributeValueAsString("diabetes").equals("1") && posCount<positiveCountInPartition){
+					testDataSet.add(e); //add to test dataset
+					posCount++;
+					exampleCheck[n]=1;
+				}
+				//if the target value of the example is 0
+				else if(e.getAttributeValueAsString("diabetes").equals("0") && totalExpCount<curParSize){
+					testDataSet.add(e); //add to test dataset
+					totalExpCount++;
+					exampleCheck[n]=1;
+					//ds.removeExample(e);
+				}
+			}
+			curParSize=posCount+totalExpCount;
+			//else continue;
+			
+		}
+		partitions.add(testDataSet);
+		
+		}
+		
+		return partitions;
+		}
+	public static DataSetSpecification createDiabetesDataSetSpecDiscretized() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineStringAttribute("pregnant", new String[]{"6","1",
+				"8","0","5","3","16","10","2","4","7",
+				"9","11","13","15",	"17","12","14"} );
+		//Citing:-http://www.diabetes.org/diabetes-basics/diagnosis/?referrer=https://www.google.com/
+		dss.defineStringAttribute("glucose", new String[]{"Normal","Low Risk","High Risk"} );
+		//Citing:=http://www.webmd.boots.com/hypertension-high-blood-pressure/guide/diastolic-systolic
+		dss.defineStringAttribute("pressure",new String[]{"Less","Normal","High"} );
+		dss.defineStringAttribute("triceps",new String[]{"35","29","0","23","32","45","19","47","38","30","41","33","26","15","36","11",
+				"31","37","42","25","18","24","39","27","21","34","10","60","13","20","22","28",
+				"54","40","51","56","14","17","50","44","12","46","16","7","52","43","48","8",
+				"49","63","99"} );
+		dss.defineStringAttribute("insulin", new String[]{"0","94","168","88","543","846","175","230","83","96","235","146","115","140","110","245","54","192","207","70","240","82","36","23","300","342","304","142","128","38","100","90","270","71","125","176","48","64","228","76","220","40","152","18","135","495","37","51","99","145","225","49","50","92","325","63","284","119","204","155","485","53","114","105","285","156","78","130","55","58","160","210","318","44","190","280","87","271","129","120","478","56","32","744","370","45","194","680","402","258","375","150","67","57","116","278","122","545","75","74","182","360","215","184","42","132","148","180","205","85","231","29","68","52","255","171","73","108","43","167","249","293","66","465","89","158","84","72","59","81","196","415","275","165","579","310","61","474","170","277","60","14","95","237","191","328","250","480","265","193","79","86","326","188","106","65","166","274","77","126","330","600","185","25","41","272","321","144","15","183","91","46","440","159","540","200","335","387","22","291","392","178","127","510","16","112"});
+		dss.defineStringAttribute("bmi",new String[]{"0","1","2","3"} );
+		dss.defineStringAttribute("pedigree", new String []{"0","1","2"});
+		dss.defineStringAttribute("age",new String [] {"50","31","32","21","33","30","26","29","53","54","34","57","59","51","27","41","43","22","38","60","28","45","35","46","56","37","48","40","25","24","58","42","44","39","36","23","61","69","62","55","65","47","52","66","49","63","67","72","81","64","70","68"} );
+		dss.defineStringAttribute("diabetes", new String []{"0","1"} );
+		// last attribute is the target attribute unless the target is
+		// explicitly reset with dss.setTarget(name)
+		
+
+		return dss;
+	}
+	public static DataSet getDiabetesDataSetDisc() throws Exception {
+		DataSetSpecification spec = createDiabetesDataSetSpecDiscretized();
+		return new DataSetFactory().fromFileForDisc("diabetes_1", spec, ",");
+	}
+}

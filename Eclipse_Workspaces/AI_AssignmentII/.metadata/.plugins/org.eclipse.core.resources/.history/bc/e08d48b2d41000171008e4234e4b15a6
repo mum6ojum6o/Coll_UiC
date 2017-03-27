@@ -1,0 +1,144 @@
+package aima.core.learning.framework;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
+import aima.core.learning.data.DataResource;
+import aima.core.util.Util;
+
+/**
+ * @author Ravi Mohan
+ * 
+ */
+public class DataSetFactory {
+
+	public DataSet fromFile(String filename, DataSetSpecification spec,
+			String separator) throws Exception {
+		// assumed file in data directory and ends in .csv
+		DataSet ds = new DataSet(spec);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				DataResource.class.getResourceAsStream(filename + ".csv")));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			ds.add(exampleFromString(line, spec, separator));
+		}
+
+		return ds;
+
+	}
+
+	public static Example exampleFromString(String data,
+			DataSetSpecification dataSetSpec, String separator) {
+		Hashtable<String, Attribute> attributes = new Hashtable<String, Attribute>();
+		List<String> attributeValues = Arrays.asList(data.split(separator));
+		if (dataSetSpec.isValid(attributeValues)) {
+			List<String> names = dataSetSpec.getAttributeNames();
+			Iterator<String> nameiter = names.iterator();
+			Iterator<String> valueiter = attributeValues.iterator();
+			while (nameiter.hasNext() && valueiter.hasNext()) {
+				String name = nameiter.next();
+				AttributeSpecification attributeSpec = dataSetSpec
+						.getAttributeSpecFor(name);
+				Attribute attribute = attributeSpec.createAttribute(valueiter
+						.next());
+				attributes.put(name, attribute);
+			}
+			String targetAttributeName = dataSetSpec.getTarget();
+			return new Example(attributes, attributes.get(targetAttributeName));
+		} else {
+			throw new RuntimeException("Unable to construct Example from "
+					+ data);
+		}
+	}
+
+	public static DataSet getRestaurantDataSet() throws Exception {
+		DataSetSpecification spec = createRestaurantDataSetSpec();
+		return new DataSetFactory().fromFile("restaurant", spec, "\\s+");
+		//DataSetSpecification spec = createDiabetesDataSetSpec();
+		//return new DataSetFactory().fromFile("restaurant", spec, "\\s+");
+	}
+	
+	public static DataSet getDiabetesDataSet() throws Exception {
+		DataSetSpecification spec = createDiabetesDataSetSpec();
+		return new DataSetFactory().fromFile("restaurant", spec, "\\s+");
+	}
+
+	public static DataSetSpecification createRestaurantDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineStringAttribute("alternate", Util.yesno());
+		dss.defineStringAttribute("bar", Util.yesno());
+		dss.defineStringAttribute("fri/sat", Util.yesno());
+		dss.defineStringAttribute("hungry", Util.yesno());
+		dss.defineStringAttribute("patrons", new String[] { "None", "Some",
+				"Full" });
+		dss.defineStringAttribute("price", new String[] { "$", "$$", "$$$" });
+		dss.defineStringAttribute("raining", Util.yesno());
+		dss.defineStringAttribute("reservation", Util.yesno());
+		dss.defineStringAttribute("type", new String[] { "French", "Italian",
+				"Thai", "Burger" });
+		dss.defineStringAttribute("wait_estimate", new String[] { "0-10",
+				"10-30", "30-60", ">60" });
+		dss.defineStringAttribute("will_wait", Util.yesno());
+		// last attribute is the target attribute unless the target is
+		// explicitly reset with dss.setTarget(name)
+
+		return dss;
+	}
+	public static DataSetSpecification createDiabetesDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineStringAttribute("pregnant", new String[]{"6","1",
+				"8","0","5","3","16","10","2","4","7",
+				"9","11","13","15",	"17","12","14"} );
+		dss.defineStringAttribute("glucose", new String[]{"0","44","56","57","61","62","65","67","68",
+				"71","72","73","74","75","76","77","78","79","80","81","82",
+				"83","84","85","86","87","88","89","90","91","92","93","94","95",
+				"96","97","98","99","100","101","102","103","104","105","106","107",
+				"108","109","110","111","112","113","114","115","116","117","118","119",
+				"120","121","122","123","124","125","126","127","128","129","130","131",
+				"132","133","134","135","136","137","138","139","140","141","142","143",
+				"144","145","146","147","148","149","150","151","152","153","154","155",
+				"156","157","158","159","160","161","162","163","164","165","166","167",
+				"168","169","170","171","172","173","174","175","176","177","178","179",
+				"180","181","182","183","184","186","187","188","189","190","191","193",
+				"194","195","196","197","198","199"} );
+		dss.defineStringAttribute("pressure",new String[]{"72","66","64","40","74","50","0","70","96",
+				"92","80","60","84","30","88","90","94","76","82","75","58","78","68",
+				"110","56","62","85","86","48","44","65","108","55","122","54","52","98",
+				"104","95","46","102","100","61","24","38","106","114"} );
+		dss.defineStringAttribute("triceps",new String[]{"35","29","0","23","32","45","19","47","38","30","41","33","26","15","36","11",
+				"31","37","42","25","18","24","39","27","21","34","10","60","13","20","22","28",
+				"54","40","51","56","14","17","50","44","12","46","16","7","52","43","48","8",
+				"49","63","99"} );
+		dss.defineStringAttribute("insulin", new String[]{"0","94","168","88","543","846","175","230","83","96","235","146","115","140","110","245","54","192","207","70","240","82","36","23","300","342","304","142","128","38","100","90","270","71","125","176","48","64","228","76","220","40","152","18","135","495","37","51","99","145","225","49","50","92","325","63","284","119","204","155","485","53","114","105","285","156","78","130","55","58","160","210","318","44","190","280","87","271","129","120","478","56","32","744","370","45","194","680","402","258","375","150","67","57","116","278","122","545","75","74","182","360","215","184","42","132","148","180","205","85","231","29","68","52","255","171","73","108","43","167","249","293","66","465","89","158","84","72","59","81","196","415","275","165","579","310","61","474","170","277","60","14","95","237","191","328","250","480","265","193","79","86","326","188","106","65","166","274","77","126","330","600","185","25","41","272","321","144","15","183","91","46","440","159","540","200","335","387","22","291","392","178","127","510","16","112"});
+		dss.defineStringAttribute("bmi",new String[]{"0","1","2","3"} );
+		dss.defineStringAttribute("pedigree", new String []{"0","1","2"});
+		dss.defineStringAttribute("age",new String [] {"50","31","32","21","33","30","26","29","53","54","34","57","59","51","27","41","43","22","38","60","28","45","35","46","56","37","48","40","25","24","58","42","44","39","36","23","61","69","62","55","65","47","52","66","49","63","67","72","81","64","70","68"} );
+		dss.defineStringAttribute("diabetes", new String []{"0","1"} );
+		// last attribute is the target attribute unless the target is
+		// explicitly reset with dss.setTarget(name)
+
+		return dss;
+	}
+	
+	
+
+	public static DataSet getIrisDataSet() throws Exception {
+		DataSetSpecification spec = createIrisDataSetSpec();
+		return new DataSetFactory().fromFile("iris", spec, ",");
+	}
+
+	public static DataSetSpecification createIrisDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineNumericAttribute("sepal_length");
+		dss.defineNumericAttribute("sepal_width");
+		dss.defineNumericAttribute("petal_length");
+		dss.defineNumericAttribute("petal_width");
+		dss.defineStringAttribute("plant_category", new String[] { "setosa",
+				"versicolor", "virginica" });
+		return dss;
+	}
+}

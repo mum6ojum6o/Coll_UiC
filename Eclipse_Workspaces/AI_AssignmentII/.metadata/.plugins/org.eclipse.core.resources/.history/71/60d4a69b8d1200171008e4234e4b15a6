@@ -1,0 +1,166 @@
+package aima.core.learning.framework;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
+import aima.core.learning.data.DataResource;
+import aima.core.util.Util;
+
+/**
+ * @author Ravi Mohan
+ * 
+ */
+public class DataSetFactory {
+
+	public DataSet fromFile(String filename, DataSetSpecification spec,
+			String separator) throws Exception {
+		// assumed file in data directory and ends in .csv
+		DataSet ds = new DataSet(spec);//passing specifications to dataset
+		//System.out.println(filename);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				DataResource.class.getResourceAsStream(filename + ".csv")));
+		String line;
+		while ((line = reader.readLine()) != null) { // adding data into dataset attribute vise
+			//System.out.println(line);
+			//ds.add(exampleFromString(line, spec, separator));
+			ds.add(exampleFromStringForDiscretizedData(line,spec,separator));
+		}
+
+		return ds;
+
+	}
+//creates an Example-Example is a hashmap of everyattribute and its corresponding value.
+	public static Example exampleFromString(String data,
+			DataSetSpecification dataSetSpec, String separator) {
+		Hashtable<String, Attribute> attributes = new Hashtable<String, Attribute>();
+		List<String> attributeValues = Arrays.asList(data.split(separator)); 
+		//System.out.println("attributeValues:"+attributeValues.size());
+		if (dataSetSpec.isValid(attributeValues)) {
+			List<String> names = dataSetSpec.getAttributeNames();
+			Iterator<String> nameiter = names.iterator();
+			Iterator<String> valueiter = attributeValues.iterator();
+			while (nameiter.hasNext() && valueiter.hasNext()) {
+				String name = nameiter.next();
+				AttributeSpecification attributeSpec = dataSetSpec
+						.getAttributeSpecFor(name);//return the values held by a particular attrib
+				Attribute attribute = attributeSpec.createAttribute(valueiter
+						.next());
+				attributes.put(name, attribute);//insert to HashMap
+			}
+			String targetAttributeName = dataSetSpec.getTarget();
+			return new Example(attributes, attributes.get(targetAttributeName));
+		} else {
+			throw new RuntimeException("Unable to construct Example from "
+					+ data);
+		}
+	}
+
+	public static Example exampleFromStringForDiscretizedData(String data,
+			DataSetSpecification dataSetSpec, String separator) {
+		System.out.println("In exampleFromStringForDiscretizedData:");
+		Hashtable<String, Attribute> attributes = new Hashtable<String, Attribute>();
+		List<String> attributeValues = Arrays.asList(data.split(separator)); 
+		System.out.println("attributeValues:"+attributeValues.size());
+		
+			System.out.println("attributes valid:");
+			List<String> names = dataSetSpec.getAttributeNames();
+			Iterator<String> nameiter = names.iterator();
+			Iterator<String> valueiter = attributeValues.iterator();
+			while (nameiter.hasNext() && valueiter.hasNext()) {
+				System.out.println("Inside iterator:");
+				String name = nameiter.next();
+				String value = valueiter.next();
+				System.out.println(name+":"+value);
+				
+				if (name.equals("glucose")&& Integer.parseInt(value)<140)
+					value="Normal";
+				else if (name.equals("glucose")&& Integer.parseInt(value)>=140 && Integer.parseInt(value)<200)
+					value="Pre Diabetes";
+				else if (name.equals("glucose")&& Integer.parseInt(value)>=200)
+					value="Diabetes";
+				else if (name.equals("pressure")&& Integer.parseInt(value)<80)
+					value="Less";
+				else if (name.equals("glucose")&& Integer.parseInt(value)>80 && Integer.parseInt(value)<89)
+					value="Normal";
+				else if (name.equals("glucose")&& Integer.parseInt(value)>=90)
+					value="High";
+				AttributeSpecification attributeSpec = dataSetSpec
+						.getAttributeSpecFor(name);
+				//return the values held by a particular attrib
+				Attribute attribute = attributeSpec.createAttribute(value);
+				System.out.println();
+				attributes.put(name, attribute);//insert to HashMap
+			
+			String targetAttributeName = dataSetSpec.getTarget();
+			return new Example(attributes, attributes.get(targetAttributeName));
+		} 
+	}
+
+	
+	public static DataSet getRestaurantDataSet() throws Exception {
+		DataSetSpecification spec = createRestaurantDataSetSpec();
+		return new DataSetFactory().fromFile("restaurant", spec, "\\s+");
+		//DataSetSpecification spec = createDiabetesDataSetSpec();
+		//return new DataSetFactory().fromFile("restaurant", spec, "\\s+");
+	}
+	
+	
+
+	public static DataSetSpecification createRestaurantDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineStringAttribute("alternate", Util.yesno());
+		dss.defineStringAttribute("bar", Util.yesno());
+		dss.defineStringAttribute("fri/sat", Util.yesno());
+		dss.defineStringAttribute("hungry", Util.yesno());
+		dss.defineStringAttribute("patrons", new String[] { "None", "Some",
+				"Full" });
+		dss.defineStringAttribute("price", new String[] { "$", "$$", "$$$" });
+		dss.defineStringAttribute("raining", Util.yesno());
+		dss.defineStringAttribute("reservation", Util.yesno());
+		dss.defineStringAttribute("type", new String[] { "French", "Italian",
+				"Thai", "Burger","Pizza" });
+		dss.defineStringAttribute("wait_estimate", new String[] { "0-10",
+				"10-30", "30-60", ">60" });
+		dss.defineStringAttribute("will_wait", Util.yesno());
+		// last attribute is the target attribute unless the target is
+		// explicitly reset with dss.setTarget(name)
+
+		return dss;
+	}
+	
+	public static DataSetSpecification createDiabDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineNumericAttribute("pregnant");
+		dss.defineNumericAttribute("glucose");
+		dss.defineNumericAttribute("pressure");
+		dss.defineNumericAttribute("triceps");
+		dss.defineNumericAttribute("insulin");
+		dss.defineNumericAttribute("bmi");
+		dss.defineNumericAttribute("digree");
+		dss.defineNumericAttribute("age");
+		dss.defineNumericAttribute("diabetes");
+	return dss;
+	}
+		
+	
+
+	public static DataSet getIrisDataSet() throws Exception {
+		DataSetSpecification spec = createIrisDataSetSpec();
+		return new DataSetFactory().fromFile("iris", spec, ",");
+	}
+
+	public static DataSetSpecification createIrisDataSetSpec() {
+		DataSetSpecification dss = new DataSetSpecification();
+		dss.defineNumericAttribute("sepal_length");
+		dss.defineNumericAttribute("sepal_width");
+		dss.defineNumericAttribute("petal_length");
+		dss.defineNumericAttribute("petal_width");
+		dss.defineStringAttribute("plant_category", new String[] { "setosa",
+				"versicolor", "virginica" });
+		return dss;
+	}
+}

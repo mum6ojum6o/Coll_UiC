@@ -1,0 +1,14 @@
+LaunchTargetManager/configs/LearningDemo=org.eclipse.launchbar.core.launchTargetType.local\:Local
+LaunchTargetManager/configs/TestDecTree=org.eclipse.launchbar.core.launchTargetType.local\:Local
+LaunchTargetManager/configs/TestDecTree\ (1)=org.eclipse.launchbar.core.launchTargetType.local\:Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:Masterdata,org.eclipse.launchbar.core.descriptorType.default\:LearningDemo,org.eclipse.launchbar.core.descriptorType.default\:DecTreeWithDiscretizedData,org.eclipse.launchbar.core.descriptorType.default\:TestDecTree,org.eclipse.launchbar.core.descriptorType.default\:DecTreeWithDiscretizedData (1),org.eclipse.launchbar.core.descriptorType.default\:TestDecTree (1)
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:LearningDemo/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:LearningDemo/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:Masterdata/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:Masterdata/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:TestDecTree\ (1)/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:TestDecTree/activeLaunchMode=run

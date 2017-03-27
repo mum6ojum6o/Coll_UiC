@@ -1,0 +1,5 @@
+package aima.core.assignments.decisionTree;
+
+public class DecTreeWithDiscretizedData {
+
+}

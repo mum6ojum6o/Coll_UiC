@@ -1,0 +1,5 @@
+import java.util.*;
+
+public class FileReader {
+ArrayList <Integer>a = new ArrayList<Integer>();
+}
