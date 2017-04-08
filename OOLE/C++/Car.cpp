@@ -45,3 +45,21 @@ void Car::setModel(char* model){
 void Car::setDate(Date d){
 date_ = d;
 }
+ ostream& operator<<(ostream& out, Car& aCar){
+	out<<aCar.getId()<<endl;
+	out<<aCar.getYear()<<endl;
+	out<<aCar.getMake()<<" "<<aCar.getModel()<<endl;
+	out<<aCar.getCost()<<endl;
+	out<<aCar.getDate().getMon()<<" "<<aCar.getDate().getDay()<<" "<<aCar.getDate().getYear()<<endl;
+	return out;
+}
+
+void Car::setCost(int cost){
+	cost_=cost;
+}
+/*friend istream& operator>>(istream& in, Car& aCar){
+	in>>aCar.id_;
+	in>>aCar.year_;
+	//in>>aCar.make_>>aCar.model_;
+	return in;
+}*/
