@@ -21,11 +21,12 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/pic1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="11dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/song1"
@@ -60,7 +61,7 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="77dp"
+        android:layout_marginBottom="133dp"
         app:layout_constraintLeft_toRightOf="@+id/song1"
         android:layout_marginLeft="4dp" />
 
@@ -69,11 +70,12 @@
         android:layout_width="88dp"
         android:layout_height="48dp"
         android:text="2"
-        android:layout_marginStart="16dp"
         tools:layout_constraintTop_creator="1"
+        app:layout_constraintTop_toBottomOf="@+id/_tv1"
+        android:layout_marginStart="17dp"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintTop_toTopOf="@+id/pic3"
-        app:layout_constraintLeft_toRightOf="@+id/pic1" />
+        app:layout_constraintLeft_toRightOf="@+id/pic1"
+        android:layout_marginLeft="17dp" />
 
     <Button
         android:id="@+id/song3"
@@ -96,13 +98,18 @@
         tools:layout_constraintRight_creator="1"
         android:layout_marginEnd="31dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="52dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="31dp"
+        app:layout_constraintLeft_toRightOf="@+id/pic2"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.692"
+        android:layout_marginStart="8dp" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="313dp"
-        android:layout_height="259dp"
+        android:layout_width="316dp"
+        android:layout_height="230dp"
         android:layout_centerHorizontal="true"
         android:scaleType="fitCenter"
         android:layout_marginStart="19dp"
@@ -110,7 +117,6 @@
         app:layout_constraintRight_toLeftOf="@+id/pic1"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
-        android:layout_marginTop="14dp"
         app:layout_constraintTop_toBottomOf="@+id/pic1"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -135,8 +141,7 @@
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="29dp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="79dp"
         android:text="Stop"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -151,12 +156,50 @@
         android:text="Pause"
         android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/stop"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/song1"
         app:layout_constraintRight_toRightOf="@+id/song1"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1" />
+
+    <Button
+        android:id="@+id/button_history"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:text="Clear"
+        app:layout_constraintRight_toRightOf="@+id/song3"
+        app:layout_constraintTop_toBottomOf="@+id/song3"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/_hist"
+        android:layout_width="332dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:scrollbarAlwaysDrawHorizontalTrack="false"
+
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pause"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="1.0"
+        tools:layout_editor_absoluteY="439dp" />
+
+
 
 
 </android.support.constraint.ConstraintLayout>

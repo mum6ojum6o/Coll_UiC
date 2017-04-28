@@ -11,14 +11,28 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.arjan.commons.FunCommons;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 public class FunClient extends AppCompatActivity {
     public Button _pic1;
@@ -30,13 +44,18 @@ public class FunClient extends AppCompatActivity {
     public Button _song3;
     public Button _pause;
     public Button _stop;
+    public Button _clear;
+    public TextView _hist;
     private boolean mIsBound = false;
     private FunCommons mFunCommonsService;
     final private String TAG="FUNClient";
+    public LinearLayout ll;
+    private final static String fileName = "History.txt";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fun_client);
+        _clear = (Button)findViewById(R.id.button_history);
         _pic1 = (Button)findViewById(R.id.pic1);
         _pic2 = (Button)findViewById(R.id.pic2);
         _pic3 = (Button)findViewById(R.id.pic3);
@@ -46,10 +65,27 @@ public class FunClient extends AppCompatActivity {
         _pause = (Button)findViewById(R.id.pause);
         _stop = (Button)findViewById(R.id.stop);
         _im =  (ImageView)findViewById(R.id.imageView1);
+        _hist = (TextView)findViewById(R.id._hist);
+
+        _hist.setMovementMethod(new ScrollingMovementMethod());
+        try {
+
+            readFile(ll);
+
+        } catch (IOException e) {
+            Log.i(TAG, "IOException");
+        }
         _pic1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                 try {
+
+                        writeFile("Request: Pic1");
+
+                    } catch (FileNotFoundException e) {
+                        Log.i(TAG, "FileNotFoundException");
+                    }
+                 try {
 
                     if (mIsBound)
                         _im.setImageBitmap(mFunCommonsService.getPicture(1));
@@ -66,6 +102,12 @@ public class FunClient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    writeFile("Request: Pic2");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
+                try {
+
                     // Call KeyGenerator and get a new ID
                     if (mIsBound)
                         _im.setImageBitmap(mFunCommonsService.getPicture(2));
@@ -82,6 +124,11 @@ public class FunClient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    writeFile("Request: Pic3");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
+                try {
 
                     if (mIsBound)
                         _im.setImageBitmap(mFunCommonsService.getPicture(3));
@@ -97,6 +144,11 @@ public class FunClient extends AppCompatActivity {
         _song1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    writeFile("Request: Play Song1");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
                 try {
                     // Call KeyGenerator and get a new ID
                     if (mIsBound) {
@@ -119,6 +171,11 @@ public class FunClient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    writeFile("Request: Play Song 2");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
+                try {
                     // Call KeyGenerator and get a new ID
                     if (mIsBound) {
                         mFunCommonsService.playSong(2);
@@ -139,6 +196,11 @@ public class FunClient extends AppCompatActivity {
         _song3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    writeFile("Request: Play Song 3");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
                 try {
                     // Call KeyGenerator and get a new ID
                     if (mIsBound) {
@@ -163,6 +225,11 @@ public class FunClient extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    writeFile("Request: Stop Song");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
+                try {
                     // Call KeyGenerator and get a new ID
                     if (mIsBound) {
                         //mFunCommonsService.playSong(20);
@@ -180,9 +247,14 @@ public class FunClient extends AppCompatActivity {
             }
         });
         _pause.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-
+                try {
+                    writeFile("Request: Pause/Resume Song");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "FileNotFoundException");
+                }
                 if(_pause.getText().equals("Pause")) {
                     Log.i(TAG,"Paused!!");
                     _pause.setText("Play");
@@ -219,11 +291,38 @@ public class FunClient extends AppCompatActivity {
 
             }
         });
+        _clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //_clear.setText("");
+                _hist.setText("");
+                try {
+                    FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+                    PrintWriter p= new PrintWriter(fileName);
+                    p.flush();
+                }catch (IOException e ){e.printStackTrace();}
+
+            }
+        });
+
+    }
+    private void writeFile(String text) throws FileNotFoundException {
+        Log.i("FunClient", text);
+        FileOutputStream fos = openFileOutput(fileName, MODE_APPEND);
+        OutputStreamWriter o = new OutputStreamWriter(fos);
+        try {
+            o.append(text+"\n");
+            o.flush();
+        }catch (IOException e){e.printStackTrace();}
 
     }
     protected void onResume() {
         super.onResume();
-
+        try {
+            readFile(ll);
+        } catch (IOException e) {
+            Log.i(TAG, "IOException");
+        }
         if (!mIsBound) {
             Log.i(TAG,"Service is not bound!");
             boolean b = false;
@@ -266,4 +365,23 @@ public class FunClient extends AppCompatActivity {
         }
         super.onDestroy();
     }
+    private void readFile(LinearLayout l) throws IOException {
+
+        FileInputStream fis = openFileInput(fileName);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+        String line = "";
+        _hist.setText("");
+        while (null != (line = br.readLine())) {
+            _hist.setMovementMethod(new ScrollingMovementMethod());
+            _hist.append(line+"\n");
+            //_hist.setText(line+"\n");
+            Log.i("reading from File",line);
+
+        }
+
+        br.close();
+
+    }
+
 }
