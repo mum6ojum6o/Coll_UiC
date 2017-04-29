@@ -11,13 +11,16 @@ class Collections{
 	public:
 	int size_;
 	Collections();
+
+	Collections(const Collections&);
 	virtual ~Collections();
 	virtual void add(int)=0;
 	bool contains(int);
-	Collections(const Collections&);
+	Collections& operator=(const Collections&);
 	virtual int& operator[](int)=0;
 	int someFunc(int);
 	Collections& map(int (*fn)(int));
+	virtual Collections* copy()=0;
 };
 
 

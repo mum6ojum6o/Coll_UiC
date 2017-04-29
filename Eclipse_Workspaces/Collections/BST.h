@@ -24,9 +24,13 @@ public:
 	void delInOrder(BNode*);
 	int doesContain(int n);
 	int check(int,BNode*);
-	int& operator[](const int i);
+	virtual int& operator[](const int i);
 	BNode* getNode(const int,BNode*);
 	void proceedToLeft(BNode* );
+	BST(const BST&);
+	void BSTCopy(BNode*);
+	virtual BST* copy();
+	BST& operator=(const BST&);
 };
 
 #endif /* BST_H_ */

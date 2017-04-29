@@ -9,6 +9,9 @@ using namespace std;
 Collections::Collections(){
 	size_=0;
 }
+Collections::Collections(const Collections& c){
+	size_=c.size_;
+}
 Collections::~Collections(){
 
 //cout<<"Nothing in Collections so far"<<endl;
@@ -33,3 +36,6 @@ Collections& Collections::map(int(*fn)(int x)){
 	return *this;
 }
 
+Collections& Collections::operator=(const Collections& c){
+	return *this;
+}

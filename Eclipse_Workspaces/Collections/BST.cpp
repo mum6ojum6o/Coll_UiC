@@ -10,9 +10,31 @@ using namespace std;
 int BST::counter = 0;
 bool BST::found = false;
 BNode* BST::temp1;
-BST::BST():Collections(){ root_=nullptr;
+BST::BST():Collections(){
+	root_=nullptr;
 	cout<<"Inside the Constructor"<<endl;
 }
+
+BST::BST(const BST& b){
+	cout<<"Copy Constructor Called"<<endl;
+				this->root_=nullptr;
+		 	this->BSTCopy(b.root_);
+
+}
+ BST* BST::copy(){
+	BST* bst= new BST(*this);
+	return bst;
+}
+
+ void BST::BSTCopy(BNode* temp){
+ 	if(temp!=nullptr){
+ 		addToTree(temp->getData(),this->root_);
+ 		BSTCopy(temp->left_);
+ 		BSTCopy(temp->right_);
+ 	}
+ }
+
+
  void BST :: add(int x){
 	 cout<<"You decided to enter "<<x<<endl;
 	 	//cout<<"the size is="<<size_<<endl;
@@ -20,16 +42,21 @@ BST::BST():Collections(){ root_=nullptr;
 
 } //add ends
 
+BST& BST::operator=(const BST& b){
+		cout<<"Assignment Operator called"<<endl;
+		delete this->root_;
+		this->BSTCopy(b.root_);
+		return *this;
+
+}
 
 void BST::addToTree(int x, BNode* tempRoot){
-	/*if(tempRoot!=nullptr)
-		cout<<"at:"<<tempRoot->getData()<<endl;*/
-	 if(root_==nullptr)
+
+	 if(root_==nullptr){
+		    size_++;
 			 root_=new BNode(x);
-	/* else if(tempRoot==nullptr){
-		 	 cout<<"creating new Node"<<x<<endl;
-		 	 tempRoot= new BNode(x);
-	 }*/
+	 }
+
 		 else if (x<tempRoot->getData()){ //insert to the left sub-tree
 			 cout<<"checking LST"<<endl;
 			 if (tempRoot->left_==nullptr){
