@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">A1</string>
-    <string name="permLab_proj3">Project III permission</string>
-    <string name="permDesc_proj3"> This is a user defined permission for the Mini Project III</string>
-
-</resources>
