@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ibeis.wildbook.wildbook.PicturePreviewActivity"
+    android:background="@color/background">
+
+    <ImageView
+        android:id="@+id/PicturePreview"
+        android:layout_width="0dp"
+        android:layout_height="311dp"
+        app:srcCompat="@drawable/common_full_open_on_phone"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="95dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" />
+
+    <Button
+        android:id="@+id/UploadBtn"
+        android:layout_width="127dp"
+        android:layout_height="0dp"
+        android:text="@string/uploadString"
+        android:background="#13a51b"
+        android:textColor="#ffffFF"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="14dp"
+        app:layout_constraintTop_toBottomOf="@+id/PicturePreview"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/DiscardBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/discardString"
+        android:background="#c11a0b"
+        android:textColor="#ffffFF"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="31dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="33dp"
+        app:layout_constraintRight_toRightOf="@+id/PicturePreview"
+        android:layout_marginTop="13dp"
+        app:layout_constraintTop_toBottomOf="@+id/PicturePreview"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintLeft_toRightOf="@+id/UploadBtn"
+        app:layout_constraintHorizontal_bias="0.546"
+        app:layout_constraintVertical_bias="0.75" />
+
+    <TextView
+        android:id="@+id/PicPreviewHead"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:text="@string/imagePreviewString"
+        android:gravity="center"
+        android:textSize="20dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="34dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="6dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/font"/>
+
+    <Spinner
+        android:id="@+id/Speciesspinner"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/PicturePreview"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="21dp"
+        app:layout_constraintTop_toBottomOf="@+id/PicturePreview"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintVertical_bias="0.997"
+        android:layout_marginStart="57dp"
+        android:layout_marginEnd="57dp"
+        app:layout_constraintHorizontal_bias="0.736"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="17dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="58dp"
+        android:layout_marginEnd="58dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/PicturePreview"
+        android:layout_marginTop="4dp"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <TextView
+        android:id="@+id/ValidationText"
+        android:layout_width="201dp"
+        android:layout_height="28dp"
+        android:text=""
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/PicturePreview" />
+
+
+</android.support.constraint.ConstraintLayout>

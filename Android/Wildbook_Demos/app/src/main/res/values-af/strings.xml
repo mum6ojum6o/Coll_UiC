@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wildbook</string>
+    <string-array name="species_array">
+        <item name="selectSpeciesString">Kies \'n spesie</item>
+        <item>Physter macrocephalus</item>
+        <item>Balaenoptera musculus</item>
+        <item>Megaptera novaengliae</item>
+        <item>Balaenoptera acutorostrata</item>
+        <item>Balaenoptera physalus</item>
+        <item>Stenella attenuata</item>
+        <item>Tursiops truncatus</item>
+    </string-array>
+    <string name="welcomeString">Welkom by Wildbook!</string>
+    <string name="reportEncounterString"> Rapporteer ontmoeting </string>
+    <string name="uploadPicsString">Laai foto\'s van die galery af</string>
+    <string name="signoutString">Teken Uit</string>
+    <string name="uploadString">Oplaai</string>
+    <string name="discardString">Weggooi</string>
+    <string name="imagePreviewString">Beeldvoorskou</string>
+    <string name="yesString">Ja</string>
+    <string name="noString">Geen</string>
+    <string name="speciesValidationString">Kies asseblief \'n spesie</string>
+    <string name="imageUploadedString">Beeld opgelaai!</string>
+    <string name="anotherIncidentString">Gee \'n ander voorval aan?</string>
+
+</resources>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Wildbook</string>
+    <string-array name="species_array">
+        <item name="selectSpeciesString">Select a Species</item>
+        <item>Physter macrocephalus</item>
+        <item>Balaenoptera musculus</item>
+        <item>Megaptera novaengliae</item>
+        <item>Balaenoptera acutorostrata</item>
+        <item>Balaenoptera physalus</item>
+        <item>Stenella attenuata</item>
+        <item>Tursiops truncatus</item>
+    </string-array>
+    <string name="welcomeString">Benvenuti nel Wildbook!</string>
+    <string name="reportEncounterString"> Incontri Report </string>
+    <string name="uploadPicsString">Caricare le foto dalla Galleria</string>
+    <string name="signoutString">Disconnessione</string>
+    <string name="uploadString">Caricare</string>
+    <string name="discardString">Scartare</string>
+    <string name="imagePreviewString">Anteprima immagine</string>
+    <string name="yesString">Sì</string>
+    <string name="noString">No</string>
+    <string name="speciesValidationString">Seleziona una specie</string>
+    <string name="imageUploadedString">Immagine caricata!</string>
+    <string name="anotherIncidentString">Segnala un altro incidente?</string>
+</resources>
