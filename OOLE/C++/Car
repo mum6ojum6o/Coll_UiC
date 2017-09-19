@@ -1,9 +1,0 @@
-class Car{
-	protected:
-	int id_;
-	MyString make_;
-	MyString model_;
-	int year_;
-	public:
-
-}

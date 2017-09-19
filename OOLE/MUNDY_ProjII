@@ -1,196 +1,0 @@
-<?xml version="1.0"?>
-
-<st-source>
-<time-stamp>From VisualWorks® Personal Use Edition, 8.2 of July 15, 2016 on March 6, 2017 at 5:29:27 PM</time-stamp>
-
-
-<component-created>
-<name>CS474</name> <type>package</type>
-</component-created><!-- Package CS474* -->
-
-
-<component-created>
-<name>CS474</name> <type>package</type>
-</component-created>
-
-<class>
-<name>PCalculator</name>
-<environment>Smalltalk</environment>
-<super>UI.ApplicationModel</super>
-<private>false</private>
-<indexed-type>none</indexed-type>
-<inst-vars>OpSeq x w z y readSeq_TE aCollection </inst-vars>
-<class-inst-vars></class-inst-vars>
-<imports></imports>
-<category></category>
-<attributes>
-<package>CS474</package>
-</attributes>
-</class>
-
-<class>
-<name>Expression</name>
-<environment>Smalltalk</environment>
-<super>Core.Object</super>
-<private>false</private>
-<indexed-type>none</indexed-type>
-<inst-vars>w x y z </inst-vars>
-<class-inst-vars></class-inst-vars>
-<imports></imports>
-<category></category>
-<attributes>
-<package>CS474</package>
-</attributes>
-</class>
-
-<class>
-<name>Operate</name>
-<environment>Smalltalk</environment>
-<super>Expression</super>
-<private>false</private>
-<indexed-type>none</indexed-type>
-<inst-vars></inst-vars>
-<class-inst-vars></class-inst-vars>
-<imports></imports>
-<category></category>
-<attributes>
-<package>CS474</package>
-</attributes>
-</class>
-
-<shared-variable>
-<name>ExpCtr</name>
-<environment>PCalculator</environment>
-<private>false</private>
-<constant>false</constant>
-<category>Number</category>
-<attributes>
-<package>CS474</package>
-</attributes>
-</shared-variable>
-
-
-<shared-variable>
-<name>StatementC</name>
-<environment>PCalculator</environment>
-<private>false</private>
-<constant>false</constant>
-<category>As yet unclassified</category>
-<attributes>
-<package>CS474</package>
-</attributes>
-</shared-variable>
-
-
-
-<methods>
-<class-id>Expression class</class-id> <category>instance creation</category>
-
-<body package="CS474" selector="new">new	"Answer a newly created and initialized instance."	^super new initialize</body>
-</methods>
-
-
-<methods>
-<class-id>Expression</class-id> <category>Operations</category>
-
-<body package="CS474" selector="evaluate:">evaluate: anExpression	"method to parse an Expression"Transcript print:'In evaluate:', anExpression. Transcript cr.^self parse2: anExpression.</body>
-
-<body package="CS474" selector="div:operator2:">div: anOperand1 operator2: operand2^ self subclassResponsibility.</body>
-
-<body package="CS474" selector="sub:operator2:">sub: anOperand1 operator2: operand2^ self subclassResponsibility.</body>
-
-<body package="CS474" selector="mul:operator2:">mul: anOperand1 operator2: operand2^ self subclassResponsibility.</body>
-
-<body package="CS474" selector="add:operator2:">add: anOperand1 operator2: operand2^ self subclassResponsibility.</body>
-
-<body package="CS474" selector="parse2:">parse2: anExpression	"method to parse an Expression"| stream op1 op2 op3 varCounter|op1:=0. op2:=''.op3:=0.varCounter:=0.stream := anExpression readStream.stream skipSeparators."Transcript print: anExpression. Transcript cr."[stream atEnd] whileFalse: [ | temp | temp:= stream upTo: $ . 	"Condition to check if constant"		((temp asNumber &gt;0 ) and:[varCounter=0])ifTrue: [^temp asNumber].	 	(temp='w') ifTrue: [(op1 = 0) ifTrue: [op1:= (self w) asNumber.]						    ifFalse:[op3:=(self w) asNumber. ]].		(temp='x') ifTrue: [(op1 = 0) ifTrue: [op1:= (self x) asNumber ]						    ifFalse:[op3:=(self x) asNumber]].		(temp='y') ifTrue: [(op1 = 0) ifTrue: [op1:= (self y) asNumber ]						    ifFalse:[op3:=(self y) asNumber]].		(temp='z') ifTrue: [(op1 = 0) ifTrue: [op1:= (self z) asNumber ]						    ifFalse:[op3:=(self z) asNumber]].		(op3=0)ifTrue:[op3 := temp asNumber. ].		(temp='+') ifTrue:[op2:= '+'.]. 	(temp='-') ifTrue: [op2:='-']. 	(temp='*') ifTrue: [op2:='*'].	(temp='**') ifTrue: [op2:='**'].	(temp='/') ifTrue: [op2:='/'].	stream skipSeparators.	varCounter:=varCounter + 1.]."op3:=(Number readFrom:stream).stream skipSeparators]."		(op2='+') ifTrue:[ |a| a:=Operate new.  			^(a add: op1 operator2: op3)].		(op2='*') ifTrue:[ |a| a:=Operate new.  			^(a mul: op1 operator2: op3)].		(op2='**') ifTrue:[ |a| a:=Operate new.  			^(a pow: op1 operator2: op3)].		(op2='-') ifTrue:[ |a| a:=Operate new.  			^(a sub: op1 operator2: op3)].		(op2='/') ifTrue:[ |a| a:=Operate new.  			^(a div: op1 operator2: op3)].	^self.</body>
-
-<body package="CS474" selector="pow:operator2:">pow: anOperand1 operator2: operand2^ self subclassResponsibility.</body>
-</methods>
-
-<methods>
-<class-id>Expression</class-id> <category>initialize-release</category>
-
-<body package="CS474" selector="w">w^w</body>
-
-<body package="CS474" selector="z">z^z</body>
-
-<body package="CS474" selector="w:">w: aNumberw:=aNumber.^self</body>
-
-<body package="CS474" selector="y">y^y</body>
-
-<body package="CS474" selector="x:">x: aNumberx:=aNumber.^self</body>
-
-<body package="CS474" selector="initialize">initialize	"Initialize a newly created instance. This method must answer the receiver."	super initialize.	x:=nil.	y:=nil.	z:=nil.	w:=nil.	" *** Replace this comment with the appropriate initialization code *** "	^self</body>
-
-<body package="CS474" selector="y:">y: aNumbery:=aNumber.^self</body>
-
-<body package="CS474" selector="z:">z: aNumberz:=aNumber.^self</body>
-
-<body package="CS474" selector="x">x^x</body>
-</methods>
-
-
-<methods>
-<class-id>PCalculator class</class-id> <category>interface specs</category>
-
-<body package="CS474" selector="windowSpec">windowSpec	"Tools.UIPainter new openOnClass: self andSelector: #windowSpec"	&lt;resource: #canvas&gt;	^#(#{UI.FullSpec} 		#window: 		#(#{UI.WindowSpec} 			#label: 'Unlabeled Canvas' 			#bounds: #(#{Graphics.Rectangle} 414 157 952 572 ) ) 		#component: 		#(#{UI.SpecCollection} 			#collection: #(				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 204 0 29 0 ) 					#name: #Heading_Label 					#label: 'Programmable Calculator' ) 				#(#{UI.TextEditorSpec} 					#layout: #(#{Graphics.LayoutFrame} 81 0 86 0 232 0 184 0 ) 					#name: #OpSeq_TextEditor 					#model: #OpSeq 					#tabRequiresControl: true ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 97 0 65 0 ) 					#name: #OpSeq_Label 					#label: 'Operation Sequence' ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 291 0 79 0 ) 					#name: #W_Label 					#label: 'W' ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 291 0 110 0 ) 					#name: #X_Label 					#label: 'X' ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 291 0 135 0 ) 					#name: #Y_Label 					#label: 'Y' ) 				#(#{UI.LabelSpec} 					#layout: #(#{Graphics.LayoutOrigin} 291 0 162 0 ) 					#name: #Z_Label 					#label: 'Z' ) 				#(#{UI.InputFieldSpec} 					#layout: #(#{Graphics.LayoutFrame} 328 0 77 0 428 0 98 0 ) 					#name: #W_InputField1 					#model: #w ) 				#(#{UI.InputFieldSpec} 					#layout: #(#{Graphics.LayoutFrame} 328 0 105 0 428 0 126 0 ) 					#name: #X_InputField 					#model: #x ) 				#(#{UI.InputFieldSpec} 					#layout: #(#{Graphics.LayoutFrame} 328 0 132 0 428 0 153 0 ) 					#name: #Y_InputField 					#model: #y ) 				#(#{UI.InputFieldSpec} 					#layout: #(#{Graphics.LayoutFrame} 328 0 160 0 428 0 183 0 ) 					#name: #Z_InputField 					#model: #z ) 				#(#{UI.ActionButtonSpec} 					#layout: #(#{Graphics.LayoutFrame} 120 0 222 0 212 0 246 0 ) 					#name: #Normal_ActionButton 					#model: #readSeq 					#label: 'Normal Mode' 					#defaultable: true ) 				#(#{UI.ActionButtonSpec} 					#layout: #(#{Graphics.LayoutFrame} 243 0 225 0 338 0 246 0 ) 					#name: #Debug_ActionButton 					#model: #debug 					#label: 'Debugger' 					#defaultable: true ) ) ) )</body>
-</methods>
-
-
-<methods>
-<class-id>PCalculator</class-id> <category>actions</category>
-
-<body package="CS474" selector="readSeq">readSeq|  counter|	 aCollection:= OrderedCollection new.Transcript show:'static var:',ExpCtr printString.Transcript show:'StatementC:'.StatementC printString."test to check the object of OpSeq value""Reading each input sequence line by line and storing it in an Ordered Collection"counter:=0.self loadSeq.aCollection do:[ :i| counter:= counter+1. self parse:i statementCount:counter]."aCollection do:[ :i| counter:= counter+1. self test:i statementCount:counter]."ExpCtr :=0.^self</body>
-
-<body package="CS474" selector="parse:statementCount:">parse: anExpression statementCount: counter"method to parse an Expression"|  exp stream temp |Transcript show:'In parse:'.Transcript cr.Transcript show:anExpression. Transcript cr.Transcript show: 'ExpCtr:',ExpCtr printString. Transcript cr.exp:= Expression new."proceed parsing if the number of experesions executed so far are less than 100"(ExpCtr&lt;100) ifTrue:[	"increment the expression counter"	ExpCtr:=ExpCtr asNumber + 1.	"create a readStream"stream := anExpression readStream.[stream atEnd] whileFalse:[	Transcript show: 'statement :',(counter asNumber)printString.	"pass the existing values of the variables to expression class"exp x: x value asNumber.exp y: y value asNumber.exp z: z value asNumber.exp w: w value asNumber."extracting next word in the stream"temp:= stream upTo:$ . "If the expression contains an = operator, send the content on the right of the = operator to the expression class for further parsing"(temp = 'w') ifTrue:[| r | r:= stream upTo: $ . (r='=')ifTrue: [(w value:(exp parse2: (anExpression copyFrom: 4 to:(anExpression size)-1) )printString). Transcript show: 'w value:',(w value). ^(w value)].	"if the operator next to the variable is a ? "	"Fetch the value in of the variable on the left of w. Extract the number on the right of ?"	(r='?')ifTrue: [		| id go| go:= w value asNumber. id:=stream upTo:$ . 		Transcript cr.		"If the value of the number on the right of the ? operator is &gt; 0 then parse the statement at that number in the ordered collection"		(go &gt; 0)ifTrue:[(ExpCtr&lt;100) ifTrue:[Transcript show:' w In looper:'. Transcript show:(aCollection at: (id asNumber) ). self readFrom: id asNumber till:counter asNumber]]		]	]."If the expression contains an = operator, send the content on the right of the = operator to the expression class for further parsing""if the operator next to the variable is a ? "(temp = 'x') ifTrue:[| r | r:= stream upTo: $ . (r='=')ifTrue:[(x value:(exp parse2: (anExpression copyFrom: 4 to:(anExpression size)-1) )printString). ^(x value)].	(r='?')ifTrue: [| id go| go:= x value asNumber. id:=stream upTo:$ . Transcript show:' x In looper:'. 		Transcript show:(aCollection at: (id asNumber) ).Transcript cr.		"If the value of the number on the right of the ? operator is &gt; 0 then parse the statement at that number in the ordered collection"		(go &gt; 0)ifTrue:[(ExpCtr &lt;100)ifTrue:[ self readFrom: id asNumber till:counter asNumber]]]	]."If the expression contains an = operator, send the content on the right of the = operator to the expression class for further parsing""if the operator next to the variable is a ? "(temp = 'y') ifTrue:[| r | r:= stream upTo: $ . (r='=')ifTrue:[(y value:(exp parse2: (anExpression copyFrom: 4 to:(anExpression size)-1) )printString).^(y value)].	(r='?')ifTrue: [| id go| go:= y value asNumber. id:=stream upTo:$ . Transcript show:' y In looper:'. Transcript show:(aCollection at: (id asNumber) ).Transcript cr.		"If the value of the number on the right of the ? operator is &gt; 0 then parse the statement at that number in the ordered collection"		(go &gt; 0)ifTrue:[ (ExpCtr&lt;100) ifTrue:[self readFrom: id asNumber till:counter asNumber]]]	]."If the expression contains an = operator, send the content on the right of the = operator to the expression class for further parsing""if the operator next to the variable is a ? "(temp = 'z') ifTrue:[| r | r:= stream upTo: $ . (r='=')ifTrue:[(z value:(exp parse2: (anExpression copyFrom: 4 to:(anExpression size)-1) )printString).^(z value)].		(r='?')ifTrue: [| id go| go:= z value asNumber. id:=stream upTo:$ . Transcript show:' z In looper:'. Transcript show:(aCollection at: (id asNumber) ).Transcript cr.			"If the value of the number on the right of the ? operator is &gt; 0 then parse the statement at that number in the ordered collection"			(go &gt; 0)ifTrue:[(ExpCtr&lt;100)ifTrue:[ self readFrom: id asNumber till:counter asNumber]]]	].].]"If Expression counter is &gt; 100 then reset the counter"ifFalse:[ Transcript show: 'Final Expression Count:',ExpCtr printString. ExpCtr:=0].ExpCtr:=0.^self.</body>
-
-<body package="CS474" selector="loadSeq">loadSeq"This method helps load all the expressions in an OrderedColection."| values|	"an Ordered Collection to store the statements in the text editor"	 aCollection:= OrderedCollection new."Creating a readStream on the input"values:= ( (OpSeq value)string) readStream."Reading each input sequence line by line and storing it in an Ordered Collection"(StatementC isNil) ifTrue:[StatementC:=1]."ExpCtr is a class variable to count the number of expressions executed"(ExpCtr isNil) ifTrue:[ExpCtr:=0.].[values atEnd] whileFalse:[aCollection add: (values upTo:Character cr)string].Transcript show: 'Collection size:',(aCollection size) printString."StatementC is another class variable to help in debugger functionality."(StatementC  &gt; aCollection size) ifTrue:[StatementC:=1]."Transcript show:StatementC printString."^self</body>
-
-<body package="CS474" selector="debug">debug"This method executes the Debugger functionality"self loadSeq. "Call the loadSeq method to add the expressions in an Ordered Collection"(StatementC asNumber =0)ifTrue: [StatementC:=1]. "StatementC is a class variable to track the statement executed. If it is 0 or nil it is initialized to 1"(StatementC &gt; aCollection size) ifTrue:[StatementC:=1.ExpCtr:=0. ^self] " If StatementC is greater that size of the Ordered Collection then stop execution and reset the class variables"ifFalse:["The transcript statement are left uncommented for the benefit of the reviewed."Transcript show:'debug:StatementC:',StatementC printString.Transcript show:(aCollection at:StatementC) printString."this condition checks whether the current expression is a control flow change operator""determine the value on the left of the ? is greater than zero.""If it is then fetch the expression based on the number on the right of the ? operator"((aCollection at:StatementC) includes: $?) ifTrue:[((self retVal:(aCollection at:StatementC) )asNumber&gt;0)ifTrue:[|temp| temp:=aCollection at:StatementC. StatementC:=( temp copyFrom:(temp indexOf: $?)+1 to:(temp size)-1) asNumber]]."call parse method to parse the current statement."self parse: (aCollection at:StatementC) statementCount:ExpCtr.].StatementC:=StatementC asNumber + 1. "increment the class variable "^self</body>
-
-<body package="CS474" selector="retVal:">retVal: anExpression"returns the value of the variable in the control flow operator"(anExpression includes: $w) ifTrue: [^(w value)].(anExpression includes: $x) ifTrue: [^(x value)].(anExpression includes: $y) ifTrue: [^(y value)].(anExpression includes: $z) ifTrue: [^(z value)].^self</body>
-
-<body package="CS474" selector="readFrom:till:">readFrom: anIndex till: bounds"This method is used by the control flow operator to executes the statements"anIndex to: (bounds) by:1 do:[:i| self parse:(aCollection at:i) statementCount:i].^self</body>
-</methods>
-
-<methods>
-<class-id>PCalculator</class-id> <category>aspects</category>
-
-<body package="CS474" selector="readSeq_TE">readSeq_TE	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^readSeq_TE isNil		ifTrue:			[readSeq_TE := String new asValue]		ifFalse:			[readSeq_TE]</body>
-
-<body package="CS474" selector="w">w	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^w isNil		ifTrue:			[w := String new asValue]		ifFalse:			[w]</body>
-
-<body package="CS474" selector="z">z	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^z isNil		ifTrue:			[z := String new asValue]		ifFalse:			[z]</body>
-
-<body package="CS474" selector="y">y	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^y isNil		ifTrue:			[y := String new asValue]		ifFalse:			[y]</body>
-
-<body package="CS474" selector="OpSeq">OpSeq	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^OpSeq isNil		ifTrue:			[OpSeq := String new asValue]		ifFalse:			[OpSeq]</body>
-
-<body package="CS474" selector="x">x	"This method was generated by UIDefiner.  Any edits made here	may be lost whenever methods are automatically defined.  The	initialization provided below may have been preempted by an	initialize method."	^x isNil		ifTrue:			[x := String new asValue]		ifFalse:			[x]</body>
-</methods>
-
-
-<methods>
-<class-id>Operate</class-id> <category>Operate</category>
-
-<body package="CS474" selector="mul:operator2:">mul: anOperand1 operator2: operand2"method to divide"Transcript show:'add value returned:', (anOperand1 asNumber *operand2 asNumber) printString. Transcript cr.^anOperand1 asNumber * operand2 asNumber.</body>
-
-<body package="CS474" selector="sub:operator2:">sub: anOperand1 operator2: operand2"method to subtract"Transcript show:'sub value returned=',(anOperand1 asNumber - operand2 asNumber) printString. Transcript cr.^anOperand1 asNumber - operand2 asNumber.</body>
-
-<body package="CS474" selector="add:operator2:">add: anOperand1 operator2: operand2"function to add "Transcript show:'add value returned:', (anOperand1 asNumber +operand2 asNumber) printString. Transcript cr.^anOperand1 asNumber +operand2 asNumber.</body>
-
-<body package="CS474" selector="pow:operator2:">pow: anOperand1 operator2: operand2"method to determine the power"Transcript show:'pow function returns: ',((anOperand1 asNumber ** operand2 asNumber) asFloat)printString. Transcript cr.^(anOperand1 asNumber ** operand2 asNumber) asFloat.</body>
-
-<body package="CS474" selector="div:operator2:">div: anOperand1 operator2: operand2"method to divide"Transcript show:'add value returned:', (anOperand1 asNumber /operand2 asNumber) printString. Transcript cr.^(anOperand1 asNumber / operand2 asNumber) asFloat.</body>
-</methods>
-
-<methods>
-<class-id>Operate</class-id> <category>initialize-release</category>
-
-<body package="CS474" selector="initialize">initialize	"Initialize a newly created instance. This method must answer the receiver."	super initialize.	" *** Replace this comment with the appropriate initialization code *** "	^self</body>
-</methods>
-
-
-
-</st-source>
