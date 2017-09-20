@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected Button RepEncounter,SignOutBut,UploadFromGallery;
     private FirebaseAuth mAuth;
     protected TextView UserName;
+    protected ArrayList<String> selectedImages = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"MainActivity onCreate");
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(requestCode==IMAGE_GALLERY_REQUEST) {
                 ContentResolver contentResolver = getContentResolver();
                 String [] filePathColumn = {MediaStore.Images.Media.DATA};
-                ArrayList<String> selectedImages = new ArrayList<String>();
+
 
                 if (data.getClipData() != null ) {
 
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             selectedImage = cursor.getString(columnIndex);
                             selectedImages.add(selectedImage);
                             cursor.close();
+                            showGallPicturesPreview();
                         }
                     }
                 }
@@ -150,12 +152,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         cursor.moveToNext();
                     }
                     cursor.close();
+                    showGallPicturesPreview();
                 }
-                Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
-                intent.putExtra("selectedImages",selectedImages);
-                startActivity(intent);
+
             }
         }
+    }
+    //metho
+    public void showGallPicturesPreview(){
+        Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
+        intent.putExtra("selectedImages",selectedImages);
+        startActivity(intent);
     }
     //this method enables users to select multiple pictures from the mobile device.
     public void requestPictureGalleryUpload(){
