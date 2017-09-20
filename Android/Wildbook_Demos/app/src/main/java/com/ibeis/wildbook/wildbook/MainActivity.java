@@ -151,8 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     cursor.close();
                 }
-
-
+                Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
+                intent.putExtra("selectedImages",selectedImages);
+                startActivity(intent);
             }
         }
     }
