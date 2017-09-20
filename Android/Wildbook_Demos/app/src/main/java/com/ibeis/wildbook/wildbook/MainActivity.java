@@ -32,6 +32,7 @@ import static android.Manifest.permission.CAMERA;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     protected static final int IMAGE_GALLERY_REQUEST = 20;
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
+    protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
     public static final String TAG ="MainActivity";
     protected Button RepEncounter,SignOutBut,UploadFromGallery;
     private FirebaseAuth mAuth;
@@ -65,20 +66,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else{
                    ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA"},CAMERA_PERMISSION_REQUEST_CODE);
-
                 }
                 break;
             case R.id.GallUpload:
                 //Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-                //File photosDirectory= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                //String picturesDirectoryPath= photosDirectory.getPath();
-                //Uri data = Uri.parse(picturesDirectoryPath);
-                //photoPickerIntent.setDataAndType(data,"image/*");
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(Intent.createChooser(photoPickerIntent,"Select Picture"), IMAGE_GALLERY_REQUEST);
-                //startActivityForResult(photoPickerIntent,IMAGE_GALLERY_REQUEST);
+                if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")==PackageManager.PERMISSION_GRANTED) {
+                    requestPictureGalleryUpload();
+                }
+                else{
+                    ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"},READ_STORAGE_PERMISSION_REQUEST);
+                }
                 break;
             case R.id.SingOut:
                 mAuth.getInstance().signOut();
@@ -88,24 +85,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
-
+        switch(requestCode) {
+            case IMAGE_GALLERY_REQUEST:
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivity(new Intent(getApplicationContext(), CameraActivity.class));
+            } else {
+                displayToasts(PackageManager.PERMISSION_DENIED);
+                //Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
+            }
+            break;
+            case READ_STORAGE_PERMISSION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(new Intent(getApplicationContext(), CameraActivity.class));
-                } else {
-                    Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
+                    requestPictureGalleryUpload();
                 }
+                else{
+                    displayToasts(PackageManager.PERMISSION_DENIED);
+                }
+                break;
+        }
     }
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+
+        String selectedImage=null;
         if(resultCode==RESULT_OK){
             Log.i(TAG,"OnActivityResult OK");
             if(requestCode==IMAGE_GALLERY_REQUEST) {
                 ContentResolver contentResolver = getContentResolver();
                 String [] filePathColumn = {MediaStore.Images.Media.DATA};
                 ArrayList<String> selectedImages = new ArrayList<String>();
-                Cursor cursor = contentResolver.query(data.getData(),filePathColumn,null,null, null);
-                if (null != cursor ) {
+
+                if (data.getClipData() != null ) {
+
+                    ClipData mClipData = data.getClipData();
+                    if (mClipData.getItemCount()>10){
+                        Log.i(TAG, "More than 10 images selected");
+                        Toast.makeText(getApplicationContext(), "Please select upto 10 images only", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri uri = item.getUri();
+                            mArrayUri.add(uri);
+                            // Get the cursor
+                            Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+                            // Move to first row
+                            cursor.moveToFirst();
+
+                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                            selectedImage = cursor.getString(columnIndex);
+                            selectedImages.add(selectedImage);
+                            cursor.close();
+                        }
+                    }
+                }
+                else if (data.getData()!=null){
+                    Cursor cursor = getContentResolver().query(data.getData(),filePathColumn,null,null, null);
                     cursor.moveToFirst();
                     while(!cursor.isAfterLast()) {
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -114,13 +151,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     cursor.close();
                 }
-                Log.i(TAG, "OnActivityResult");
-                Toast.makeText(getApplicationContext(), "Please select upto 10 images only", Toast.LENGTH_LONG).show();
-                //}
-             //   else{
 
-               // }
+
             }
+        }
+    }
+    //this method enables users to select multiple pictures from the mobile device.
+    public void requestPictureGalleryUpload(){
+        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(Intent.createChooser(photoPickerIntent, "Select Picture"), IMAGE_GALLERY_REQUEST);
+    }
+
+    public void displayToasts(int type){
+        switch (type){
+            case PackageManager.PERMISSION_DENIED:
+                Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
+                break;
         }
     }
 }
