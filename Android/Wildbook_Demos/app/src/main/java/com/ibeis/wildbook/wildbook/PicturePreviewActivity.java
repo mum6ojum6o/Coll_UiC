@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-
+//activity display the preview of the image clicked via camera
 public class PicturePreviewActivity extends AppCompatActivity implements View.OnClickListener{
 protected Button Upload,Discard;
     protected Spinner speciesSpinner;
