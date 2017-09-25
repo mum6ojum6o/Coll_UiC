@@ -22,4 +22,5 @@
     <string name="speciesValidationString">Please selecte a Species</string>
     <string name="imageUploadedString">Image Uploaded!</string>
     <string name="anotherIncidentString">Report another Incident?</string>
+    <string name="historyString">Your Contribution</string>
 </resources>

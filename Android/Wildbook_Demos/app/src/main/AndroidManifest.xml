@@ -32,8 +32,7 @@
         <activity
             android:name=".CameraActivity"
             android:noHistory="true" />
-        <activity android:name=".ImageAdapter"
-            android:noHistory="true"/>
+
         <activity android:name=".DisplaySelectedImages"
             android:noHistory="false"></activity>
     </application>

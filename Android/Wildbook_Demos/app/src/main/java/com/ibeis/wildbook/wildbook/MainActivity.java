@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected Button RepEncounter,SignOutBut,UploadFromGallery;
     private FirebaseAuth mAuth;
     protected TextView UserName;
-    protected ArrayList<String> selectedImages = new ArrayList<String>();
+    protected ArrayList<String> selectedImages= new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"MainActivity onCreate");
@@ -57,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SignOutBut.setOnClickListener(this);
         RepEncounter.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //selectedImages = new ArrayList<String>();
+        Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
     @Override
     public void onClick(View v){
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
         switch(requestCode) {
             case IMAGE_GALLERY_REQUEST:
+                //
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivity(new Intent(getApplicationContext(), CameraActivity.class));
             } else {
@@ -113,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(resultCode==RESULT_OK){
             Log.i(TAG,"OnActivityResult OK");
             if(requestCode==IMAGE_GALLERY_REQUEST) {
+                selectedImages=new ArrayList<String>();
                 ContentResolver contentResolver = getContentResolver();
                 String [] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -139,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             selectedImage = cursor.getString(columnIndex);
                             selectedImages.add(selectedImage);
                             cursor.close();
-                            showGallPicturesPreview();
+                            showGallPicturesPreview(selectedImages);
                         }
                     }
                 }
@@ -152,16 +161,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         cursor.moveToNext();
                     }
                     cursor.close();
-                    showGallPicturesPreview();
+                    showGallPicturesPreview(selectedImages);
                 }
 
             }
         }
     }
     //metho
-    public void showGallPicturesPreview(){
+    public void showGallPicturesPreview(ArrayList<String> images){
         Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
-        intent.putExtra("selectedImages",selectedImages);
+        intent.putExtra("selectedImages",images);
         startActivity(intent);
     }
     //this method enables users to select multiple pictures from the mobile device.
@@ -178,5 +187,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
                 break;
         }
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.i(TAG,"OnResume");
+        selectedImages=null;
     }
 }

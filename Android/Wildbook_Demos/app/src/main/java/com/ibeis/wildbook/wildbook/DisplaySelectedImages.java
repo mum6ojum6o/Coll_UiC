@@ -94,8 +94,6 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
     public void redirect(int imagesUploaded, int imagesRequested){
                 if(imagesRequested==imagesUploaded){
                     Toast.makeText(getApplicationContext(),"All images were uploaded!",Toast.LENGTH_LONG).show();
-
-
                 }
                 else{
                     Toast.makeText(getApplicationContext(),imagesRequested-imagesUploaded+"were uploaded!",Toast.LENGTH_LONG).show();
