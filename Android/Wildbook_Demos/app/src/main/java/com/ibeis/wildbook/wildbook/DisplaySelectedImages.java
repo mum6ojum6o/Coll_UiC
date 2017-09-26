@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -30,6 +32,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
     protected Button UploadBtn,DiscardBtn;
     protected StorageReference mStorage;
     protected FirebaseAuth mAuth;
+    protected DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         mStorage= FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
         UploadBtn=(Button)findViewById(R.id.UploadBtn2);
         DiscardBtn=(Button)findViewById(R.id.DiscardBtn2);
         selectedImages = getIntent().getStringArrayListExtra("selectedImages");
@@ -56,8 +60,10 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     for(String s:selectedImages){
                         Uri uploadImage= Uri.fromFile(new File(s));
                          filePath=mStorage.child("Photos/"+mAuth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
-
+                        String fileName = new File(s).getName();
                          upload = filePath.putFile(uploadImage);
+                        String ImageUploadId=databaseReference.push().getKey();
+                        databaseReference.child(ImageUploadId).setValue(fileName);
                        /* filePath.putFile(uploadImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -79,6 +85,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         @SuppressWarnings("VisibleForTests")   Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         successUploads.add(downloadUrl);
+
 
                     }
                 });

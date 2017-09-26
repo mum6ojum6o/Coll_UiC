@@ -32,9 +32,10 @@
         <activity
             android:name=".CameraActivity"
             android:noHistory="true" />
-
-        <activity android:name=".DisplaySelectedImages"
-            android:noHistory="false"></activity>
+        <activity
+            android:name=".DisplaySelectedImages"
+            android:noHistory="false" />
+        <activity android:name=".DisplayImagesUsingRecyclerView"></activity>
     </application>
 
 </manifest>

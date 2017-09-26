@@ -34,10 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
     public static final String TAG ="MainActivity";
-    protected Button RepEncounter,SignOutBut,UploadFromGallery;
+    protected Button RepEncounter,SignOutBut,UploadFromGallery,History;
     private FirebaseAuth mAuth;
     protected TextView UserName;
     protected ArrayList<String> selectedImages= new ArrayList<String>();
+    protected static String storagePath="Photos/";
+    protected static String databasePath="Photos/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"MainActivity onCreate");
@@ -54,9 +56,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
         SignOutBut = (Button)findViewById(R.id.SingOut);
+        History = (Button)findViewById(R.id.historyBtn);
         SignOutBut.setOnClickListener(this);
         RepEncounter.setOnClickListener(this);
+        History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
+        storagePath = storagePath+firebaseUser.getEmail();
+        if(databasePath.equals("Photos/"))
+            databasePath = databasePath+firebaseUser.getUid();
     }
     @Override
     public void onResume(){
@@ -85,11 +92,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"},READ_STORAGE_PERMISSION_REQUEST);
                 }
                 break;
+            case R.id.historyBtn:
+                    startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
+                break;
             case R.id.SingOut:
                 mAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(getApplicationContext(),Login.class));
         }
+    }
+
+    /*
+    *fetch the pictures from Firebase.
+     */
+    public void retrieveFirebaseData(){
+
     }
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
@@ -148,8 +165,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             selectedImage = cursor.getString(columnIndex);
                             selectedImages.add(selectedImage);
                             cursor.close();
-                            showGallPicturesPreview(selectedImages);
+
                         }
+                        showGallPicturesPreview(selectedImages);
                     }
                 }
                 else if (data.getData()!=null){
