@@ -72,9 +72,11 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
         //storageReference = FirebaseStorage.getInstance().getReference(MainActivity.storagePath);
 
         // Adding Add Value Event Listener to databaseReference.
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                Log.i(TAG,"DATA CHANGED!!!");
                int snapShotSize=0;
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String storagePath=MainActivity.storagePath+"/"+postSnapshot.getValue();
@@ -88,10 +90,9 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                             imagesList.add(uri);
                             Log.i(TAG,"Successfully Downloaded Uri!!!Size"+imagesList.size());
                             if(imagesList.size()==objeCount){
+                                Log.i(TAG,"ObjeCount="+objeCount);
                                 adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
-
                                 recyclerView.setAdapter(adapter);
-
                                 // Hiding the progress dialog.
                                 progressDialog.dismiss();
                             }
@@ -102,7 +103,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                         public void onFailure(@NonNull Exception exception) {
                             // Handle any errors
                             Log.i(TAG,"Something went wrong!!");
-                            Toast.makeText(getApplicationContext(),"Something went wrong!!",Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),"Something went wrong!!",Toast.LENGTH_LONG).show();
                         }
                     });
 

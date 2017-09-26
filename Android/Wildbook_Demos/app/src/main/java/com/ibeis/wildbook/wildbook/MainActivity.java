@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RepEncounter.setOnClickListener(this);
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
-        storagePath = storagePath+firebaseUser.getEmail();
+        if(storagePath.equals("Photos/"))
+            storagePath = storagePath+firebaseUser.getEmail();
         if(databasePath.equals("Photos/"))
             databasePath = databasePath+firebaseUser.getUid();
     }
