@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Substitute for activity_main2-->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -13,8 +11,39 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
-
     </android.support.v7.widget.RecyclerView>
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/DiscardBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/recyclerView"
+        android:layout_alignBottom="@+id/recyclerView"
+        android:layout_alignLeft="@+id/recyclerView"
+        android:layout_alignParentBottom="false"
+
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:background="#c11a0b"
+        android:gravity="center_vertical|center"
+        android:text="@string/discardString"
+        android:textAlignment="gravity"
+        android:textColor="#ffffFF"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/UploadBtn2"
+        android:layout_width="100dp"
+        android:layout_height="46dp"
+        android:layout_above="@+id/recyclerView"
+        android:layout_alignBottom="@+id/DiscardBtn2"
+        android:layout_alignParentRight="true"
+        android:background="#13a51b"
+        android:gravity="center_vertical|center"
+        android:text="@string/uploadString"
+        android:textAlignment="gravity"
+
+        android:textColor="#ffffFF"
+        android:visibility="visible" />
+
+</RelativeLayout>

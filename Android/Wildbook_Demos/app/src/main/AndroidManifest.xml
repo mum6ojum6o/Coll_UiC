@@ -36,7 +36,8 @@
             android:name=".DisplaySelectedImages"
             android:noHistory="false" />
         <activity android:name=".DisplayImagesUsingRecyclerView" />
-        <activity android:name=".CameraMainActivity" />
+        <activity android:name=".CameraMainActivity"
+            android:noHistory="true"/>
         <activity android:name=".UploadCamPics"></activity>
     </application>
 

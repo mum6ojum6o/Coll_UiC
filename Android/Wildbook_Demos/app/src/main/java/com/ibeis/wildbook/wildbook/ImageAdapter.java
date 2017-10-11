@@ -46,10 +46,12 @@ public class ImageAdapter extends BaseAdapter {
 
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+        //options.inJustDecodeBounds = true;
+        options.inScaled=true;
+        options.inSampleSize=2;
         //imageView.setImageURI(Uri.parse(new File(imagesPath.get(position)).getAbsolutePath().toString()));
         File f = new File(imagesPath.get(position));
-        Bitmap imgBitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
+        Bitmap imgBitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),options);
         imageView.setImageBitmap(imgBitmap);
         return imageView;
     }
