@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.RepEnc:
                if(ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED){
-                    startActivity(new Intent(getApplicationContext(), CameraActivity.class));
+                    startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
                 }
                 else{
                    ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA"},CAMERA_PERMISSION_REQUEST_CODE);

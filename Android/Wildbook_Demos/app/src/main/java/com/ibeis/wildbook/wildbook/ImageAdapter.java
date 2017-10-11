@@ -1,6 +1,8 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ImageAdapter extends BaseAdapter {
@@ -42,7 +45,12 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setPadding(PADDING, PADDING, PADDING, PADDING);
 
         }
-        imageView.setImageURI(Uri.parse(imagesPath.get(position)));
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        //imageView.setImageURI(Uri.parse(new File(imagesPath.get(position)).getAbsolutePath().toString()));
+        File f = new File(imagesPath.get(position));
+        Bitmap imgBitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
+        imageView.setImageBitmap(imgBitmap);
         return imageView;
     }
 

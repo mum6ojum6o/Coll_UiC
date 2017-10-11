@@ -109,4 +109,5 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
         startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
 
     }
+
 }

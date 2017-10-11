@@ -3,7 +3,10 @@ package com.ibeis.wildbook.wildbook;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Camera;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 
 import android.os.Bundle;
@@ -72,7 +75,10 @@ protected Button Upload,Discard;
 
                 break;
             case R.id.DiscardBtn:
-                startActivity(new Intent(getApplicationContext(),CameraActivity.class));
+                Intent i = new Intent(PicturePreviewActivity.this, CameraActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                ActivityCompat.finishAffinity(PicturePreviewActivity.this);
                 //startActivity(new Intent());
                 break;
         }
