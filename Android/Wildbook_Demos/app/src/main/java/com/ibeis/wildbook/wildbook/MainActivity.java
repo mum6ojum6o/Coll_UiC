@@ -77,11 +77,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v){
         switch (v.getId()){
             case R.id.RepEnc:
-               if(ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED){
+               if(ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.CAMERA")
+                       == PackageManager.PERMISSION_GRANTED &&
+                       ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.READ_EXTERNAL_STORAGE")
+                       == PackageManager.PERMISSION_GRANTED &&
+                       ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.WRITE_EXTERNAL_STORAGE")
+                       == PackageManager.PERMISSION_GRANTED){
                     startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
                 }
                 else{
-                   ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA"},CAMERA_PERMISSION_REQUEST_CODE);
+                   ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA",
+                           "android.permission.READ_EXTERNAL_STORAGE",
+                           "android.permission.WRITE_EXTERNAL_STORAGE"},
+                           CAMERA_PERMISSION_REQUEST_CODE);
+
                 }
                 break;
             case R.id.GallUpload:
@@ -112,10 +121,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
         switch(requestCode) {
-            case IMAGE_GALLERY_REQUEST:
+            case CAMERA_PERMISSION_REQUEST_CODE:
                 //
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startActivity(new Intent(getApplicationContext(), CameraActivity.class));
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1]== PackageManager.PERMISSION_GRANTED &&
+                    grantResults[2]== PackageManager.PERMISSION_GRANTED) {
+                startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
             } else {
                 displayToasts(PackageManager.PERMISSION_DENIED);
                 //Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();

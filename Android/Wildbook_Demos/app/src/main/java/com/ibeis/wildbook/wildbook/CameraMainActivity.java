@@ -2,6 +2,7 @@ package com.ibeis.wildbook.wildbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -23,6 +24,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -58,6 +61,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+    protected static final int STORAGE_PERMISSION_REQUEST=99;
 
     private Handler mUIHandler = new Handler(){
         public void handleMessage(Message msg) {
@@ -402,10 +406,34 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
 
     private void createImageFolder() {
         //Log.i(TAG,"createImageFolder");
-        File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        mImageFolder = new File(imageFile, "camera2Api");
-        if(!mImageFolder.exists()) {
-            mImageFolder.mkdirs();
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")== PackageManager.PERMISSION_GRANTED) {
+            File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            mImageFolder = new File(imageFile, "camera2Api");
+            if (!mImageFolder.exists()) {
+                mImageFolder.mkdirs();
+            }
+        }
+        else{
+            ActivityCompat.requestPermissions(this,
+                            new String[]{"android.permission.READ_EXTERNAL_STORAGE",
+                            "android.permission.WRITE_EXTERNAL_STORAGE"},
+                            STORAGE_PERMISSION_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
+        switch(requestCode) {
+            case STORAGE_PERMISSION_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    createImageFolder();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"In order to contribute to our cause we " +
+                            "would encourage you to grant us access in the future!",Toast.LENGTH_LONG);
+                    startActivity(new Intent(CameraMainActivity.this,MainActivity.class));
+                }
+            break;
         }
     }
 
@@ -549,4 +577,6 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         });
         return files;
     }
+
+
 }
