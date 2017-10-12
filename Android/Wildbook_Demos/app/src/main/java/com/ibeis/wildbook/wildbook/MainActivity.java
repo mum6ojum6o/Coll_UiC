@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected static final int IMAGE_GALLERY_REQUEST = 20;
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
+    protected  static final int INTERNET_NOT_CONNECTED =11;
     public static final String TAG ="MainActivity";
     protected Button RepEncounter,SignOutBut,UploadFromGallery,History;
     private FirebaseAuth mAuth;
@@ -103,7 +106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.historyBtn:
+                if(isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
+                else
+                    displayToasts(INTERNET_NOT_CONNECTED);
                 break;
             case R.id.SingOut:
                 mAuth.getInstance().signOut();
@@ -217,7 +223,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case PackageManager.PERMISSION_DENIED:
                 Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
                 break;
+            case INTERNET_NOT_CONNECTED:
+                Toast.makeText(getApplicationContext(), "Internet connection is needed to perform this operation ", Toast.LENGTH_LONG).show();
         }
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     @Override
     public void onPause(){

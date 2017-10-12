@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -55,7 +56,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
         recyclerView.setHasFixedSize(true);
 
         // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new LinearLayoutManager(DisplayImagesUsingRecyclerView.this));
+        recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this,3));
 
         // Assign activity this to progress dialog.
         progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
