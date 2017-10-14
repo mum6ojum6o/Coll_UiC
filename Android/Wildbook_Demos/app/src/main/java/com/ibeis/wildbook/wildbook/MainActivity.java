@@ -85,13 +85,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                        ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.READ_EXTERNAL_STORAGE")
                        == PackageManager.PERMISSION_GRANTED &&
                        ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.WRITE_EXTERNAL_STORAGE")
-                       == PackageManager.PERMISSION_GRANTED){
+                       == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION")
+                        == PackageManager.PERMISSION_GRANTED){
                     startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
                 }
                 else{
                    ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA",
                            "android.permission.READ_EXTERNAL_STORAGE",
-                           "android.permission.WRITE_EXTERNAL_STORAGE"},
+                           "android.permission.WRITE_EXTERNAL_STORAGE",
+                           "android.permission.ACCESS_FINE_LOCATION"},
                            CAMERA_PERMISSION_REQUEST_CODE);
 
                 }
@@ -239,4 +242,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG,"OnResume");
         selectedImages=null;
     }
+
 }

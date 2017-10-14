@@ -18,12 +18,15 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.location.Location;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +42,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,6 +76,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             int what = msg.what;
             switch(what){
                 case UPDATE_PIC_PREVIEW:
+                    getGeoTagData(mImageFile.getAbsolutePath());
                     mPicPreview.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
                     mCapturedPics.add(mImageFile.getAbsoluteFile().toString());
                     //mPicPreview.invalidate();
@@ -101,6 +110,8 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                 public void onSurfaceTextureUpdated(SurfaceTexture surface) {
                 }
             };
+    private Location mLocation;
+    private FusedLocationProviderClient mFusedLocationClient;
     private Button mCaptureButton;
     private static File mLatestFile;
     private static ImageView mPicPreview;
@@ -119,7 +130,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         mRecycleView.setLayoutManager(gridLayoutManager);
         RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
         mRecycleView.setAdapter(imageAdapter);
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         mPicPreview.setOnClickListener(this);
@@ -576,6 +587,79 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             }
         });
         return files;
+    }
+    private void getGeoTagData(final String imagePath){
+        try {
+            mFusedLocationClient.getLastLocation()
+                    .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                mLocation = task.getResult();
+                                try{
+                                    ExifInterface exif = new ExifInterface(imagePath);
+                                    exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE,GPS.convert(mLocation.getLatitude()));
+                                    exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,GPS.latitudeRef(mLocation.getLatitude()));
+                                    exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE,GPS.convert(mLocation.getLongitude()));
+                                    exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(mLocation.getLongitude()) );
+                                    SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                                    exif.setAttribute(ExifInterface.TAG_DATETIME,fmt_Exif.format(new Date(mLocation.getTime())));
+                                    exif.saveAttributes();
+                                }catch(IOException e){e.printStackTrace();}
+                            }
+                        }
+                    });
+        }catch(SecurityException e){e.printStackTrace();}
+
+    }
+    private static class GPS {
+        private static StringBuilder sb = new StringBuilder(20);
+        /**
+         * returns ref for latitude which is S or N.
+         *
+         * @param latitude
+         * @return S or N
+         */
+        public static String latitudeRef(final double latitude) {
+            return latitude < 0.0d ? "S" : "N";
+        }
+
+        /**
+         * returns ref for latitude which is S or N.
+         *
+         * @param latitude
+         * @return S or N
+         */
+        public static String longitudeRef(final double longitude) {
+            return longitude < 0.0d ? "W" : "E";
+        }
+        /**
+         * convert latitude into DMS (degree minute second) format. For instance<br/>
+         * -79.948862 becomes<br/>
+         * 79/1,56/1,55903/1000<br/>
+         * It works for latitude and longitude<br/>
+         *
+         * @param latitude could be longitude.
+         * @return
+         */
+        public static final String convert(double latitude) {
+            latitude = Math.abs(latitude);
+            final int degree = (int)latitude;
+            latitude *= 60;
+            latitude -= degree * 60.0d;
+            final int minute = (int)latitude;
+            latitude *= 60;
+            latitude -= minute * 60.0d;
+            final int second = (int)(latitude * 1000.0d);
+            sb.setLength(0);
+            sb.append(degree);
+            sb.append("/1,");
+            sb.append(minute);
+            sb.append("/1,");
+            sb.append(second);
+            sb.append("/1000,");
+            return sb.toString();
+        }
     }
 
 
