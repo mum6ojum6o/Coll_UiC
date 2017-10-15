@@ -16,6 +16,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -58,16 +60,48 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         // [START initialize_auth]
-        mAuth = FirebaseAuth.getInstance();
+           mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
     }
+    @Override
     public void onStart(){
-      super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            //mAuth = FirebaseAuth.getInstance();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            //showProgressDialog();
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    //hideProgressDialog();
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
     }
 
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+           firebaseAuthWithGoogle(acct);
+            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+        } else {
+            //Nothing.
+        }
+    }
 
 
     @Override
@@ -109,6 +143,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithCredential:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                Log.i(TAG,"Login Username:"+user.getEmail());
                                 updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -128,7 +163,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     private void updateUI(FirebaseUser user) {
         progressDialog.dismiss();
         if (user != null) {
+
            Intent i = new Intent(this,MainActivity.class);
+
             startActivity(i);
         } else {
 
@@ -152,5 +189,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 break;
         }
     }
+
     }
 

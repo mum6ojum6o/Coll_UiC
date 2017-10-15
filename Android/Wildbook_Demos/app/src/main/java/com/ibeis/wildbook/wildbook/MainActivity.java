@@ -21,6 +21,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,7 +40,8 @@ import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        GoogleApiClient.OnConnectionFailedListener {
     protected static final int IMAGE_GALLERY_REQUEST = 20;
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
@@ -43,19 +53,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected ArrayList<String> selectedImages= new ArrayList<String>();
     protected static String storagePath="Photos/";
     protected static String databasePath="Photos/";
+    private GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"MainActivity onCreate");
         super.onCreate(savedInstanceState);
+       // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
         setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()==null){
+        //mAuth = FirebaseAuth.getInstance();
+        mAuth=FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if(storagePath.equals("Photos/"))
+            storagePath = storagePath+firebaseUser.getEmail();
+        Log.i(TAG,"storagePath"+storagePath);
+        if(databasePath.equals("Photos/"))
+            databasePath = databasePath+firebaseUser.getUid();
+        Log.i(TAG,"databasePath"+databasePath);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        if(firebaseUser==null){
             finish();
             startActivity(new Intent(this,Login.class));
         }
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
         UserName=(TextView)findViewById(R.id.username);
-        UserName.setText(firebaseUser.getDisplayName()+"!");
+        UserName.setText(firebaseUser.getEmail()+"!");
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
         SignOutBut = (Button)findViewById(R.id.SingOut);
@@ -64,12 +92,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RepEncounter.setOnClickListener(this);
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
-        if(storagePath.equals("Photos/"))
-            storagePath = storagePath+firebaseUser.getEmail();
-        if(databasePath.equals("Photos/"))
-            databasePath = databasePath+firebaseUser.getUid();
+
     }
-    @Override
+    /*@Override
+    public void onStart(){
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            //showProgressDialog();
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    //hideProgressDialog();
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+    */@Override
     public void onResume(){
         super.onResume();
 
@@ -115,10 +164,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     displayToasts(INTERNET_NOT_CONNECTED);
                 break;
             case R.id.SingOut:
+               /* mGoogleApiClient.disconnect();
                 mAuth.getInstance().signOut();
                 finish();
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                startActivity(new Intent(getApplicationContext(),Login.class));*/
+
+               signOut();
+
         }
+    }
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+
+                        mGoogleApiClient.disconnect();
+                        //mAuth.signOut();
+                        mGoogleApiClient=null;
+                        mAuth=null;
+                        finish();
+                        databasePath="Photos/";
+                        storagePath="Photos/";
+                        //mAuth=null;
+                        startActivity(new Intent(MainActivity.this,Login.class));
+                    }
+                });
+
+        //startActivity(new Intent(MainActivity.this,Login.class));
     }
 
     /*
@@ -241,6 +315,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         Log.i(TAG,"OnResume");
         selectedImages=null;
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+        } else {
+            //Nothing.
+        }
+    }
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        startActivity(new Intent(MainActivity.this,Login.class));
     }
 
 }

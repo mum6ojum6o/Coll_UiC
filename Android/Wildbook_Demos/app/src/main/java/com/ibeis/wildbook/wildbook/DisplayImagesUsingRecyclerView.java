@@ -78,11 +78,13 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.i(TAG,"DATA CHANGED!!!");
-               int snapShotSize=0;
+               //final long recordsRead=0;
+                final long objeCount=snapshot.getChildrenCount();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     String storagePath=MainActivity.storagePath+"/"+postSnapshot.getValue();
-                    snapShotSize++;
-                    final int objeCount=snapShotSize;
+                    //recordsRead++;
+
+                    Log.i(TAG,"snapshot_ChildCount"+objeCount);
                     storageReference =FirebaseStorage.getInstance().getReference().child(storagePath);
                     storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -90,13 +92,13 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
 
                             imagesList.add(uri);
                             Log.i(TAG,"Successfully Downloaded Uri!!!Size"+imagesList.size());
-                            if(imagesList.size()==objeCount){
+                            //if((long)imagesList.size()==objeCount){
                                 Log.i(TAG,"ObjeCount="+objeCount);
                                 adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
                                 recyclerView.setAdapter(adapter);
                                 // Hiding the progress dialog.
                                 progressDialog.dismiss();
-                            }
+                           // }
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
