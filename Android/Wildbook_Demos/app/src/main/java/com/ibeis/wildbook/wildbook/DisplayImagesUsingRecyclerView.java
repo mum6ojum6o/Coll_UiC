@@ -78,11 +78,12 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.i(TAG,"DATA CHANGED!!!");
-               //final long recordsRead=0;
+                long recordsRead=0;
                 final long objeCount=snapshot.getChildrenCount();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    long recordCount = snapshot.getChildrenCount();
                     String storagePath=MainActivity.storagePath+"/"+postSnapshot.getValue();
-                    //recordsRead++;
+                    recordsRead++;
 
                     Log.i(TAG,"snapshot_ChildCount"+objeCount);
                     storageReference =FirebaseStorage.getInstance().getReference().child(storagePath);
@@ -92,13 +93,14 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
 
                             imagesList.add(uri);
                             Log.i(TAG,"Successfully Downloaded Uri!!!Size"+imagesList.size());
-                            //if((long)imagesList.size()==objeCount){
+                            if((long)imagesList.size()==objeCount){
                                 Log.i(TAG,"ObjeCount="+objeCount);
-                                adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
+                                adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList );
                                 recyclerView.setAdapter(adapter);
-                                // Hiding the progress dialog.
+                            // Hiding the progress dialog.
                                 progressDialog.dismiss();
-                           // }
+                                //imagesList.clear();
+                            }
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -113,6 +115,10 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                     //ImageUploadInfo imageUploadInfo = postSnapshot.getValue(ImageUploadInfo.class);
 
                     //list.add(imageUploadInfo);
+                    /*adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
+                    recyclerView.setAdapter(adapter);
+                    progressDialog.dismiss();*/
+
                 }
                 Log.i(TAG,"Download completed!!!imagesList.SIZE()="+imagesList.size());
 

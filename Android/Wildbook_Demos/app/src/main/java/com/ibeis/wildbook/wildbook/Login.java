@@ -62,6 +62,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         // [START initialize_auth]
            mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+        if(null !=mAuth.getCurrentUser()){
+            updateUI(mAuth.getCurrentUser());
+        }
+
 
     }
     @Override
@@ -167,6 +171,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
            Intent i = new Intent(this,MainActivity.class);
 
             startActivity(i);
+            //finishAndRemoveTask();
+            finish();
         } else {
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);

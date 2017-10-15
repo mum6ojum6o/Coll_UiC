@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mGoogleApiClient.disconnect();
                         //mAuth.signOut();
                         mGoogleApiClient=null;
+                        mAuth.signOut();
                         mAuth=null;
                         finish();
                         databasePath="Photos/";
