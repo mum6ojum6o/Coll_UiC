@@ -25,6 +25,13 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 
+
+/*
+This Activity is used for displayin the preview of images captured by the user using the
+cameraMainActivity.
+This activity also enables user to either Upload or Discard the pictures clicked by the user.
+
+ */
 public class UploadCamPics extends AppCompatActivity implements View.OnClickListener {
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
