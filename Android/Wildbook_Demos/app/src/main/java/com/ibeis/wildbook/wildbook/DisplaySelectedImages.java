@@ -53,16 +53,17 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
     public void onClick(View view){
         switch(view.getId()){
             case R.id.UploadBtn2:
-                UploadTask upload=null;
-                StorageReference filePath=null;
-                final ArrayList<Uri> successUploads=new ArrayList<Uri>();
+                if (new Utilities(this).isNetworkAvailable()) { //check for network availability
+                    UploadTask upload = null;
+                    StorageReference filePath = null;
+                    final ArrayList<Uri> successUploads = new ArrayList<Uri>();
                     //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
-                    for(String s:selectedImages){
-                        Uri uploadImage= Uri.fromFile(new File(s));
-                         filePath=mStorage.child("Photos/"+mAuth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
+                    for (String s : selectedImages) {
+                        Uri uploadImage = Uri.fromFile(new File(s));
+                        filePath = mStorage.child("Photos/" + mAuth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
                         String fileName = new File(s).getName();
-                         upload = filePath.putFile(uploadImage);
-                        String ImageUploadId=databaseReference.push().getKey();
+                        upload = filePath.putFile(uploadImage);
+                        String ImageUploadId = databaseReference.push().getKey();
                         databaseReference.child(ImageUploadId).setValue(fileName);
                        /* filePath.putFile(uploadImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -72,24 +73,28 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                         });*/
 
                     }
-                upload.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
+                    upload.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
 
-                        Log.i(TAG, "Error!");
-                        Toast.makeText(getApplicationContext(),"Something went wrong!",Toast.LENGTH_LONG).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        @SuppressWarnings("VisibleForTests")   Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        successUploads.add(downloadUrl);
+                            Log.i(TAG, "Error!");
+                            Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            successUploads.add(downloadUrl);
 
 
-                    }
-                });
-                redirect(successUploads.size(),selectedImages.size());
+                        }
+                    });
+                    redirect(successUploads.size(), selectedImages.size());
+                }
+                else{
+                    new Utilities(this).connectivityAlert().show(); //show the connectivity missing dialog
+                }
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));

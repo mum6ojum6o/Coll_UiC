@@ -30,12 +30,6 @@
             android:name=".GoogleSignInActivity"
             android:noHistory="true" />
         <activity
-            android:name=".PicturePreviewActivity"
-            android:noHistory="true" />
-        <activity
-            android:name=".CameraActivity"
-            android:noHistory="true" />
-        <activity
             android:name=".DisplaySelectedImages"
             android:noHistory="false" />
         <activity android:name=".DisplayImagesUsingRecyclerView" />

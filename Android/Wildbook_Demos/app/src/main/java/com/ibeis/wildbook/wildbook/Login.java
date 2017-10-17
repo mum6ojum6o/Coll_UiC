@@ -71,6 +71,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     @Override
     public void onStart(){
         super.onStart();
+        // more understanding on OptionalPendingResult required....
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"

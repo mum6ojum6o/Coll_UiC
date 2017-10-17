@@ -23,4 +23,12 @@
     <string name="imageUploadedString">Image Uploaded!</string>
     <string name="anotherIncidentString">Report another Incident?</string>
     <string name="historyString">Your Contribution</string>
+    <string name="wifiString">Wifi</string>
+    <string name="mobiledataString">Mobile Data</string>
+    <string name="anyString">Any</string>
+    <string name="connectivityLossMessageString">Since you are no longer connected to the internet,
+        the selected images will be uploaded automatically once your device connectivity resumes.
+        Which type of connection would you prefer for image syncing?
+    </string>
+
 </resources>

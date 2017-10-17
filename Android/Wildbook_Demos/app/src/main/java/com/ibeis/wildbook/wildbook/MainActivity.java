@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.historyBtn:
-                if(isNetworkAvailable())
+                if(new Utilities(this).isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
                 else
                     displayToasts(INTERNET_NOT_CONNECTED);
@@ -305,12 +305,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(), "Internet connection is needed to perform this operation ", Toast.LENGTH_LONG).show();
         }
     }
-    private boolean isNetworkAvailable() {
+   /* private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+    }*/
     @Override
     public void onPause(){
         super.onPause();

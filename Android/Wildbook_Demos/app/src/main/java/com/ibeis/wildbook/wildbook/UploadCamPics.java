@@ -1,5 +1,6 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -32,7 +33,7 @@ cameraMainActivity.
 This activity also enables user to either Upload or Discard the pictures clicked by the user.
 
  */
-public class UploadCamPics extends AppCompatActivity implements View.OnClickListener {
+public class UploadCamPics extends Activity implements View.OnClickListener {
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
@@ -68,43 +69,48 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
     public void onClick(View view){
         switch (view.getId()){
             case R.id.UploadBtn2:
-                 StorageReference storage;
-                 FirebaseAuth auth;
-                 DatabaseReference databaseReference;
-                auth = FirebaseAuth.getInstance();
-                FirebaseUser user = auth.getCurrentUser();
-                storage= FirebaseStorage.getInstance().getReference();
-                databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
-                UploadTask upload=null;
-                StorageReference filePath=null;
-                final ArrayList<Uri> successUploads=new ArrayList<Uri>();
-                //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
-                for(String s:imagesNames) {
-                    Uri uploadImage = Uri.fromFile(new File(s));
-                    filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
-                    String fileName = new File(s).getName();
-                    upload = filePath.putFile(uploadImage);
-                    String ImageUploadId = databaseReference.push().getKey();
-                    databaseReference.child(ImageUploadId).setValue(fileName);
+                if (new Utilities(this).isNetworkAvailable()) {
+                    StorageReference storage;
+                    FirebaseAuth auth;
+                    DatabaseReference databaseReference;
+                    auth = FirebaseAuth.getInstance();
+                    FirebaseUser user = auth.getCurrentUser();
+                    storage = FirebaseStorage.getInstance().getReference();
+                    databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
+                    UploadTask upload = null;
+                    StorageReference filePath = null;
+                    final ArrayList<Uri> successUploads = new ArrayList<Uri>();
+                    //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
+                    for (String s : imagesNames) {
+                        Uri uploadImage = Uri.fromFile(new File(s));
+                        filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
+                        String fileName = new File(s).getName();
+                        upload = filePath.putFile(uploadImage);
+                        String ImageUploadId = databaseReference.push().getKey();
+                        databaseReference.child(ImageUploadId).setValue(fileName);
+                    }
+                    upload.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+
+                            Log.i(TAG, "Error!");
+                            Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            successUploads.add(downloadUrl);
+
+
+                        }
+                    });
+                    redirect(successUploads.size(), imagesNames.size());
                 }
-                upload.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-
-                        Log.i(TAG, "Error!");
-                        Toast.makeText(getApplicationContext(),"Something went wrong!",Toast.LENGTH_LONG).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        @SuppressWarnings("VisibleForTests")   Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        successUploads.add(downloadUrl);
-
-
-                    }
-                });
-                redirect(successUploads.size(),imagesNames.size());
+                else{
+                    new Utilities(this).connectivityAlert().show();
+                }
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(UploadCamPics.this , CameraMainActivity.class));
