@@ -30,5 +30,6 @@
         the selected images will be uploaded automatically once your device connectivity resumes.
         Which type of connection would you prefer for image syncing?
     </string>
+    <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
 
 </resources>

@@ -38,6 +38,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
     private Button mUploadBtn,mDiscardBtn;
+    private FirebaseAuth mAuth;
 
     private ArrayList<Uri> imagesList=new ArrayList<Uri>();
     private ArrayList<String> imagesNames = new ArrayList<String>();
@@ -48,6 +49,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         mUploadBtn = (Button) findViewById(R.id.UploadBtn2);
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
         Intent intent = getIntent();
+        mAuth = FirebaseAuth.getInstance();
         imagesNames =intent.getStringArrayListExtra("Files");
         for(String file: imagesNames){
             imagesList.add(Uri.parse(new File(file).toString()));
@@ -109,7 +111,11 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     redirect(successUploads.size(), imagesNames.size());
                 }
                 else{
-                    new Utilities(this).connectivityAlert().show();
+                    /*If user preferences do not exist in the sharedpreferences*/
+                    if(!(new Utilities(this).checkSharedPreference(mAuth.getCurrentUser().getEmail()))) {
+                        new Utilities(this).connectivityAlert().show();
+                    }
+                    redirect(0,0);
                 }
                 break;
             case R.id.DiscardBtn2:
@@ -120,8 +126,11 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
 
     }
     public void redirect(int imagesUploaded, int imagesRequested){
-        if(imagesRequested==imagesUploaded){
+        if(imagesRequested==imagesUploaded && imagesRequested>0 && imagesUploaded >0){
             Toast.makeText(getApplicationContext(),"All images were uploaded!",Toast.LENGTH_LONG).show();
+        }
+        else if(imagesUploaded == 0 && imagesRequested ==0){
+            Toast.makeText(getApplicationContext(),"The images will be uploaded on the availability of appropriate network!",Toast.LENGTH_LONG).show();
         }
         else{
             Toast.makeText(getApplicationContext(),imagesRequested-imagesUploaded+"were uploaded!",Toast.LENGTH_LONG).show();

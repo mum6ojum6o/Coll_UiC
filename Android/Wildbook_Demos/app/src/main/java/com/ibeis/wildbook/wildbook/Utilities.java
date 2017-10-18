@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by Arjan on 10/17/2017.
@@ -18,6 +21,7 @@ import android.widget.Toast;
 public class Utilities {
     private static final String TAG = "Utilities Class";
     private AlertDialog.Builder mAlertDialogBuilder;
+    private SharedPreferences mSharedPreference;
     private Context mContext;
     Utilities (Context context){
         mContext = context;
@@ -35,7 +39,7 @@ public class Utilities {
 
 
     /*
-    This method displays a dialoge to get user preferences
+    This method displays a dialog to get user preferences
      for syncing images in the absence of Network.
      */
     public AlertDialog.Builder connectivityAlert(){
@@ -47,6 +51,7 @@ public class Utilities {
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG,"+ve Button");
                         Toast.makeText(mContext,"positive Button",Toast.LENGTH_SHORT).show();
+                        writeSyncPreferences(mContext.getString(R.string.wifiString));
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
                         ((Activity)mContext).finish();
                     }
@@ -56,6 +61,7 @@ public class Utilities {
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG," -ve Button");
                         Toast.makeText(mContext,"negative Button",Toast.LENGTH_SHORT).show();
+                        writeSyncPreferences(mContext.getString(R.string.mobiledataString));
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
                         ((Activity)mContext).finish();
 
@@ -66,10 +72,32 @@ public class Utilities {
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG," = Button");
                         Toast.makeText(mContext,"neutral Button",Toast.LENGTH_SHORT).show();
+                        writeSyncPreferences(mContext.getString(R.string.anyString));
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
                         ((Activity)mContext).finish();
                     }
                 });
         return mAlertDialogBuilder;
+    }
+    /*
+    This method checks if the user's Syncing properties are set
+     */
+    public boolean checkSharedPreference(String username){
+        mSharedPreference = mContext.getSharedPreferences(mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+        if(mSharedPreference.getString(username,"Sync_Preference")=="Sync_Preference"){
+            return false;
+        }
+        else
+            return true;
+    }
+
+    /*
+    This method writes to the sharedpreferences file.
+     */
+    public void writeSyncPreferences(String string){
+        mSharedPreference = mContext.getSharedPreferences(mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreference.edit();
+        editor.putString(FirebaseAuth.getInstance().getCurrentUser().getEmail(),string);
+        editor.commit();
     }
 }
