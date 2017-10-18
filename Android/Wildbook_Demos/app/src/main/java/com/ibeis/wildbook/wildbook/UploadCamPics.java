@@ -24,7 +24,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /*
@@ -111,11 +115,27 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     redirect(successUploads.size(), imagesNames.size());
                 }
                 else{
+                    List<ImageRecordDBRecord> records= new ArrayList<ImageRecordDBRecord>();
+                    ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
+                    Utilities utility = new Utilities(this,dbHelper,records);
+                    for(String filename : imagesNames){
+                    ImageRecordDBRecord record = new ImageRecordDBRecord();
+                        record.setFileName(filename);
+                        record.setUsername(mAuth.getCurrentUser().getEmail());
+                        Date date = new Date();
+                        record.setDate(date);
+                        records.add(record);
+                    }
+                    //Utilities utility = new Utilities(this,)
                     /*If user preferences do not exist in the sharedpreferences*/
                     if(!(new Utilities(this).checkSharedPreference(mAuth.getCurrentUser().getEmail()))) {
-                        new Utilities(this).connectivityAlert().show();
+                       utility.connectivityAlert().show();
                     }
-                    redirect(0,0);
+                    else {
+                        utility.insertRecords();
+                        redirect(0, 0);
+                    }
+
                 }
                 break;
             case R.id.DiscardBtn2:
@@ -139,4 +159,5 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         startActivity(new Intent(UploadCamPics.this,MainActivity.class));
 
     }
+
 }

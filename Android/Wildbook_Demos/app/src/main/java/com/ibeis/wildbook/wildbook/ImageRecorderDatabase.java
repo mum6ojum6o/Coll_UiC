@@ -3,6 +3,9 @@ package com.ibeis.wildbook.wildbook;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+
 
 /*******************************
  * Created by Arjan on 10/16/2017.
@@ -28,25 +31,26 @@ public class ImageRecorderDatabase extends SQLiteOpenHelper {
     public static final String WIFI_SYNC = "wifi_sync";
     public static final String LTE_SYNC = "LTE_sync";
     final private static Integer VERSION = 1;
+    public static final String TAG="DatabaseHelper";
     final private Context mContext;
     final private static String CREATE_CMD =
             "CREATE TABLE "+TABLE_NAME+"("+
-                    _ID + "INTEGER PRIMARY KEY AUTO INCREMENT,"+
-                    FILE_NAME+"TEXT NOT NULL,"+
+                    _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    FILE_NAME+" TEXT NOT NULL,"+
                     LONGITUDE+" DOUBLE ,"+
                     LATITUDE+ " DOUBLE ,"+
-                    USER_NAME+"TEXT NOT NULL,"+
-                    DATE+"DATE NOT NULL,"+
+                    USER_NAME+" TEXT NOT NULL,"+
+                    DATE+" DATE NOT NULL,"+
                     IS_UPLOADED+" BOOLEAN NOT NULL DEFAULT 0 CHECK("+IS_UPLOADED+
-                    "IN (0,1)))";
+                    " IN (0,1)))";
     final static String[] columns_imagesrecorder = {_ID,FILE_NAME,LONGITUDE,LATITUDE,USER_NAME,DATE,IS_UPLOADED};
     final static String[] columns_sync_recorder = {_ID,FILE_ID,WIFI_SYNC,LTE_SYNC};
     final private static String CREATE_CMD_II =
             "CREATE TABLE "+TABLE_NAME_II+"("+
-                    _ID + "INTEGER PRIMARY KEY AUTO INCREMENT,"+
-                    FILE_ID + "INTEGER NOT NULL, " +
-                    WIFI_SYNC+ "BOOLEAN ," +
-                    LTE_SYNC + "BOOLEAN, " +
+                    _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    FILE_ID + " INTEGER NOT NULL, " +
+                    WIFI_SYNC+ " BOOLEAN ," +
+                    LTE_SYNC + " BOOLEAN, " +
                     "FOREIGN KEY(FILE_ID) REFERENCES IMAGES_RECORDER(_ID) )";
 
 
@@ -61,7 +65,12 @@ public class ImageRecorderDatabase extends SQLiteOpenHelper {
         mContext = context;
     }
     @Override
-    public void onCreate(SQLiteDatabase db){db.execSQL(CREATE_CMD); db.execSQL(CREATE_CMD_II);}
+    public void onCreate(SQLiteDatabase db){
+        db.execSQL(CREATE_CMD);
+        Log.i(TAG,"After CREATE_CMD");
+        db.execSQL(CREATE_CMD_II);
+        Log.i(TAG,"After CREATE_CMD_II");
+    }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // N/A
