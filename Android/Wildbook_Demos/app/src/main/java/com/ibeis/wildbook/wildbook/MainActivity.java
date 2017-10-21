@@ -47,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
     protected  static final int INTERNET_NOT_CONNECTED =11;
     public static final String TAG ="MainActivity";
-    protected Button RepEncounter,SignOutBut,UploadFromGallery,History;
+    protected Button RepEncounter,SignOutBut,UploadFromGallery,History,mSync;
     private FirebaseAuth mAuth;
     protected TextView UserName;
     protected ArrayList<String> selectedImages= new ArrayList<String>();
     protected static String storagePath="Photos/";
     protected static String databasePath="Photos/";
     private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"MainActivity onCreate");
@@ -86,12 +87,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         UserName.setText(firebaseUser.getEmail()+"!");
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
+        mSync = (Button)findViewById(R.id.syncBtn);
         SignOutBut = (Button)findViewById(R.id.SingOut);
         History = (Button)findViewById(R.id.historyBtn);
         SignOutBut.setOnClickListener(this);
         RepEncounter.setOnClickListener(this);
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
+        mSync.setOnClickListener(this);
 
     }
     /*@Override
@@ -170,6 +173,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(getApplicationContext(),Login.class));*/
 
                signOut();
+                break;
+            case R.id.syncBtn:
+                new Utilities(this).startSyncing();
+                break;
 
         }
     }
@@ -239,8 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ContentResolver contentResolver = getContentResolver();
                 String [] filePathColumn = {MediaStore.Images.Media.DATA};
 
-
-                if (data.getClipData() != null ) {
+                    if (data.getClipData() != null ) {
 
                     ClipData mClipData = data.getClipData();
                     if (mClipData.getItemCount()>10){

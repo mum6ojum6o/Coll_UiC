@@ -36,6 +36,7 @@
         <activity android:name=".CameraMainActivity"
             android:noHistory="true"/>
         <activity android:name=".UploadCamPics"></activity>
+        <service android:name=".SyncerService" />
     </application>
 
 </manifest>

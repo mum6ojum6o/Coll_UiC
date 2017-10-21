@@ -76,6 +76,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.UploadBtn2:
                 if (new Utilities(this).isNetworkAvailable()) {
+                    //refactor this block into a method.
                     StorageReference storage;
                     FirebaseAuth auth;
                     DatabaseReference databaseReference;
@@ -133,6 +134,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     }
                     else {
                         utility.insertRecords();
+
                         redirect(0, 0);
                     }
 

@@ -146,6 +146,7 @@ public class Utilities {
     public void insertRecords(){
         InsertToDB insertRecords= new InsertToDB(mDbhelper,mRecord);
         insertRecords.run();
+
     }
 
 public class InsertToDB implements Runnable{
@@ -171,12 +172,21 @@ public class InsertToDB implements Runnable{
            values.put(ImageRecorderDatabase.IS_UPLOADED,record.getmIsUploaded());
            db.insert(ImageRecorderDatabase.TABLE_NAME,null,values);
            values.clear();
+
         }
-
+       //  //Start the Syncing Service.
         db.close();
-
+        startSyncing();
 
     }
+
+    }
+    /*
+    This method starts the Sync Service.
+     */
+    public void startSyncing(){
+        Intent intent = new Intent(mContext,SyncerService.class);
+        mContext.startService(intent);
 
     }
 
