@@ -1,6 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
@@ -53,7 +54,8 @@ public class SyncerService extends IntentService {
         while(!c.isAfterLast()) {
             Log.i(TAG,"Checking NetworkAvailability!!");
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
-                String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
+                final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
+                Log.i(TAG,"filename Uploading..."+filename);
                 StorageReference storage;
                 FirebaseAuth auth;
                 DatabaseReference databaseReference;
@@ -78,7 +80,14 @@ public class SyncerService extends IntentService {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         successUploads.add(downloadUrl);
-
+                        // set the isUploaded field to 1 for that file....
+                        ContentValues values = new ContentValues();
+                        values.put(ImageRecorderDatabase.IS_UPLOADED,"1");
+                        ImageRecorderDatabase dbHelper= new ImageRecorderDatabase(getApplicationContext());
+                        dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME,values,ImageRecorderDatabase.FILE_NAME +"=?", new String[]{filename});
+                        dbHelper.close();
+                        values.clear();
+                        //how to make this synchronous....
 
                     }
                 });
@@ -92,7 +101,12 @@ public class SyncerService extends IntentService {
                     e.printStackTrace();
                 }
                 Log.i(TAG, "Checking Next Record!");
-            }Log.i(TAG,"Network not available");
+                c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
+                        new String[]{"0"},null,null,null);
+                Log.i(TAG,"After updating count="+c.getCount() );
+                c.moveToFirst();
+            }
+
             try {
                 sleep(3000);
             } catch (Exception e) {
@@ -101,6 +115,7 @@ public class SyncerService extends IntentService {
 
         }
         c.close();
+        mDBHelper.close();
         Log.i(TAG,"Service Stopping");
     }
 }
