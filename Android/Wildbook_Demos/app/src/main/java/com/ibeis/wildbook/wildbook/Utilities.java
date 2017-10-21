@@ -9,20 +9,33 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+
 /****************************************************************
  * Created by Arjan on 10/17/2017.
  *This class will contain the utility methods.
+ * REFACTOR,REFACTOR,REFACTOR!!!
  ***************************************************************/
 
 public class Utilities {
@@ -32,6 +45,7 @@ public class Utilities {
     private Context mContext;
     private List<ImageRecordDBRecord> mRecord;
     private ImageRecorderDatabase mDbhelper;
+    private List<String> mImagePaths;
     Utilities (Context context){
         mContext = context;
     }
@@ -40,8 +54,13 @@ public class Utilities {
         this.mRecord=record;
         this.mDbhelper=dbHelper;
     }
+    Utilities (Context context, List<String> images,ImageRecorderDatabase dbHelper){
+        this.mContext = context;
+        this.mDbhelper=dbHelper;
+        this.mImagePaths=images;
+    }
     /***************************************************************
-        this method checks if the device is connected to internet services..
+        This method checks if the device is connected to internet services..
      ***************************************************************/
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -49,7 +68,6 @@ public class Utilities {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
     /***************************************************************
     This method displays a dialog to get user preferences
@@ -157,7 +175,7 @@ public class InsertToDB implements Runnable{
             this.mRecords=records;
         }
     @Override
-    public void run() {
+   synchronized public void run() {
         Log.i(TAG,"inserting records");
         SQLiteDatabase db=mDbhelper.getWritableDatabase();
        for (ImageRecordDBRecord record: this.mRecords){
@@ -176,6 +194,7 @@ public class InsertToDB implements Runnable{
         }
        //  //Start the Syncing Service.
         db.close();
+
         startSyncing();
 
     }
@@ -188,6 +207,106 @@ public class InsertToDB implements Runnable{
         Intent intent = new Intent(mContext,SyncerService.class);
         mContext.startService(intent);
 
+    }
+
+    /**********************************************************
+     * This method uploads pictures.....
+     * and then redirects to the mainactivity....
+     **********************************************************/
+    public void uploadPictures(ArrayList<String> _images ){
+        final Context context = mContext;
+        UploadTask upload = null;
+        StorageReference filePath = null;
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        final ArrayList<Uri> successUploads = new ArrayList<Uri>();
+        ArrayList<String> selectedImages=_images;
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
+        for (String s : selectedImages) {
+            Uri uploadImage = Uri.fromFile(new File(s));
+            filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
+            String fileName = new File(s).getName();
+            upload = filePath.putFile(uploadImage);
+
+
+        }
+        upload.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.i(TAG, "Error!");
+                Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                //
+                String fileName = downloadUrl.getLastPathSegment().toString();
+                ImageRecordDBRecord aRecord = new ImageRecordDBRecord();
+                aRecord.setFileName(fileName);
+                aRecord.setIsUploaded(true);
+                aRecord.setDate(new Date());
+                aRecord.setUsername(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                successUploads.add(downloadUrl);
+                ArrayList<ImageRecordDBRecord> aRec = new ArrayList<ImageRecordDBRecord>();
+                aRec.add(aRecord);
+                mRecord=new ArrayList<ImageRecordDBRecord>();
+                mRecord.add(aRecord);
+                insertRecords();
+
+            }
+        });
+        //redirect(successUploads.size(), selectedImages.size(),this,MainActivity.class);
+    }
+
+    /*********************
+     *
+     * This method redirects from one activity to the other..
+     * @param imagesUploaded
+     * @param imagesRequested
+     * @param FromClass
+     * @param ToClass
+     */
+    public void redirect(int imagesUploaded, int imagesRequested,Activity FromClass,Class ToClass){
+        if(imagesRequested==imagesUploaded){
+            Toast.makeText(mContext,"All images were uploaded!",Toast.LENGTH_LONG).show();
+        }
+        else if(imagesUploaded == 0 && imagesRequested ==0){
+            Toast.makeText(mContext,"The images will be uploaded on the availability of appropriate network!",Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(mContext,imagesRequested-imagesUploaded+"were uploaded!",Toast.LENGTH_LONG).show();
+        }
+        ((Activity)FromClass).finish();
+        mContext.startActivity(new Intent(FromClass,ToClass));
+
+    }
+
+
+    /*********************************************************
+     * Prepares records for insertion to Database
+     *
+     *******************************************************/
+    public void prepareBatchForInsertToDB(Boolean isUploaded) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        mRecord=new ArrayList<ImageRecordDBRecord>();
+        for (String filename : mImagePaths) {
+            ImageRecordDBRecord record = new ImageRecordDBRecord();
+            record.setFileName(filename);
+            record.setUsername(auth.getCurrentUser().getEmail());
+            Date date = new Date();
+            record.setDate(date);
+            record.setIsUploaded(isUploaded);
+            mRecord.add(record);
+
+        }
+        //return records;
+    }
+
+
+    public void setmRecord(List<ImageRecordDBRecord> records){
+        this.mRecord = records;
     }
 
 }

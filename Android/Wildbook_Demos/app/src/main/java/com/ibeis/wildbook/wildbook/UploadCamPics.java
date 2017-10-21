@@ -76,65 +76,20 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.UploadBtn2:
                 if (new Utilities(this).isNetworkAvailable()) {
-                    //refactor this block into a method.
-                    StorageReference storage;
-                    FirebaseAuth auth;
-                    DatabaseReference databaseReference;
-                    auth = FirebaseAuth.getInstance();
-                    FirebaseUser user = auth.getCurrentUser();
-                    storage = FirebaseStorage.getInstance().getReference();
-                    databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
-                    UploadTask upload = null;
-                    StorageReference filePath = null;
-                    final ArrayList<Uri> successUploads = new ArrayList<Uri>();
-                    //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
-                    for (String s : imagesNames) {
-                        Uri uploadImage = Uri.fromFile(new File(s));
-                        filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
-                        String fileName = new File(s).getName();
-                        upload = filePath.putFile(uploadImage);
-                        String ImageUploadId = databaseReference.push().getKey();
-                        databaseReference.child(ImageUploadId).setValue(fileName);
-                    }
-                    upload.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
 
-                            Log.i(TAG, "Error!");
-                            Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            successUploads.add(downloadUrl);
-
-
-                        }
-                    });
-                    redirect(successUploads.size(), imagesNames.size());
+                    Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
+                    util.uploadPictures(imagesNames);
+                    redirect(imagesNames.size(), imagesNames.size());
                 }
                 else{
-                    List<ImageRecordDBRecord> records= new ArrayList<ImageRecordDBRecord>();
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
-                    Utilities utility = new Utilities(this,dbHelper,records);
-                    for(String filename : imagesNames){
-                    ImageRecordDBRecord record = new ImageRecordDBRecord();
-                        record.setFileName(filename);
-                        record.setUsername(mAuth.getCurrentUser().getEmail());
-                        Date date = new Date();
-                        record.setDate(date);
-                        records.add(record);
-                    }
-                    //Utilities utility = new Utilities(this,)
-                    /*If user preferences do not exist in the sharedpreferences*/
+                    Utilities utility = new Utilities(this,imagesNames,dbHelper);
+                    utility.prepareBatchForInsertToDB(false);
                     if(!(new Utilities(this).checkSharedPreference(mAuth.getCurrentUser().getEmail()))) {
                        utility.connectivityAlert().show();
                     }
                     else {
                         utility.insertRecords();
-
                         redirect(0, 0);
                     }
 

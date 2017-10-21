@@ -24,12 +24,11 @@ import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
-/*************************************************************************
+/***************************************************************************************
  * Created by Arjan on 10/19/2017.
  * This class is creates the service that will sync the images as per the availability of
  * Network.
- *
- ****************************************************************************/
+ ************************************************************************************/
 
 public class SyncerService extends IntentService {
     private static final String TAG = "SyncerService";
@@ -38,6 +37,7 @@ public class SyncerService extends IntentService {
    public SyncerService(){
        super(TAG);
    }
+   //The service also has to be syncronized.... Uff!!
     @Override
     public void onHandleIntent(Intent intent){
         int count=0;
@@ -87,7 +87,7 @@ public class SyncerService extends IntentService {
                         dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME,values,ImageRecorderDatabase.FILE_NAME +"=?", new String[]{filename});
                         dbHelper.close();
                         values.clear();
-                        //how to make this synchronous....
+                        //how to make this synchronous?????????
 
                     }
                 });
@@ -108,7 +108,7 @@ public class SyncerService extends IntentService {
             }
 
             try {
-                sleep(3000);
+                sleep(3000); ///sleep for 5 mins?
             } catch (Exception e) {
                 e.printStackTrace();
             }
