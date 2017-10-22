@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -167,7 +169,10 @@ public class Utilities {
 
     }
 
-public class InsertToDB implements Runnable{
+    /************************************************************************************
+     * A thread that will insert records to the SQLite database
+     **********************************************************************************/
+    public class InsertToDB implements Runnable{
         private ImageRecorderDatabase mDbhelper;
         private List<ImageRecordDBRecord> mRecords;
         public InsertToDB(ImageRecorderDatabase dbHelper,List<ImageRecordDBRecord> records){
@@ -192,17 +197,17 @@ public class InsertToDB implements Runnable{
            values.clear();
 
         }
-       //  //Start the Syncing Service.
+       //close the database.
         db.close();
-
+        //Start the Syncing Service.
         startSyncing();
 
     }
 
     }
-    /*
+    /**********************************
     This method starts the Sync Service.
-     */
+     *************************************/
     public void startSyncing(){
         Intent intent = new Intent(mContext,SyncerService.class);
         mContext.startService(intent);
@@ -214,10 +219,13 @@ public class InsertToDB implements Runnable{
      * and then redirects to the mainactivity....
      **********************************************************/
     public void uploadPictures(ArrayList<String> _images ){
+        DatabaseReference databaseReference;
         final Context context = mContext;
         UploadTask upload = null;
         StorageReference filePath = null;
         StorageReference storage = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
+
         final ArrayList<Uri> successUploads = new ArrayList<Uri>();
         ArrayList<String> selectedImages=_images;
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -226,7 +234,10 @@ public class InsertToDB implements Runnable{
             Uri uploadImage = Uri.fromFile(new File(s));
             filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
             String fileName = new File(s).getName();
-            upload = filePath.putFile(uploadImage);
+
+                upload = filePath.putFile(uploadImage);
+                String ImageUploadId = databaseReference.push().getKey();
+                databaseReference.child(ImageUploadId).setValue(fileName);
 
 
         }
@@ -242,7 +253,9 @@ public class InsertToDB implements Runnable{
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 //
+
                 String fileName = downloadUrl.getLastPathSegment().toString();
+                Log.i(TAG,"Uploaded FILE:"+fileName);
                 ImageRecordDBRecord aRecord = new ImageRecordDBRecord();
                 aRecord.setFileName(fileName);
                 aRecord.setIsUploaded(true);
@@ -263,11 +276,13 @@ public class InsertToDB implements Runnable{
     /*********************
      *
      * This method redirects from one activity to the other..
-     * @param imagesUploaded
-     * @param imagesRequested
-     * @param FromClass
-     * @param ToClass
-     */
+     * @param imagesUploaded -represents number of images uploaded
+     * @param imagesRequested - represents total number of images that were requested to be uploaded
+     * @param FromClass - the context of the class that request for upload.
+     * @param ToClass   - the class that will be redirected to once the upload process is complete.
+     *                  THIS METHOD NEEDS WORK!
+     *                  LINE:  ((Activity)FromClass).finish(); THROIWS AN ERROR!!
+     ******************************************/
     public void redirect(int imagesUploaded, int imagesRequested,Activity FromClass,Class ToClass){
         if(imagesRequested==imagesUploaded){
             Toast.makeText(mContext,"All images were uploaded!",Toast.LENGTH_LONG).show();
@@ -299,9 +314,8 @@ public class InsertToDB implements Runnable{
             record.setDate(date);
             record.setIsUploaded(isUploaded);
             mRecord.add(record);
-
         }
-        //return records;
+
     }
 
 
