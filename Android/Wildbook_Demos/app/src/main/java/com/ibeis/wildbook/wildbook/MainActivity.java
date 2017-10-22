@@ -10,6 +10,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -54,9 +56,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected static String storagePath="Photos/";
     protected static String databasePath="Photos/";
     private GoogleApiClient mGoogleApiClient;
+    public static final int SYNC_COMPLETE=1;
+    public static final int SYNC_STARTED=2;
+    public static Handler handler;
+    public Handler mUiHandler = new Handler(){
+       @Override
+        public void handleMessage(Message message){
+           switch(message.what){
+               case SYNC_COMPLETE:
+                   Log.i(TAG,"SYNC_COMPLETED");
+                   mSync.setEnabled(true);
+                   break;
+               case SYNC_STARTED:
+                   Log.i(TAG,"SYNC_STARTED");
+                   mSync.setEnabled(false);
+           }
+       }
+    } ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        handler = mUiHandler;
         Log.i(TAG,"MainActivity onCreate");
         super.onCreate(savedInstanceState);
        // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -124,7 +144,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     */@Override
     public void onResume(){
         super.onResume();
-
+        if(SyncerService.IsRunning){
+            Log.i(TAG,"Service is running");
+            mSync.setEnabled(false);
+        }
+        else{
+            Log.i(TAG,"Service is not running");
+            mSync.setEnabled(true);
+        }
         //selectedImages = new ArrayList<String>();
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
@@ -167,15 +194,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     displayToasts(INTERNET_NOT_CONNECTED);
                 break;
             case R.id.SingOut:
-               /* mGoogleApiClient.disconnect();
-                mAuth.getInstance().signOut();
-                finish();
-                startActivity(new Intent(getApplicationContext(),Login.class));*/
-
-               signOut();
+                signOut();
                 break;
             case R.id.syncBtn:
-                new Utilities(this).startSyncing();
+                if(!SyncerService.IsRunning) {
+                    mSync.setEnabled(false);
+                    new Utilities(this).startSyncing();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Service is already Running!!",Toast.LENGTH_SHORT).show();
+                }
                 break;
 
         }
@@ -203,9 +231,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //startActivity(new Intent(MainActivity.this,Login.class));
     }
 
-    /*
+    /***********************************************************
     *fetch the pictures from Firebase.
-     */
+     ***********************************************************/
     public void retrieveFirebaseData(){
 
     }

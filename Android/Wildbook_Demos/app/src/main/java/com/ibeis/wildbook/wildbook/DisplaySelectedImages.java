@@ -96,7 +96,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     Toast.makeText(getApplicationContext(),imagesRequested-imagesUploaded+"were uploaded!",Toast.LENGTH_LONG).show();
                 }
         finish();
-        startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
     }
 

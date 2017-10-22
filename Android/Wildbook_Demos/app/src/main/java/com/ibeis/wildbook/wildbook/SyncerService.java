@@ -6,8 +6,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -15,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -31,15 +38,33 @@ import static java.lang.Thread.sleep;
  ************************************************************************************/
 
 public class SyncerService extends IntentService {
+    Handler serviceHandler = new Handler(){
+
+    };
+
     private static final String TAG = "SyncerService";
     private SQLiteCursor mSQLiteCursor;
     private ImageRecorderDatabase mDBHelper;
+    private Button syncButton;
    public SyncerService(){
        super(TAG);
    }
+   public static boolean IsRunning=false; //Field that helps determine is the service is running....
    //The service also has to be syncronized.... Uff!!
     @Override
     public void onHandleIntent(Intent intent){
+        Bundle extras=intent.getExtras();
+        Messenger msngr = (Messenger)extras.get("Messenger");
+        Message msg = Message.obtain();
+        msg.what=MainActivity.SYNC_STARTED;
+        try {
+            msngr.send(msg);
+        }
+        catch (android.os.RemoteException e1) {
+            Log.w(getClass().getName(), "Exception sending message", e1);
+        }
+
+        IsRunning=true;
         int count=0;
         mDBHelper= new ImageRecorderDatabase(this);
         mDBHelper.getReadableDatabase();
@@ -59,14 +84,19 @@ public class SyncerService extends IntentService {
                 StorageReference storage;
                 FirebaseAuth auth;
                 DatabaseReference databaseReference;
+                databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
                 StorageReference filePath = null;
                 UploadTask upload = null;
                 auth = FirebaseAuth.getInstance();
                 FirebaseUser user = auth.getCurrentUser();
                 storage = FirebaseStorage.getInstance().getReference();
-                Uri uploadImage = Uri.fromFile(new File(filename));
+                File file = new File(filename);
+                Uri uploadImage = Uri.fromFile(file);
+
                 filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
                 upload = filePath.putFile(uploadImage);
+                String ImageUploadId = databaseReference.push().getKey();
+                databaseReference.child(ImageUploadId).setValue(file.getName());
                 upload.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -112,10 +142,27 @@ public class SyncerService extends IntentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
+                    new String[]{"0"},null,null,null);
+            c.moveToFirst();
 
         }
         c.close();
         mDBHelper.close();
         Log.i(TAG,"Service Stopping");
+
+
+        msngr = (Messenger)extras.get("Messenger");
+        Message msg1 = Message.obtain();
+        msg1.what=MainActivity.SYNC_COMPLETE;
+        try {
+            msngr.send(msg1);
+        }
+        catch (android.os.RemoteException e1) {
+            Log.w(getClass().getName(), "Exception sending message", e1);
+        }
+        // h = new Handler(Looper.getMainLooper());
+        Log.i(TAG,"IsRunning is now set to False");
+        IsRunning=false;
     }
 }

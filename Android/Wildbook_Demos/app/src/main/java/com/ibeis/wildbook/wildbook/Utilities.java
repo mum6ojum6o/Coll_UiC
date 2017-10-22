@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Messenger;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -207,9 +208,13 @@ public class Utilities {
     }
     /**********************************
     This method starts the Sync Service.
+     @buttonId refers to the Id of the button that initiates the sync. value is -1 if service is started internally
      *************************************/
     public void startSyncing(){
         Intent intent = new Intent(mContext,SyncerService.class);
+        intent.putExtra("SyncStarted",MainActivity.SYNC_STARTED);
+        intent.putExtra("SyncComplete",MainActivity.SYNC_COMPLETE);
+        intent.putExtra("Messenger",new Messenger(MainActivity.handler));
         mContext.startService(intent);
 
     }
