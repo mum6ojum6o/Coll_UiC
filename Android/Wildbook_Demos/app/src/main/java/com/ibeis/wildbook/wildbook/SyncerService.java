@@ -1,7 +1,10 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
@@ -12,6 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -79,6 +83,7 @@ public class SyncerService extends IntentService {
         while(!c.isAfterLast()) {
             Log.i(TAG,"Checking NetworkAvailability!!");
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
+                sendNotification("Sync Started!");
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
                 Log.i(TAG,"filename Uploading..."+filename);
                 StorageReference storage;
@@ -164,5 +169,36 @@ public class SyncerService extends IntentService {
         // h = new Handler(Looper.getMainLooper());
         Log.i(TAG,"IsRunning is now set to False");
         IsRunning=false;
+        sendNotification("Sync Completed!");
     }
+
+    private void sendNotification(String msg) {
+        NotificationManager mNotificationManager = (NotificationManager)
+                this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder;
+        PendingIntent contentIntent;
+        mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setContentTitle("Wildbook")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(msg))
+                        .setContentText(msg);
+        if(msg.equals("Sync Started!")) {
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, MainActivity.class), 0);
+            mBuilder.setSmallIcon(R.drawable.notification_sync);
+            //mBuilder.setContentIntent(contentIntent);
+
+        }
+        else{
+            contentIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, DisplayImagesUsingRecyclerView.class), 0);
+            mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
+            /*mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(2, mBuilder.build());*/
+        }
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
 }

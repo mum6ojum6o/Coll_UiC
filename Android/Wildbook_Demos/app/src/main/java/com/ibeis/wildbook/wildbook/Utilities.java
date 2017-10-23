@@ -201,7 +201,9 @@ public class Utilities {
        //close the database.
         db.close();
         //Start the Syncing Service.
-        startSyncing();
+        if(!SyncerService.IsRunning) {
+            startSyncing();
+        }
 
     }
 

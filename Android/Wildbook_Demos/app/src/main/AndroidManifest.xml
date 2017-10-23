@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -16,16 +18,16 @@
         android:roundIcon="@mipmap/wildbook2"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".Login"
-            >
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"
-                    />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:launchMode="singleInstance"/>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".GoogleSignInActivity"
             android:noHistory="true" />
@@ -33,10 +35,14 @@
             android:name=".DisplaySelectedImages"
             android:noHistory="false" />
         <activity android:name=".DisplayImagesUsingRecyclerView" />
-        <activity android:name=".CameraMainActivity"
-            android:noHistory="true"/>
-        <activity android:name=".UploadCamPics"></activity>
+        <activity
+            android:name=".CameraMainActivity"
+            android:noHistory="true" />
+        <activity android:name=".UploadCamPics" />
+
         <service android:name=".SyncerService" />
+
+        <activity android:name=".ImageViewActivity" />
     </application>
 
 </manifest>

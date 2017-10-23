@@ -12,6 +12,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -73,11 +75,20 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
         progressDialog.setMessage("Loading Images.");
 
         // Showing progress dialog.
-        progressDialog.show();
+
 
         // Setting up Firebase image upload folder path in databaseReference.
         // The path is already defined in MainActivity.
-            databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
+
+
+
+
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        progressDialog.show();
+        databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -123,6 +134,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                     Toast.makeText(getApplicationContext(),"No Contributions",Toast.LENGTH_LONG).show();
                 }
                 progressDialog.dismiss();
+
                 //Log.i(TAG,"Download completed!!!imagesList.SIZE()="+imagesList.size());
 
             }
@@ -132,9 +144,6 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
 
 }
