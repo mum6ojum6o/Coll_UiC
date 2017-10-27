@@ -19,8 +19,9 @@ public class ImageViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Bundle bundle = getIntent().getExtras();
         setContentView(R.layout.activity_imageview_activity);
+        //Bundle bundle = getIntent().getExtras();
+
         Log.i("IMAGEVIEWACTIVITY", getIntent().getStringExtra("POS"));
         Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
         ImageView imageView = new ImageView(getApplicationContext());
@@ -32,13 +33,18 @@ public class ImageViewActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
         //setContentView(imageView);
-        Glide
-                .with(ImageViewActivity.this)
-                .load(uri)// the uri you got from Firebase
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                . override(width,height)
-                .centerCrop()
-                .crossFade()
-                .into(imgView);
+        if(!getIntent().getStringExtra("Adapter").equals("DispPic")) {
+            Glide
+                    .with(ImageViewActivity.this)
+                    .load(uri)// the uri you got from Firebase
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter()
+                    .crossFade()
+                    .into(imgView);
+        }
+        else{
+            imgView.setImageURI(uri);
+        }
+
     }
 }

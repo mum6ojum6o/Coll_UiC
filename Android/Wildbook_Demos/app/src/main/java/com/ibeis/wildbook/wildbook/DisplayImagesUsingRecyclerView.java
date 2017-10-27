@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import android.os.Handler;
 
@@ -86,6 +87,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
     }
     @Override
     public void onResume(){
+
         super.onResume();
         progressDialog.show();
         databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
@@ -100,23 +102,25 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                         long recordCount = snapshot.getChildrenCount();
 
                         String storagePath = MainActivity.storagePath + "/" + postSnapshot.getValue();
+
                         recordsRead++;
 
                         Log.i(TAG, "snapshot_ChildCount" + objeCount);
                         storageReference = FirebaseStorage.getInstance().getReference().child(storagePath);
+
+
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-
                                 imagesList.add(uri);
                                 Log.i(TAG, "Successfully Downloaded Uri!!!Size" + imagesList.size());
                                 if ((long) imagesList.size() == objeCount) {
                                     Log.i(TAG, "ObjeCount=" + objeCount);
+                                    Collections.reverse(imagesList);
                                     adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
                                     recyclerView.setAdapter(adapter);
                                     // Hiding the progress dialog.
                                     progressDialog.dismiss();
-
                                 }
 
                             }

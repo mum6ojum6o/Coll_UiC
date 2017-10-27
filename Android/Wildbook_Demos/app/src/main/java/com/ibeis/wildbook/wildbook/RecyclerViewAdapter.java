@@ -22,6 +22,7 @@ import android.widget.TextView;
         import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -58,6 +59,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
        // holder.imageNameTextView.setText(UploadInfo.getImageName());
             Log.i("RecyclerViewAdapter","ON_BIND_VIEW_HOLDER!!!");
         //Loading image from Glide library.
+
+
         Glide.with(context).load(UploadInfo).into(holder.imageView);
     }
 
@@ -88,6 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
             intent.putExtra("POS",uri.toString());
+            intent.putExtra("Adapter","RecyclerView");
             context.startActivity(intent);
            /* Glide
                     .with(mContext)

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -22,6 +23,7 @@ import android.location.Location;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -36,13 +38,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,14 +65,24 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class CameraMainActivity extends AppCompatActivity implements  View.OnClickListener{
+import static java.lang.System.load;
 
+public class CameraMainActivity extends AppCompatActivity implements  View.OnClickListener{
+    public static String SWAP="Rear";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
+    }
+    /*This will change based on the location of the device's sensor*/
+    private static final SparseIntArray ORIENTATIONSFRONT = new SparseIntArray();
+    static {
+        ORIENTATIONSFRONT.append(Surface.ROTATION_0, 270);
+        ORIENTATIONSFRONT.append(Surface.ROTATION_270, 180);
+        ORIENTATIONSFRONT.append(Surface.ROTATION_180, 90);
+        ORIENTATIONSFRONT.append(Surface.ROTATION_90, 0);
     }
     protected static final int STORAGE_PERMISSION_REQUEST=99;
 
@@ -78,7 +93,13 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                 case UPDATE_PIC_PREVIEW:
                     getGeoTagData(mImageFile.getAbsolutePath());
                     mPicPreview.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
+
+
                     mCapturedPics.add(mImageFile.getAbsoluteFile().toString());
+                    Intent mediaScanIntent = new Intent(
+                            Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    mediaScanIntent.setData(Uri.fromFile(mImageFile)); // may cause lags...
+                    getApplicationContext().sendBroadcast(mediaScanIntent);
                     //mPicPreview.invalidate();
                     break;
             }
@@ -91,11 +112,15 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     private TextureView mTextureView;
     private RecyclerView mRecycleView;
     private String currentPreview;
+    private ImageButton mImageButton;
+    private CameraManager mCameraManager;
+    private List<Uri> mFileUris;
     private TextureView.SurfaceTextureListener mSurfaceTextureListener =
             new TextureView.SurfaceTextureListener() {
                 @Override
                 public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                     setupCamera(width, height);
+
                     transformImage(width, height);
                     openCamera();
                 }
@@ -125,14 +150,22 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         mPicPreview = (ImageView)findViewById(R.id.picPreview);
         mCaptureButton.setOnClickListener(this);
         mRecycleView = (RecyclerView) findViewById(R.id.galleryRecyclerView);
+        mImageButton =(ImageButton) findViewById(R.id.imageButton);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecycleView.setLayoutManager(gridLayoutManager);
-        RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
-        mRecycleView.setAdapter(imageAdapter);
+        //RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
+        //List<File> files = Arrays.asList(Uri.fromFile(mImageFolder.listFiles()));
+        mFileUris = new ArrayList<Uri>();
+        for(File f: mImageFolder.listFiles()){
+            mFileUris.add(Uri.fromFile(f));
+        }
+        //removing the picture preview as it may confuse the user....
+        /*RecyclerView.Adapter imageAdapter = new DispPicAdapter(getApplicationContext(),mFileUris,null);
+        mRecycleView.setAdapter(imageAdapter);*/
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
+        mImageButton.setOnClickListener(this);
         mPicPreview.setOnClickListener(this);
 
 
@@ -172,6 +205,24 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                 i.putExtra("Files",mCapturedPics);
                 startActivity(i);
                 break;
+            case R.id.imageButton:
+                if(SWAP.equals("Front")) {
+                    SWAP = "Rear";
+                }
+                else{
+                    SWAP="Front";
+                }
+                closeCamera();
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int width = size.x;
+                int height = size.y;
+                setupCamera(width, height);
+
+                //transformImage(width, height);
+                openCamera();
+                break;
         }
     }
     @Override
@@ -184,36 +235,76 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     private String mCameraId;
     private void setupCamera(int width, int height) {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-        try {
-            for(String cameraId : cameraManager.getCameraIdList()) {
-                CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
-                if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) ==
-                        CameraCharacteristics.LENS_FACING_FRONT){
-                    continue;
-                }
-                StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                Size largestImageSize = Collections.max(
-                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-                        new Comparator<Size>() {
-                            @Override
-                            public int compare(Size lhs, Size rhs) {
-                                return Long.signum(lhs.getWidth() * lhs.getHeight() -
-                                        rhs.getWidth() * rhs.getHeight());
+        mCameraManager =cameraManager;
+        if(SWAP.equals("Front")) {
+            try {
+                for (String cameraId : cameraManager.getCameraIdList()) {
+                    CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+                    if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) !=
+                            CameraCharacteristics.LENS_FACING_FRONT) {
+                        continue;
+                    }
+                    StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                    Size largestImageSize = Collections.max(
+                            Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                            new Comparator<Size>() {
+                                @Override
+                                public int compare(Size lhs, Size rhs) {
+                                    return Long.signum(lhs.getWidth() * lhs.getHeight() -
+                                            rhs.getWidth() * rhs.getHeight());
+                                }
                             }
-                        }
-                );
-                mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
-                        largestImageSize.getHeight(),
-                        ImageFormat.JPEG,
-                        1);
-                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener,
-                        mBackgroundHandler);
-                mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
-                mCameraId = cameraId;
+                    );
+                    mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
+                            largestImageSize.getHeight(),
+                            ImageFormat.JPEG,
+                            1);
+                    mImageReader.setOnImageAvailableListener(mOnImageAvailableListener,
+                            mBackgroundHandler);
+                    mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
+                    mCameraId = cameraId;
+                }
                 return;
+
+
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
+        }
+        else{
+            try {
+
+                for (String cameraId : cameraManager.getCameraIdList()) {
+                    CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+                    if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) ==
+                            CameraCharacteristics.LENS_FACING_FRONT) {
+                        continue;
+                    }
+                    StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                    Size largestImageSize = Collections.max(
+                            Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                            new Comparator<Size>() {
+                                @Override
+                                public int compare(Size lhs, Size rhs) {
+                                    return Long.signum(lhs.getWidth() * lhs.getHeight() -
+                                            rhs.getWidth() * rhs.getHeight());
+                                }
+                            }
+                    );
+                    mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
+                            largestImageSize.getHeight(),
+                            ImageFormat.JPEG,
+                            1);
+                    mImageReader.setOnImageAvailableListener(mOnImageAvailableListener,
+                            mBackgroundHandler);
+                    mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
+                    mCameraId = cameraId;
+                    return;
+                }
+
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
     private Size getPreferredPreviewSize(Size[] mapSizes, int width, int height) {
@@ -459,13 +550,12 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     }
 
     public void takePhoto() {
-        /*try {
-            //mImageFile = createImageFileN();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }*/
-        lockFocus();
+        if(SWAP.equals("Rear")) {
+            lockFocus();
+        }
+        else{
+            captureStillImage();
+        }
     }
 
 
@@ -525,9 +615,15 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             CaptureRequest.Builder captureStillBuilder =
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureStillBuilder.addTarget(mImageReader.getSurface());
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
-                    ORIENTATIONS.get(rotation));
+            int rotation = getWindowManager().getDefaultDisplay().getRotation(); CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
+            if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT){
+                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
+                        ORIENTATIONSFRONT.get(rotation));
+            }
+            else {
+                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
+                        ORIENTATIONS.get(rotation));
+            }
             CameraCaptureSession.CaptureCallback captureCallback =
                     new CameraCaptureSession.CaptureCallback() {
                         @Override

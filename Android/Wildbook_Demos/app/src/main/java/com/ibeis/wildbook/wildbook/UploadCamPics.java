@@ -66,6 +66,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new LinearLayoutManager(UploadCamPics.this));
         adapter = new DispPicAdapter(getApplicationContext(), imagesList,imagesNames);
+        //adapter = new RecyclerViewAdapter(getApplicationContext(),imagesList);
         recyclerView.setAdapter(adapter);
         mUploadBtn.setOnClickListener(this);
         mDiscardBtn.setOnClickListener(this);
