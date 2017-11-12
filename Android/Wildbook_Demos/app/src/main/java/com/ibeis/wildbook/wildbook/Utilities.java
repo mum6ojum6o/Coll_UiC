@@ -16,6 +16,13 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +38,9 @@ import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
@@ -69,6 +78,8 @@ public class Utilities {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        Log.i("Utilities","isNetworkAvailable()"+(activeNetworkInfo != null
+                && activeNetworkInfo.isConnected()));
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
@@ -214,10 +225,16 @@ public class Utilities {
      *************************************/
     public void startSyncing(){
         Intent intent = new Intent(mContext,SyncerService.class);
-        intent.putExtra("SyncStarted",MainActivity.SYNC_STARTED);
-        intent.putExtra("SyncComplete",MainActivity.SYNC_COMPLETE);
-        intent.putExtra("Messenger",new Messenger(MainActivity.handler));
+        if(MainActivity.handler!=null) {
+            intent.putExtra("SyncStarted", MainActivity.SYNC_STARTED);
+            intent.putExtra("SyncComplete", MainActivity.SYNC_COMPLETE);
+            Log.i("Utilities", "Mainactivity.handler" + (MainActivity.handler == null) + " MainActivity.SYNC_STARTED=" +
+                    MainActivity.SYNC_STARTED + "MainActivity.SYNC_COMPLETE" + MainActivity.SYNC_COMPLETE);
+            intent.putExtra("Messenger", new Messenger(MainActivity.handler));
+        }
         mContext.startService(intent);
+        Toast.makeText(mContext,"Service will be started!!",Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -226,6 +243,13 @@ public class Utilities {
      * and then redirects to the mainactivity....
      **********************************************************/
     public void uploadPictures(ArrayList<String> _images ){
+        ArrayList<ImageModel> imageModels=new ArrayList<ImageModel>();
+        for(String image:_images){
+            ImageModel anImage=new ImageModel(image);
+            imageModels.add(anImage);
+            //createPostRequest(image);
+        }
+
         DatabaseReference databaseReference;
         final Context context = mContext;
         UploadTask upload = null;
@@ -328,6 +352,37 @@ public class Utilities {
 
     public void setmRecord(List<ImageRecordDBRecord> records){
         this.mRecord = records;
+    }
+
+    public void createPostRequest(String image){
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String API_URL="http://tobedecided.com/wildbook/";
+        final ImageModel imageModel = new ImageModel(image);
+        StringRequest request = new StringRequest(Request.Method.POST,API_URL, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response){
+                Log.i("Recieving Response",response);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                Log.i("Receiving Response ERROR!!", error.toString());
+            }
+        }){
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+                params.put("image",imageModel.mImage.toString());
+                params.put("long",Double.toString(imageModel.mLongitude));
+                params.put("lat",Double.toString(imageModel.mLatitude));
+                return params;
+            }
+        };
+        try{String rq=request.getBody().toString();
+            Log.i("Creating Requiest",rq);}
+        catch(AuthFailureError r){}
+
+        queue.add(request);
     }
 
 }

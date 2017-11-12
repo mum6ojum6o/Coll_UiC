@@ -6,4 +6,6 @@
     <color name="background">#ffffff</color>
     <color name="actionbar">#6ba8ce</color>
     <color name="font">#000000</color>
+   <color name="red">#db2f23</color>
+    <color name="green">#078e10</color>
 </resources>

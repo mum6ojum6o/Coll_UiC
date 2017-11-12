@@ -136,6 +136,12 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                 }
             };
     private Location mLocation;
+    /* Warning: Please continue using the FusedLocationProviderApi class and don't migrate to the
+    FusedLocationProviderClient class until Google Play services version 12.0.0 is available, which
+     is expected to ship in early 2018. Using the FusedLocationProviderClient before version 12.0.0
+      causes the client app to crash when Google Play services is updated on the device.
+      We apologize for any inconvenience this may have caused.
+      Source:- developer.android.com */
     private FusedLocationProviderClient mFusedLocationClient;
     private Button mCaptureButton;
     private static File mLatestFile;

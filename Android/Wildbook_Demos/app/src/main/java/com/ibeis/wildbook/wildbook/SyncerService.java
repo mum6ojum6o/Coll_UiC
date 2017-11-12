@@ -54,19 +54,11 @@ public class SyncerService extends IntentService {
        super(TAG);
    }
    public static boolean IsRunning=false; //Field that helps determine is the service is running....
-   //The service also has to be syncronized.... Uff!!
+   //The service also has to be syncronized.
     @Override
     public void onHandleIntent(Intent intent){
         Bundle extras=intent.getExtras();
-        Messenger msngr = (Messenger)extras.get("Messenger");
-        Message msg = Message.obtain();
-        msg.what=MainActivity.SYNC_STARTED;
-        try {
-            msngr.send(msg);
-        }
-        catch (android.os.RemoteException e1) {
-            Log.w(getClass().getName(), "Exception sending message", e1);
-        }
+
 
         IsRunning=true;
         int count=0;
@@ -78,10 +70,24 @@ public class SyncerService extends IntentService {
         Cursor c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
                 new String[]{"0"},null,null,null);
         c.moveToFirst();
+        Messenger msngr;
+
         //String groupBy
         final ArrayList<Uri> successUploads = new ArrayList<Uri>();
-        while(!c.isAfterLast()) {
-            Log.i(TAG,"Checking NetworkAvailability!!");
+        if(new Utilities(getApplicationContext()).isNetworkAvailable()) {
+
+            if(extras!=null && extras.get("Messenger")!=null) {
+                msngr = (Messenger) extras.get("Messenger");
+                Message msg = Message.obtain();
+                msg.what = MainActivity.SYNC_STARTED;
+                try {
+                    msngr.send(msg);
+                } catch (android.os.RemoteException e1) {
+                    Log.w(getClass().getName(), "Exception sending message", e1);
+                }
+            }
+            Log.i(TAG, "Checking NetworkAvailability!!");
+        }
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
                 sendNotification("Sync Started!");
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
@@ -89,7 +95,6 @@ public class SyncerService extends IntentService {
                 StorageReference storage;
                 FirebaseAuth auth;
                 DatabaseReference databaseReference;
-                databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
                 StorageReference filePath = null;
                 UploadTask upload = null;
                 auth = FirebaseAuth.getInstance();
@@ -97,7 +102,7 @@ public class SyncerService extends IntentService {
                 storage = FirebaseStorage.getInstance().getReference();
                 File file = new File(filename);
                 Uri uploadImage = Uri.fromFile(file);
-
+                databaseReference = FirebaseDatabase.getInstance().getReference("Photos/"+auth.getCurrentUser().getUid());
                 filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
                 upload = filePath.putFile(uploadImage);
                 String ImageUploadId = databaseReference.push().getKey();
@@ -142,34 +147,34 @@ public class SyncerService extends IntentService {
                 c.moveToFirst();
             }
 
-            try {
-                sleep(3000); ///sleep for 5 mins?
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
-                    new String[]{"0"},null,null,null);
-            c.moveToFirst();
 
-        }
         c.close();
         mDBHelper.close();
         Log.i(TAG,"Service Stopping");
 
 
-        msngr = (Messenger)extras.get("Messenger");
-        Message msg1 = Message.obtain();
-        msg1.what=MainActivity.SYNC_COMPLETE;
-        try {
-            msngr.send(msg1);
+
+        if(extras!=null && extras.get("Messenger")!=null) {
+            msngr = (Messenger) extras.get("Messenger");
+            Message msg1 = Message.obtain();
+            msg1.what = MainActivity.SYNC_COMPLETE;
+            if (msg1 != null) {
+                try {
+                    msngr.send(msg1);
+                } catch (android.os.RemoteException e1) {
+                    Log.w(getClass().getName(), "Exception sending message", e1);
+                }
+            }
         }
-        catch (android.os.RemoteException e1) {
-            Log.w(getClass().getName(), "Exception sending message", e1);
-        }
-        // h = new Handler(Looper.getMainLooper());
-        Log.i(TAG,"IsRunning is now set to False");
-        IsRunning=false;
-        sendNotification("Sync Completed!");
+
+            // h = new Handler(Looper.getMainLooper());
+            Log.i(TAG, "IsRunning is now set to False");
+            IsRunning = false;
+            //if no records were uploaded... do not send any notification...
+            if(count>0)
+                sendNotification("Sync Completed!");
+
+
     }
 
     private void sendNotification(String msg) {
@@ -187,15 +192,14 @@ public class SyncerService extends IntentService {
             contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, MainActivity.class), 0);
             mBuilder.setSmallIcon(R.drawable.notification_sync);
-            //mBuilder.setContentIntent(contentIntent);
+
 
         }
         else{
             contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, DisplayImagesUsingRecyclerView.class), 0);
             mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
-            /*mBuilder.setContentIntent(contentIntent);
-            mNotificationManager.notify(2, mBuilder.build());*/
+
         }
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(1, mBuilder.build());

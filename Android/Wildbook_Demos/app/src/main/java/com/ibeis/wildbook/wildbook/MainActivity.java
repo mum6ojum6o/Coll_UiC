@@ -1,18 +1,24 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,16 +41,18 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.File;
+import com.google.firebase.auth.GoogleAuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import static android.Manifest.permission.CAMERA;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
+    public static View LAYOUT;
+    public static int WARNING,POS_FEEDBACK;
+    protected static final int ONLINE=1;
+    protected static final int OFFLINE=0;
     protected static final int IMAGE_GALLERY_REQUEST = 20;
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
@@ -58,7 +67,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GoogleApiClient mGoogleApiClient;
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
+    public static boolean MAIN_ACTIVITY_IS_RUNNING;
     public static Handler handler;
+    private GoogleSignInAccount googleSignInAccount;
     public Handler mUiHandler = new Handler(){
        @Override
         public void handleMessage(Message message){
@@ -76,11 +87,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        MAIN_ACTIVITY_IS_RUNNING=true;
         handler = mUiHandler;
+        WiFiScanner scanner = new WiFiScanner();
+        IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
+        getApplicationContext().registerReceiver(scanner,filter);
         Log.i(TAG,"MainActivity onCreate");
         super.onCreate(savedInstanceState);
        // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        setContentView(R.layout.activity_main);
+        Log.i("Logging window","Orientation is"+getResources().getConfiguration().orientation);
+
+            setContentView(R.layout.activity_main);
+            LAYOUT=findViewById(R.id.mainLinearLayout);
         //mAuth = FirebaseAuth.getInstance();
         mAuth=FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -102,9 +121,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             startActivity(new Intent(this,Login.class));
         }
-
+        WARNING=getColor(R.color.red);
+        POS_FEEDBACK=getColor(R.color.green);
         UserName=(TextView)findViewById(R.id.username);
-        UserName.setText(firebaseUser.getEmail()+"!");
+        //UserName.setText(firebaseUser.getEmail()+"!");
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
         mSync = (Button)findViewById(R.id.syncBtn);
@@ -115,18 +135,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
         mSync.setOnClickListener(this);
+       Log.i("Login",Auth.GOOGLE_SIGN_IN_API.getName());
+        mGoogleApiClient.connect();
+
 
     }
-    /*@Override
-    public void onStart(){
+
+    @Override
+    public void onStart() {
+
         super.onStart();
+        MAIN_ACTIVITY_IS_RUNNING=true;
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
+            //mAuth = FirebaseAuth.getInstance();
+            googleSignInAccount = result.getSignInAccount();
+            Log.i("SilentLogin",googleSignInAccount.getEmail());
+            UserName.setText(googleSignInAccount.getEmail()+"!");
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
@@ -136,14 +165,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
                     //hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
+                    googleSignInAccount = googleSignInResult.getSignInAccount();
+                    Log.i("SilentLogin",googleSignInAccount.getEmail());
+                    UserName.setText(googleSignInAccount.getEmail()+"!");
                 }
             });
         }
     }
-    */@Override
+    @Override
+    public void onStop(){
+        super.onStop();
+        MAIN_ACTIVITY_IS_RUNNING=false;
+    }
+    @Override
     public void onResume(){
+
         super.onResume();
+        MAIN_ACTIVITY_IS_RUNNING=true;
         if(SyncerService.IsRunning){
             Log.i(TAG,"Service is running");
             mSync.setEnabled(false);
@@ -152,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.i(TAG,"Service is not running");
             mSync.setEnabled(true);
         }
+        //UserName.setText(googleSignInAccount.getEmail()+"!");
         //selectedImages = new ArrayList<String>();
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
@@ -190,8 +229,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.historyBtn:
                 if(new Utilities(this).isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
-                else
-                    displayToasts(INTERNET_NOT_CONNECTED);
+                else {
+                    MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
+                    //displayToasts(INTERNET_NOT_CONNECTED);
+                }
                 break;
             case R.id.SingOut:
                 signOut();
@@ -228,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
-        //startActivity(new Intent(MainActivity.this,Login.class));
+
     }
 
     /***********************************************************
@@ -350,18 +391,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         Log.i(TAG,"OnResume");
         selectedImages=null;
+        MAIN_ACTIVITY_IS_RUNNING=false;
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-        } else {
-            //Nothing.
-        }
-    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
@@ -369,6 +402,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         startActivity(new Intent(MainActivity.this,Login.class));
     }
+public static void displayOnlineStatus(int status){
+    Snackbar snack=null;
+    View snackView=null;
+        switch(status){
+            case OFFLINE:
+                snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
+                 snackView = snack.getView();
+                snackView.setBackgroundColor(WARNING);
+                snack.show();
+                break;
+            case ONLINE:
+                snack=Snackbar.make(LAYOUT,R.string.online,Snackbar.LENGTH_LONG);
+                 snackView = snack.getView();
+                snackView.setBackgroundColor(POS_FEEDBACK);
+                snack.show();
+                break;
+        }
 
+}
 
 }

@@ -10,9 +10,9 @@
         <item>Stenella attenuata</item>
         <item>Tursiops truncatus</item>
     </string-array>
-    <string name="welcomeString">Welcome To WildBook!</string>
+    <string name="welcomeString">Welcome To Wildbook!</string>
     <string name="reportEncounterString"> Report Encounter </string>
-    <string name="uploadPicsString">Upload Pictures From the Gallery</string>
+    <string name="uploadPicsString">Upload Pictures From Gallery</string>
     <string name="signoutString">Sign Out</string>
     <string name="uploadString">Upload</string>
     <string name="discardString">Discard</string>
@@ -26,10 +26,12 @@
     <string name="wifiString">Wifi</string>
     <string name="mobiledataString">Mobile Data</string>
     <string name="anyString">Any</string>
+    <string name="online">You are online!</string>
     <string name="connectivityLossMessageString">Since you are no longer connected to the internet,
         the selected images will be uploaded automatically once your device connectivity resumes.
         Which type of connection would you prefer for image syncing?
     </string>
+    <string name="offline">You are offline</string>
     <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
 
 </resources>

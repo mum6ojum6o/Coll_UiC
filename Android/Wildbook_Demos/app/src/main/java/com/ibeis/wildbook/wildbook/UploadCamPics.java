@@ -81,6 +81,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());
+
                 }
                 else{
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);

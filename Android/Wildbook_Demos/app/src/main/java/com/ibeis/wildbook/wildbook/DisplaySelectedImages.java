@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +60,9 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                 if (new Utilities(this).isNetworkAvailable()) { //check for network availability
                     Utilities util = new Utilities(getApplicationContext(),selectedImages,new ImageRecorderDatabase(this));
                     util.uploadPictures(selectedImages);
+
                     redirect(selectedImages.size(),selectedImages.size());
+
                 }
                 else{//no connectivity
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
@@ -78,6 +82,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));
+                finish();
         }
     }
     /*

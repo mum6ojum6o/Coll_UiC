@@ -74,6 +74,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         // more understanding on OptionalPendingResult required....
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
+            Log.i(TAG,"Result is Done!!");
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
@@ -89,6 +90,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
                     //hideProgressDialog();
+                    Log.i(TAG,"Result Callback in else!!");
                     handleSignInResult(googleSignInResult);
                 }
             });
@@ -99,11 +101,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
+            Log.i(TAG,"Result is Success!!");
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
            firebaseAuthWithGoogle(acct);
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
         } else {
+            Log.i(TAG,"Result is NOT Success!!");
             //Nothing.
         }
     }
@@ -123,46 +127,53 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
-                updateUI(null);
+                Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
+                    //updateUI(null);
                 // [END_EXCLUDE]
             }
         }
     }
     public void signIn(){
+        Log.i(TAG,"Signing In!!");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent,RC_SIGN_IN);
     }
         // [START auth_with_google]
         private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-            Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-            // [START_EXCLUDE silent]
-           progressDialog.show();
-            // [END_EXCLUDE]
+            if(new Utilities(getApplicationContext()).isNetworkAvailable()) {
+                Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+                // [START_EXCLUDE silent]
+                progressDialog.show();
+                // [END_EXCLUDE]
 
-            AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-            mAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInWithCredential:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Log.i(TAG,"Login Username:"+user.getEmail());
-                                updateUI(user);
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                Toast.makeText(Login.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                                updateUI(null);
+                AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "signInWithCredential:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Log.i(TAG, "Login Username:" + user.getEmail());
+                                    updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                    Toast.makeText(Login.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    updateUI(null);
+                                }
+
+                                // [START_EXCLUDE]
+                                progressDialog.dismiss();
+                                // [END_EXCLUDE]
                             }
-
-                            // [START_EXCLUDE]
-                           progressDialog.dismiss();
-                            // [END_EXCLUDE]
-                        }
-                    });
+                        });
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
+            }
 
         }
     private void updateUI(FirebaseUser user) {

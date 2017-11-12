@@ -7,8 +7,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -18,6 +16,7 @@
         android:roundIcon="@mipmap/wildbook2"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +42,14 @@
         <service android:name=".SyncerService" />
 
         <activity android:name=".ImageViewActivity" />
+        <receiver
+            android:name=".WiFiScanner"
+            android:enabled="true"
+            android:label="WiFi Scanner Broadcast Receiver">
+        <intent-filter android:priority="10">
+            <action android:name="android.net.wifi.STATE_CHANGE"></action>
+        </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
