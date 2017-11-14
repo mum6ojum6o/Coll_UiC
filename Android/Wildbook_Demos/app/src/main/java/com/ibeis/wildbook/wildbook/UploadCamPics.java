@@ -3,6 +3,7 @@ package com.ibeis.wildbook.wildbook;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,11 +87,18 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.UploadBtn2:
                 if (new Utilities(this).isNetworkAvailable()) {
-
-                    Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
+                    int uploadCount=0;
+                    /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
-                    redirect(imagesNames.size(), imagesNames.size());
-
+                    redirect(imagesNames.size(), imagesNames.size());*/
+                    for (String filename:imagesNames){
+                        if(new Utilities(this).uploadPictures(filename)){
+                            uploadCount++;
+                        }
+                    }
+                    finish();
+                    Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));
                 }
                 else{
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);

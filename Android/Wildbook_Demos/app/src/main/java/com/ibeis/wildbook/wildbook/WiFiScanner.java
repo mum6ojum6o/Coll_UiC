@@ -42,8 +42,10 @@ public class WiFiScanner extends BroadcastReceiver {
                 if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
                     MainActivity.displayOnlineStatus(MainActivity.ONLINE);
                 }
-                Utilities utility = new Utilities(context);
-                utility.startSyncing(); //start service....
+                if(!SyncerService.IsRunning) {
+                    Utilities utility = new Utilities(context);
+                    utility.startSyncing(); //start service....
+                }
             } else {
                 if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
                     MainActivity.displayOnlineStatus(MainActivity.OFFLINE);

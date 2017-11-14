@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Messenger;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -32,9 +33,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -383,6 +395,90 @@ public class Utilities {
         catch(AuthFailureError r){}
 
         queue.add(request);
+    }
+    /* Vvvvv important method.
+    Method uploads images to the wildbook db using the Goog Old httpurlconnection.
+     */
+    public boolean uploadPictures(String imagesNames){
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        try {
+            URL url = new URL("http://uidev.scribble.com/v2/EncounterForm");
+            String boundary = "----------------------------------------";
+            HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoOutput(true); // indicates POST method
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type",
+                    "multipart/form-data; boundary=" + boundary);
+            // httpURLConnection.setRequestProperty("jsonResponse","true");
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream,"UTF-8"),true);
+            writer.append(boundary).append("\r\n");
+            File image = new File(imagesNames);
+            writer.append("--" + boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"" + "jsonResponse" + "\"")
+                    .append("\r\n");
+            writer.append("Content-Type: text/plain; charset=" + "UTF-8").append(
+                    "\r\n");
+            writer.append("\r\n");
+            writer.append("\"true\"").append("\r\n");
+            writer.flush();
+            //adding image details....
+            writer.append(boundary).append("\r\n");
+            writer.append(
+                    "Content-Disposition: form-data; name=\"" + "theFiles"
+                            + "\"; filename=\"" + image.getName() + "\"")
+                    .append("\r\n");
+            writer.append("Content-Transfer-Encoding: binary").append("\r\n");
+            writer.append("\r\n");
+            writer.flush();
+            FileInputStream inputStream = new FileInputStream(image);
+            byte[] buffer = new byte[4096]; //whats the significance of this!!!
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                // Log.i(TAG,buffer.toString());
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
+            inputStream.close();
+            writer.append("\r\n");
+            writer.flush();
+            writer.append("\r\n").flush();
+            writer.append("--" + boundary + "--").append("\r\n");
+            //Log.i(TAG,httpURLConnection.getContent().toString());
+            writer.close();
+            int status = httpURLConnection.getResponseCode();
+            if(status==HttpURLConnection.HTTP_OK){
+
+                BufferedReader reader = new BufferedReader( new InputStreamReader(httpURLConnection.getInputStream()));
+                String line = null;
+                StringBuilder responseString = new StringBuilder();
+                while((line=reader.readLine())!=null){
+                    Log.i("RESPONSE",line);
+                    responseString.append(line+"\n");
+                }
+
+                 String responseForJSON=responseString.toString();
+                JSONObject json = new JSONObject(responseForJSON);
+                Log.i(TAG,json.get("success")+" encounterId"+json.get("encounterId"));
+
+                Response2Json msg = new Gson().fromJson(responseForJSON,Response2Json.class);
+                reader.close();
+                Log.i("JSON_RESPONSE:","Success:"+msg.getSuccessStatus()+" Encounter ID:"+msg.getEncounterId());
+                httpURLConnection.disconnect();
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.i(TAG,"ERROR!!"+e.getMessage().toString());
+            return false;
+        }
+        return false;
     }
 
 }
