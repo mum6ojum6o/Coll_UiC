@@ -42,12 +42,13 @@ import java.util.List;
 
 
 /*
-This Activity is used for displayin the preview of images captured by the user using the
+This Activity is used for displaying the preview of images captured by the user using the
 cameraMainActivity.
 This activity also enables user to either Upload or Discard the pictures clicked by the user.
 
  */
 public class UploadCamPics extends Activity implements View.OnClickListener {
+    private static final String url="http://uidev.scribble.com/v2/EncounterForm";
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
@@ -87,10 +88,16 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
         switch (view.getId()){
             case R.id.UploadBtn2:
                 if (new Utilities(this).isNetworkAvailable()) {
+
                     int uploadCount=0;
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());*/
+
+                    /*************************************
+                     *
+                     * this commented block runs just fine!
+                     * ***************************************
                     for (String filename:imagesNames){
                         if(new Utilities(this).uploadPictures(filename)){
                             uploadCount++;
@@ -98,6 +105,25 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     }
                     finish();
                     Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));*/
+                Requestor request = new Requestor(url,"UTF-8","POST");
+                request.addFormField("jsonResponse","true");
+                for(String file:imagesNames){
+                    try {
+                        request.addFile("theFiles", file);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Log.i(TAG,"case UploadBtn2: exception occured while building request");
+                        break;
+                    }
+                }
+                try{
+                    request.finishRequesting();
+                }catch(Exception e){
+                    Log.i(TAG,"Server response error!!");
+                    Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
+                }
+                    Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UploadCamPics.this,MainActivity.class));
 
                 }

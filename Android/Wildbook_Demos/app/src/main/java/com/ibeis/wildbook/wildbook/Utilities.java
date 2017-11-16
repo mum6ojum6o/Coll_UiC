@@ -63,6 +63,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
  ***************************************************************/
 
 public class Utilities {
+
     private static final String TAG = "Utilities Class";
     private AlertDialog.Builder mAlertDialogBuilder;
     private SharedPreferences mSharedPreference;
@@ -434,25 +435,7 @@ public class Utilities {
             writer.append("true").append("\r\n");
             writer.flush();
             //adding image details....
-            writer.append("--"+boundary).append("\r\n");
-            writer.append(
-                    "Content-Disposition: form-data; name=\"" + "theFiles"
-                            + "\"; filename=\"" + image.getName() + "\"")
-                    .append("\r\n");
-            writer.append("Content-Transfer-Encoding: binary").append("\r\n");
-            writer.append("\r\n");
-            writer.flush();
-            FileInputStream inputStream = new FileInputStream(image);
-            byte[] buffer = new byte[4096]; //whats the significance of this!!!
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                // Log.i(TAG,buffer.toString());
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            outputStream.flush();
-            inputStream.close();
-            writer.append("\r\n");
-            writer.flush();
+
             writer.append("\r\n").flush();
             writer.append("--" + boundary + "--").append("\r\n");
             //Log.i(TAG,httpURLConnection.getContent().toString());
@@ -484,6 +467,10 @@ public class Utilities {
             return false;
         }
         return false;
+    }
+    public void addFile(String fileName){
+        File file = new File(fileName);
+
     }
 
 }
