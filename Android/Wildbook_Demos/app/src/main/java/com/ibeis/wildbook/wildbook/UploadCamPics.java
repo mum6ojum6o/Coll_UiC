@@ -99,6 +99,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     finish();
                     Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UploadCamPics.this,MainActivity.class));
+
                 }
                 else{
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);

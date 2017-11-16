@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -99,8 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("Logging window","Orientation is"+getResources().getConfiguration().orientation);
 
             setContentView(R.layout.activity_main);
-            LAYOUT=findViewById(R.id.mainLinearLayout);
-        //mAuth = FirebaseAuth.getInstance();
+            setLAYOUT();
         mAuth=FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(storagePath.equals("Photos/"))
@@ -165,9 +165,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
                     //hideProgressDialog();
-                    googleSignInAccount = googleSignInResult.getSignInAccount();
-                    Log.i("SilentLogin",googleSignInAccount.getEmail());
-                    UserName.setText(googleSignInAccount.getEmail()+"!");
+                    if (googleSignInResult.getStatus().isSuccess() ) {
+                        googleSignInAccount = googleSignInResult.getSignInAccount();
+                        Log.i("SilentLogin", googleSignInAccount.getEmail());
+                        UserName.setText(googleSignInAccount.getEmail() + "!");
+                    } else {
+                        Snackbar snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
+                        View snackView = snack.getView();
+                        snackView.setBackgroundColor(WARNING);
+                        snack.show();
+                    }//else closes
                 }
             });
         }
@@ -406,20 +413,42 @@ public static void displayOnlineStatus(int status){
     Snackbar snack=null;
     View snackView=null;
         switch(status){
-            case OFFLINE:
-                snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
+            case OFFLINE://make a function out of it.
+                /*snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
                  snackView = snack.getView();
                 snackView.setBackgroundColor(WARNING);
-                snack.show();
+                snack.show();*/
+                dispSnackBar(R.string.offline,WARNING);
                 break;
             case ONLINE:
-                snack=Snackbar.make(LAYOUT,R.string.online,Snackbar.LENGTH_LONG);
+               /* snack=Snackbar.make(LAYOUT,R.string.online,Snackbar.LENGTH_LONG);
                  snackView = snack.getView();
                 snackView.setBackgroundColor(POS_FEEDBACK);
-                snack.show();
+                snack.show();*/
+                dispSnackBar(R.string.online,POS_FEEDBACK);
                 break;
         }
 
-}
+    }
+    public static void  dispSnackBar(int message,int bgcolor){
+        Snackbar snack=null;
+        View snackView;
+        snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_LONG);
+        snackView = snack.getView();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
+    }
+
+    /********************************************
+     * Setup the LAYOUT
+     ********************************************/
+    public void setLAYOUT(){
+        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
+            LAYOUT=findViewById(R.id.mainLinearLayout);//setupLayout;
+        }
+        else{
+            LAYOUT=findViewById(R.id.myCoordinatorLayout);
+        }
+    }
 
 }

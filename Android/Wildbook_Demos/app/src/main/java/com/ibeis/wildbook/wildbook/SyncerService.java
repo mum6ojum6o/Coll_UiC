@@ -57,9 +57,8 @@ public class SyncerService extends IntentService {
    //The service also has to be syncronized.
     @Override
     public void onHandleIntent(Intent intent){
+        Log.i(TAG,"Service started");
         Bundle extras=intent.getExtras();
-
-
         IsRunning=true;
         int count=0;
         mDBHelper= new ImageRecorderDatabase(this);
@@ -89,6 +88,7 @@ public class SyncerService extends IntentService {
             Log.i(TAG, "Checking NetworkAvailability!!");
         }
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
+                Log.i(TAG,"Network Available!");
                 sendNotification("Sync Started!");
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
                 Log.i(TAG,"filename Uploading..."+filename);
@@ -173,7 +173,7 @@ public class SyncerService extends IntentService {
             //if no records were uploaded... do not send any notification...
             if(count>0)
                 sendNotification("Sync Completed!");
-
+        Log.i(TAG,"Service ended");
 
     }
 

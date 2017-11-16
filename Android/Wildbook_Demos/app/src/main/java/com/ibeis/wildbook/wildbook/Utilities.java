@@ -237,16 +237,20 @@ public class Utilities {
      *************************************/
     public void startSyncing(){
         Intent intent = new Intent(mContext,SyncerService.class);
-        if(MainActivity.handler!=null) {
+        if(MainActivity.handler!=null && !SyncerService.IsRunning) {
             intent.putExtra("SyncStarted", MainActivity.SYNC_STARTED);
             intent.putExtra("SyncComplete", MainActivity.SYNC_COMPLETE);
             Log.i("Utilities", "Mainactivity.handler" + (MainActivity.handler == null) + " MainActivity.SYNC_STARTED=" +
                     MainActivity.SYNC_STARTED + "MainActivity.SYNC_COMPLETE" + MainActivity.SYNC_COMPLETE);
             intent.putExtra("Messenger", new Messenger(MainActivity.handler));
         }
-        mContext.startService(intent);
-        Toast.makeText(mContext,"Service will be started!!",Toast.LENGTH_SHORT).show();
-
+        if(!SyncerService.IsRunning) {
+            mContext.startService(intent);
+            Toast.makeText(mContext, "Service will be started!!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(mContext, "Syncing in progress already!!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -407,7 +411,7 @@ public class Utilities {
         }
         try {
             URL url = new URL("http://uidev.scribble.com/v2/EncounterForm");
-            String boundary = "----------------------------------------";
+            String boundary = "==="+System.currentTimeMillis()+"===";
             HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
             httpURLConnection.setUseCaches(false);
             httpURLConnection.setDoOutput(true); // indicates POST method
@@ -415,10 +419,11 @@ public class Utilities {
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setRequestProperty("Content-Type",
                     "multipart/form-data; boundary=" + boundary);
-            // httpURLConnection.setRequestProperty("jsonResponse","true");
             OutputStream outputStream = httpURLConnection.getOutputStream();
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream,"UTF-8"),true);
-            writer.append(boundary).append("\r\n");
+            writer.append("User-Agent: " + "Wildbook.Mobile").append("\r\n");
+            writer.flush();
+
             File image = new File(imagesNames);
             writer.append("--" + boundary).append("\r\n");
             writer.append("Content-Disposition: form-data; name=\"" + "jsonResponse" + "\"")
@@ -426,10 +431,10 @@ public class Utilities {
             writer.append("Content-Type: text/plain; charset=" + "UTF-8").append(
                     "\r\n");
             writer.append("\r\n");
-            writer.append("\"true\"").append("\r\n");
+            writer.append("true").append("\r\n");
             writer.flush();
             //adding image details....
-            writer.append(boundary).append("\r\n");
+            writer.append("--"+boundary).append("\r\n");
             writer.append(
                     "Content-Disposition: form-data; name=\"" + "theFiles"
                             + "\"; filename=\"" + image.getName() + "\"")
