@@ -24,7 +24,7 @@ import java.net.URLConnection;
 
 public class Requestor {
     public static final String TAG="Requestor";
-    private final String mBoundary="==="+System.currentTimeMillis()+"===";;
+    private String mBoundary;
     private HttpURLConnection mHttpURLConnection;
     private String mCharset;
     private OutputStream mOutputStream;
@@ -37,7 +37,7 @@ public class Requestor {
         }
         try {
             this.mCharset=charset;
-           // mBoundary="==="+System.currentTimeMillis()+"===";
+            mBoundary="==="+System.currentTimeMillis()+"===";
             URL url = new URL(applUrl);
             mHttpURLConnection = (HttpURLConnection) url.openConnection();
             mHttpURLConnection.setUseCaches(false);
@@ -74,7 +74,7 @@ public class Requestor {
         mWriter.append("Content-Type: "+ URLConnection.guessContentTypeFromName(absFileName)).append("\r\n");
         mWriter.append("Content-Transfer-Encoding: binary").append("\r\n");
         mWriter.append("\r\n");
-
+        mWriter.flush();
         try {
             FileInputStream inputStream = new FileInputStream(file);
             byte[] buffer= new byte[4096];

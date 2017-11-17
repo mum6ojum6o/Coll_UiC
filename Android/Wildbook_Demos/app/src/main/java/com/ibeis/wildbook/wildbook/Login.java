@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            //mAuth = FirebaseAuth.getInstance();
+            mAuth = FirebaseAuth.getInstance();
             handleSignInResult(result);
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
@@ -104,6 +104,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             Log.i(TAG,"Result is Success!!");
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+           /* if(acct!=null)
+                updateUI(true);*/  //UNCOMMENT in PRODUCTIONS
            firebaseAuthWithGoogle(acct);
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
         } else {
@@ -123,7 +125,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                //updateUI(true);
+                firebaseAuthWithGoogle(account); //Comment in Production....
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
@@ -176,6 +179,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             }
 
         }
+
+    /***********************
+     * This method would be deprecated.
+     * @param user
+     */
     private void updateUI(FirebaseUser user) {
         progressDialog.dismiss();
         if (user != null) {
@@ -189,6 +197,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+        }
+    }
+    private void updateUI(boolean isLoggedIn){
+        if (isLoggedIn){
+            Intent i = new Intent(this,MainActivity.class);
+            startActivity(i);
+            //finishAndRemoveTask();
+            finish();
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Something went wrong!",Toast.LENGTH_LONG);
         }
     }
     @Override

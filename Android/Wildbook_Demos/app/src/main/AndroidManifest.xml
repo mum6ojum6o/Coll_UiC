@@ -43,14 +43,14 @@
         <service android:name=".SyncerService" />
 
         <activity android:name=".ImageViewActivity" />
-        <receiver
-            android:name=".WiFiScanner"
+        <!--<receiver
+            android:name=".NetworkScanner"
             android:enabled="true"
             android:label="WiFi Scanner Broadcast Receiver">
         <intent-filter android:priority="10">
             <action android:name="android.net.wifi.STATE_CHANGE"></action>
         </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>

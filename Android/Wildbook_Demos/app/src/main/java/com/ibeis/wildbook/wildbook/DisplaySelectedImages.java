@@ -58,10 +58,31 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
         switch(view.getId()){
             case R.id.UploadBtn2:
                 if (new Utilities(this).isNetworkAvailable()) { //check for network availability
-                    Utilities util = new Utilities(getApplicationContext(),selectedImages,new ImageRecorderDatabase(this));
+                   /* Utilities util = new Utilities(getApplicationContext(),selectedImages,new ImageRecorderDatabase(this));
                     util.uploadPictures(selectedImages);
 
-                    redirect(selectedImages.size(),selectedImages.size());
+                    redirect(selectedImages.size(),selectedImages.size());*/
+                   Requestor request = new Requestor(UploadCamPics.url,"UTF-8","POST");
+                    request.addFormField("jsonResponse","true");
+                    for(String file:selectedImages){
+                        try {
+                            request.addFile("theFiles", file);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                            Log.i(TAG,"case UploadBtn2: exception occured while building request");
+                            break;
+                        }
+                    }
+                    try{
+                        request.finishRequesting();
+                        Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
+                    }catch(Exception e){
+                        Log.i(TAG,"Server response error!!");
+                        Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
+                    }finally{
+                        redirect(selectedImages.size(),selectedImages.size());
+                    }
 
                 }
                 else{//no connectivity

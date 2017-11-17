@@ -1,24 +1,18 @@
 package com.ibeis.wildbook.wildbook;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,7 +21,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,16 +35,15 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
-import com.google.firebase.auth.GoogleAuthProvider;
+
 import java.util.ArrayList;
 
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
-    public static View LAYOUT;
-    public static int WARNING,POS_FEEDBACK;
+    protected static View LAYOUT;
+    protected static int WARNING,POS_FEEDBACK;
     protected static final int ONLINE=1;
     protected static final int OFFLINE=0;
     protected static final int IMAGE_GALLERY_REQUEST = 20;
@@ -91,8 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MAIN_ACTIVITY_IS_RUNNING=true;
         handler = mUiHandler;
-        WiFiScanner scanner = new WiFiScanner();
-        IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
+        NetworkScanner scanner = new NetworkScanner();
+        /*IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
+        IntentFilter filter2 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        */
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         getApplicationContext().registerReceiver(scanner,filter);
         Log.i(TAG,"MainActivity onCreate");
         super.onCreate(savedInstanceState);
@@ -105,9 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(storagePath.equals("Photos/"))
             storagePath = storagePath+firebaseUser.getEmail();
-        Log.i(TAG,"storagePath"+storagePath);
-        if(databasePath.equals("Photos/"))
+         if(databasePath.equals("Photos/"))
             databasePath = databasePath+firebaseUser.getUid();
+        Log.i(TAG,"storagePath"+storagePath);
+
         Log.i(TAG,"databasePath"+databasePath);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -152,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            //mAuth = FirebaseAuth.getInstance();
+            mAuth = FirebaseAuth.getInstance();
             googleSignInAccount = result.getSignInAccount();
             Log.i("SilentLogin",googleSignInAccount.getEmail());
             UserName.setText(googleSignInAccount.getEmail()+"!");
@@ -264,14 +262,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResult(Status status) {
 
                         mGoogleApiClient.disconnect();
-                        //mAuth.signOut();
+                        mAuth.signOut(); //comment for production
                         mGoogleApiClient=null;
                         mAuth.signOut();
                         mAuth=null;
                         finish();
-                        databasePath="Photos/";
-                        storagePath="Photos/";
-                        //mAuth=null;
+                        databasePath="Photos/"; //comment for production
+                        storagePath="Photos/";//comment for production
+
                         startActivity(new Intent(MainActivity.this,Login.class));
                     }
                 });

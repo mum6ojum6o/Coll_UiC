@@ -48,7 +48,7 @@ This activity also enables user to either Upload or Discard the pictures clicked
 
  */
 public class UploadCamPics extends Activity implements View.OnClickListener {
-    private static final String url="http://uidev.scribble.com/v2/EncounterForm";
+    public static final String url="http://uidev.scribble.com/v2/EncounterForm";
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
@@ -119,13 +119,12 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                 }
                 try{
                     request.finishRequesting();
+                    Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));
                 }catch(Exception e){
                     Log.i(TAG,"Server response error!!");
                     Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
                 }
-                    Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));
-
                 }
                 else{
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
