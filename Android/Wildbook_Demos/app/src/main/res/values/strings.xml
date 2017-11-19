@@ -27,6 +27,7 @@
     <string name="mobiledataString">Mobile Data</string>
     <string name="anyString">Any</string>
     <string name="online">You are online!</string>
+    <string name="imagesNotUploaded">Images were not uploaded!!</string>
     <string name="connectivityLossMessageString">Since you are no longer connected to the internet,
         the selected images will be uploaded automatically once your device connectivity resumes.
         Which type of connection would you prefer for image syncing?

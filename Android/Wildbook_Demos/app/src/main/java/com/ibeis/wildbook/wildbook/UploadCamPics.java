@@ -2,6 +2,7 @@ package com.ibeis.wildbook.wildbook;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -35,6 +37,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,6 +93,10 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                 if (new Utilities(this).isNetworkAvailable()) {
 
                     int uploadCount=0;
+                    ImageUploaderTask task = new ImageUploaderTask(imagesNames);
+                    new Thread(task).start();
+                    Log.i(TAG,"redirecting....");
+                    redirect(imagesNames.size(), imagesNames.size());
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());*/
@@ -106,8 +113,36 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                     finish();
                     Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UploadCamPics.this,MainActivity.class));*/
+
+                    /****************************
                 Requestor request = new Requestor(url,"UTF-8","POST");
                 request.addFormField("jsonResponse","true");
+                try {
+
+
+                    ExifInterface exif = new ExifInterface(imagesNames.get(0));
+                    String datepicker = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                    DateFormat dfrom = new  SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+                    DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
+
+                    try{
+                        Date date = dfrom.parse(datepicker);
+                        datepicker = dTo.format(date);
+                    }catch(ParseException pe){pe.printStackTrace();Log.i(TAG,"Parsing Issue");}
+                    request.addFormField("datepicker",datepicker);
+                    float[] latLong = new float[2];
+                    String lat=null,Long=null;
+                    if(exif.getLatLong(latLong)){
+                        lat=Float.toString(latLong[0]);
+                        Long=Float.toString(latLong[1]);
+                        Log.i(TAG,"lat:"+lat+"long: "+Long);
+                        request.addFormField("lat",lat);
+                        request.addFormField("longitude",Long);
+                    }
+                }catch(IOException e){
+                    e.printStackTrace();
+                    Log.i(TAG,"Coordinates could not be extracted!!");
+                }
                 for(String file:imagesNames){
                     try {
                         request.addFile("theFiles", file);
@@ -120,7 +155,8 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                 try{
                     request.finishRequesting();
                     Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));
+                    //startActivity(new Intent(UploadCamPics.this,MainActivity.class));
+                    redirect(imagesNames.size(),imagesNames.size());
                 }catch(Exception e){
                     Log.i(TAG,"Server response error!!");
                     Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
@@ -137,6 +173,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                         utility.insertRecords();
                         redirect(0, 0);
                     }
+                     **************************************/
 
                 }
                 break;
@@ -148,16 +185,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
 
     }
     public void redirect(int imagesUploaded, int imagesRequested){
-        if(imagesRequested==imagesUploaded && imagesRequested>0 && imagesUploaded >0){
-            Toast.makeText(getApplicationContext(),"All images were uploaded!",Toast.LENGTH_LONG).show();
-        }
-        else if(imagesUploaded == 0 && imagesRequested ==0){
-            Toast.makeText(getApplicationContext(),"The images will be uploaded on the availability of appropriate network!",Toast.LENGTH_LONG).show();
-        }
-        else{
-            Toast.makeText(getApplicationContext(),imagesRequested-imagesUploaded+"were uploaded!",Toast.LENGTH_LONG).show();
-        }
-        finish();
+       finish();
         startActivity(new Intent(UploadCamPics.this,MainActivity.class));
 
     }

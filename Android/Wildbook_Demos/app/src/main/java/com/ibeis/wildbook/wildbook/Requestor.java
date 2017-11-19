@@ -111,10 +111,12 @@ public class Requestor {
                 }
             }
             reader.close();
-            mHttpURLConnection.disconnect();
+
         } else {
             throw new IOException("Server returned non-OK status: " + status);
         }
+        Log.i(TAG,"Disconnecting httpURLConnection!!");
+        mHttpURLConnection.disconnect();
 
     }
 

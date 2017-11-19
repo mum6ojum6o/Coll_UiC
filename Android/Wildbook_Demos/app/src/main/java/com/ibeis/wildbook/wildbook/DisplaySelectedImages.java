@@ -62,7 +62,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     util.uploadPictures(selectedImages);
 
                     redirect(selectedImages.size(),selectedImages.size());*/
-                   Requestor request = new Requestor(UploadCamPics.url,"UTF-8","POST");
+                   /*Requestor request = new Requestor(UploadCamPics.url,"UTF-8","POST");
                     request.addFormField("jsonResponse","true");
                     for(String file:selectedImages){
                         try {
@@ -82,7 +82,13 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                         Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
                     }finally{
                         redirect(selectedImages.size(),selectedImages.size());
-                    }
+                    }*/
+
+                    ImageUploaderTask task = new ImageUploaderTask(selectedImages);
+                    Log.i(TAG,"Starting fileupload request using worker thread!!");
+                    new Thread(task).start();
+                    Log.i(TAG,"redirecting....to mainActivity");
+                    redirect(selectedImages.size(), selectedImages.size());
 
                 }
                 else{//no connectivity

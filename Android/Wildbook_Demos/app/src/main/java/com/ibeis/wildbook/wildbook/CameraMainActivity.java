@@ -344,7 +344,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         @Override
         public void onOpened(CameraDevice camera) {
             mCameraDevice = camera;
-            Toast.makeText(getApplicationContext(), "Camera Opened!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Camera Opened!", Toast.LENGTH_SHORT).show();
             createCameraPreviewSession();
         }
         @Override

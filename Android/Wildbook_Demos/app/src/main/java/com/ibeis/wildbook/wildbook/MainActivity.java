@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
     public static Handler handler;
     private GoogleSignInAccount googleSignInAccount;
-    public Handler mUiHandler = new Handler(){
+    public final Handler mUiHandler = new Handler(){
        @Override
         public void handleMessage(Message message){
            switch(message.what){
@@ -74,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                case SYNC_STARTED:
                    Log.i(TAG,"SYNC_STARTED");
                    mSync.setEnabled(false);
+                   break;
+               case 200:
+                   dispSnackBar(R.string.imageUploadedString,POS_FEEDBACK);
+                   break;
+               case 404:
+                   dispSnackBar(R.string.imagesNotUploaded,WARNING);
+                   break;
            }
        }
     } ;
