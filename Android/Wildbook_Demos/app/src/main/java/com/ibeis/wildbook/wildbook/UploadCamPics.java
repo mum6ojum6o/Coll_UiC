@@ -93,7 +93,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                 if (new Utilities(this).isNetworkAvailable()) {
 
                     int uploadCount=0;
-                    ImageUploaderTask task = new ImageUploaderTask(imagesNames);
+                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames);
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....");
                     redirect(imagesNames.size(), imagesNames.size());
@@ -160,9 +160,10 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                 }catch(Exception e){
                     Log.i(TAG,"Server response error!!");
                     Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
-                }
+                } **************************************/
                 }
                 else{
+                    //this is running on the main thread!!!!!!!!
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                     Utilities utility = new Utilities(this,imagesNames,dbHelper);
                     utility.prepareBatchForInsertToDB(false);
@@ -173,7 +174,7 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
                         utility.insertRecords();
                         redirect(0, 0);
                     }
-                     **************************************/
+
 
                 }
                 break;

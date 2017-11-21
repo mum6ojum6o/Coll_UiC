@@ -1,5 +1,4 @@
 package com.ibeis.wildbook.wildbook;
-
 import android.os.StrictMode;
 import android.util.Log;
 import org.json.JSONException;
@@ -29,7 +28,9 @@ public class Requestor {
     private String mCharset;
     private OutputStream mOutputStream;
     private PrintWriter mWriter;
+    private JSONObject jsonResponse;
     public Requestor(String applUrl,String charset,String requestMethod){
+        jsonResponse= new JSONObject();
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -105,19 +106,26 @@ public class Requestor {
             JSONObject json;
             while ((line = reader.readLine()) != null) {
                 Log.i(TAG, line);
-                json = new JSONObject(line);
-                if (json == null) {
+                jsonResponse = new JSONObject(line);
+
+                if (jsonResponse == null) {
+                    Log.i(TAG,"Throwing Exception!!");
                     throw new JSONException("Server returned empty JSON response");
                 }
             }
             reader.close();
 
+
         } else {
+            Log.i(TAG,"Throwing Exception!! IOException");
             throw new IOException("Server returned non-OK status: " + status);
         }
         Log.i(TAG,"Disconnecting httpURLConnection!!");
         mHttpURLConnection.disconnect();
 
+    }
+public JSONObject getResponse(){
+        return jsonResponse;
     }
 
 }

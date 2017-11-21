@@ -10,6 +10,7 @@ import android.content.Context;
 
 public class ActiveActivityTracker {
     private Context mCurrentContext;
+    private  Activity mActivity;
     private static ActiveActivityTracker instance;
     private ActiveActivityTracker(){
 
@@ -25,7 +26,7 @@ public class ActiveActivityTracker {
     }
 
 
-     public void setCurrentContext(Context context){
+     public void setCurrentContext(Context context, Activity activity){
         this.mCurrentContext=context;
     }
     public Context getmCurrentContext(){

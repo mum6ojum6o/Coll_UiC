@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,11 +29,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import android.os.Handler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class DisplayImagesUsingRecyclerView extends AppCompatActivity {
 public static String TAG = "DisplayImagesUsingRecyclerView ";
@@ -90,7 +98,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
 
         super.onResume();
         progressDialog.show();
-        databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
+        /*databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -147,7 +155,55 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
                 // Hiding the progress dialog.
                 progressDialog.dismiss();
             }
-        });
+        });*/
+
+        ///this code should be in worker thread.
+        try {
+            if (android.os.Build.VERSION.SDK_INT > 9)
+            {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+            }
+            URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(this).getUserEmail());
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            JSONArray jsonArray=null;
+            JSONObject jsonObject= null;
+            int statusCode =httpURLConnection.getResponseCode();
+            if(statusCode==HttpURLConnection.HTTP_OK){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        httpURLConnection.getInputStream()));
+                String line=null;
+                StringBuilder sb=new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    Log.i(TAG, line);
+                   sb.append(line);
+                }
+                String response = sb.toString();
+                 jsonArray=new JSONArray(response);
+                //jsonObject=new JSONObject(response);
+                reader.close();
+                httpURLConnection.disconnect();
+            }
+            List<Uri>imagePaths = new ArrayList<Uri>();
+
+            if (jsonArray!=null){
+                int size=jsonArray.length();
+                for(int i=0;i<size;i++){
+                    if(jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                        imagePaths.add(Uri.parse(jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                }
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
+                recyclerView.setAdapter(adapter);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Log.i(TAG,"Error!!");
+        }
+        finally{
+
+        }
+        progressDialog.dismiss();
     }
 
 }

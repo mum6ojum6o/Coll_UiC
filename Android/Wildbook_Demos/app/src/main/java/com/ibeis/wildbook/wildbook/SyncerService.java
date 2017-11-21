@@ -42,9 +42,7 @@ import static java.lang.Thread.sleep;
  ************************************************************************************/
 
 public class SyncerService extends IntentService {
-    Handler serviceHandler = new Handler(){
 
-    };
 
     private static final String TAG = "SyncerService";
     private SQLiteCursor mSQLiteCursor;
@@ -65,12 +63,15 @@ public class SyncerService extends IntentService {
         mDBHelper.getReadableDatabase();
         String where = "isUploaded = 0";
         //String orderBy= "ORDER BY "
-        String columns[]={ImageRecorderDatabase._ID,ImageRecorderDatabase.FILE_NAME,ImageRecorderDatabase.LONGITUDE,ImageRecorderDatabase.LATITUDE};
+        String columns[]={ImageRecorderDatabase._ID,ImageRecorderDatabase.ENCOUNTER_NUM,ImageRecorderDatabase.FILE_NAME,ImageRecorderDatabase.LONGITUDE,ImageRecorderDatabase.LATITUDE};
+        String column[]={ImageRecorderDatabase.ENCOUNTER_NUM};
+
+
         Cursor c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
-                new String[]{"0"},null,null,null);
+                new String[]{"0"},null,null,ImageRecorderDatabase.ENCOUNTER_NUM);
         c.moveToFirst();
         Messenger msngr;
-
+        ArrayList<Integer> filesUploadedIds= new ArrayList<Integer>();
         //String groupBy
         final ArrayList<Uri> successUploads = new ArrayList<Uri>();
         if(new Utilities(getApplicationContext()).isNetworkAvailable()) {
@@ -85,14 +86,38 @@ public class SyncerService extends IntentService {
                     Log.w(getClass().getName(), "Exception sending message", e1);
                 }
             }
+
             Log.i(TAG, "Checking NetworkAvailability!!");
         }
+        ArrayList<String> filenames=new ArrayList<String>();
+            int encounterNum=-1,rowCount=0;
+        filesUploadedIds=new ArrayList<Integer>();
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
-                Log.i(TAG,"Network Available!");
-                sendNotification("Sync Started!");
+                Log.i(TAG,"Network Available & Sync Started!");
+                new Utilities(this).sendNotification("Sync Started!");
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
+
+                int fileId = c.getInt(c.getColumnIndex(ImageRecorderDatabase._ID));
+                filesUploadedIds.add(fileId);
+                int currEncNum=c.getInt(c.getColumnIndex(ImageRecorderDatabase.ENCOUNTER_NUM));
+                Log.i(TAG, "record:"+fileId+", "+filename+", "+currEncNum);
                 Log.i(TAG,"filename Uploading..."+filename);
-                StorageReference storage;
+                if(encounterNum==-1){
+                    encounterNum=currEncNum;
+                    filenames.add(filename);
+                }
+                else if(encounterNum==currEncNum){
+                    filenames.add(filename);
+                }
+                else if(count>0&& encounterNum!=currEncNum){
+                    ImageUploaderTask task = new ImageUploaderTask(this,filenames);
+                    task.run();
+                    encounterNum=currEncNum;
+                    filenames=null;
+                    filenames = new ArrayList<String>();
+                    filenames.add(filename);
+                }
+             /*   StorageReference storage;
                 FirebaseAuth auth;
                 DatabaseReference databaseReference;
                 StorageReference filePath = null;
@@ -130,23 +155,28 @@ public class SyncerService extends IntentService {
                         //how to make this synchronous?????????
 
                     }
-                });
+                });*/
                 count++;
                 Log.i(TAG, "There are " + c.getCount() + "remaining. Record " + count);
                 Log.i(TAG, "Column ID=" + c.getString(c.getColumnIndex(ImageRecorderDatabase._ID)));
                 c.moveToNext();
-                try {
-                    sleep(3000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Log.i(TAG, "Checking Next Record!");
-                c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
-                        new String[]{"0"},null,null,null);
-                Log.i(TAG,"After updating count="+c.getCount() );
-                c.moveToFirst();
-            }
 
+                Log.i(TAG, "Checking Next Record!");
+                /*c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
+                        new String[]{"0"},null,null,null);*/
+                Log.i(TAG,"After updating count="+c.getCount() );
+                //c.moveToFirst();
+                /*try{
+                    Thread.sleep(1000);
+                }catch(Exception e){e.printStackTrace();}*/
+            }
+            if(count>0) {
+                Log.i(TAG,"Instantiating Http Request");
+                Log.i(TAG, "filesRead:"+filenames.size());
+                ImageUploaderTask task = new ImageUploaderTask(this,filenames); //the last record....
+                task.run();
+
+            }
 
         c.close();
         mDBHelper.close();
@@ -171,8 +201,10 @@ public class SyncerService extends IntentService {
             Log.i(TAG, "IsRunning is now set to False");
             IsRunning = false;
             //if no records were uploaded... do not send any notification...
-            if(count>0)
-                sendNotification("Sync Completed!");
+            if(count>0) {
+                new Utilities(this).sendNotification("Sync Completed!");
+               // sendNotification("Sync Completed!");
+            }
         Log.i(TAG,"Service ended");
 
     }

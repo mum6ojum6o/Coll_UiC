@@ -84,7 +84,7 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                         redirect(selectedImages.size(),selectedImages.size());
                     }*/
 
-                    ImageUploaderTask task = new ImageUploaderTask(selectedImages);
+                    ImageUploaderTask task = new ImageUploaderTask(this,selectedImages);
                     Log.i(TAG,"Starting fileupload request using worker thread!!");
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....to mainActivity");
@@ -95,8 +95,8 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                     Utilities utility = new Utilities(this,selectedImages,dbHelper);
                     utility.prepareBatchForInsertToDB(false);
-
-                    if(!(new Utilities(this).checkSharedPreference(mAuth.getCurrentUser().getEmail()))) {
+                    Log.i(TAG,"prepared");
+                    if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getUserEmail()))) {
                         utility.connectivityAlert().show();
                     }
                     else {

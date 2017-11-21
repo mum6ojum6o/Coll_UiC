@@ -1,6 +1,8 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +15,8 @@ import android.net.Uri;
 import android.os.Messenger;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,10 +28,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +62,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -167,7 +183,27 @@ public class Utilities {
         editor.putString(FirebaseAuth.getInstance().getCurrentUser().getEmail(),string);
         editor.commit();
     }
+public void writeEncounterNumPreferences(long encounterNum){
+        mSharedPreference = mContext.getSharedPreferences(mContext.getString(
+                R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=mSharedPreference.edit();
+        editor.putLong(mContext.getString(R.string.encounter),encounterNum);
+        editor.commit();
+}
+public long getEncounterNumPreferences(){
+    long enctrNum=-1;
+    mSharedPreference = mContext.getSharedPreferences(mContext.getString(
+            R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+    if(mSharedPreference.contains(mContext.getString(R.string.encounter))){
+        enctrNum=mSharedPreference.getLong(mContext.getString(R.string.encounter),-1);
 
+    }
+    else{
+        enctrNum=1;
+    }
+    writeEncounterNumPreferences(enctrNum+1);
+    return enctrNum;
+}
 
     /****
      * This method will be used to insert data into the imageRecorder database.
@@ -188,11 +224,21 @@ public class Utilities {
 
     }
 
+
     public void insertRecords(){
         InsertToDB insertRecords= new InsertToDB(mDbhelper,mRecord);
-        insertRecords.run();
+        Log.i(TAG, "starting insertion on a new Thread!!");
+        new Thread(insertRecords).start(); // this is not creating a new Thread..... :-@ embarrased!!
 
     }
+    //insert encounterId.....
+    public void insertRecords(String encounterId){
+    InsertToDB insertRecords= new InsertToDB(mDbhelper,encounterId);
+    Log.i(TAG, "saving response on a new Thread!!");
+    new Thread(insertRecords).start();
+}
+
+
 
     /************************************************************************************
      * A thread that will insert records to the SQLite database
@@ -200,27 +246,49 @@ public class Utilities {
     public class InsertToDB implements Runnable{
         private ImageRecorderDatabase mDbhelper;
         private List<ImageRecordDBRecord> mRecords;
+        private String mEncounterId;
+        private String mEmail;
         public InsertToDB(ImageRecorderDatabase dbHelper,List<ImageRecordDBRecord> records){
             this.mDbhelper=dbHelper;
             this.mRecords=records;
         }
+        public InsertToDB(ImageRecorderDatabase dbHelper,String encounterId){
+            this.mDbhelper=dbHelper;
+            this.mEncounterId=encounterId;
+            this.mEmail=getUserEmail();
+            this.mRecords=null;
+        }
     @Override
-   synchronized public void run() {
+    public void run() {
         Log.i(TAG,"inserting records");
-        SQLiteDatabase db=mDbhelper.getWritableDatabase();
-       for (ImageRecordDBRecord record: this.mRecords){
-           ContentValues values = new ContentValues();
-           values.put(ImageRecorderDatabase.FILE_NAME,record.getmFileName());
-           values.put(ImageRecorderDatabase.LONGITUDE,record.getmLongitude());
-           values.put(ImageRecorderDatabase.LATITUDE,record.getmLatitude());
-           values.put(ImageRecorderDatabase.USER_NAME,record.getmUsername());
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-           String date = sdf.format(record.getmDate());
-           values.put(ImageRecorderDatabase.DATE,record.getmDate().toString());
-           values.put(ImageRecorderDatabase.IS_UPLOADED,record.getmIsUploaded());
-           db.insert(ImageRecorderDatabase.TABLE_NAME,null,values);
-           values.clear();
 
+        SQLiteDatabase db=mDbhelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if(mRecords !=null){
+           for (ImageRecordDBRecord record: this.mRecords){
+               values.put(ImageRecorderDatabase.FILE_NAME,record.getmFileName());
+               values.put(ImageRecorderDatabase.ENCOUNTER_NUM,record.getmEncounterNum());
+               values.put(ImageRecorderDatabase.LONGITUDE,record.getmLongitude());
+               values.put(ImageRecorderDatabase.LATITUDE,record.getmLatitude());
+               values.put(ImageRecorderDatabase.USER_NAME,record.getmUsername());
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+               String date = sdf.format(record.getmDate());
+               values.put(ImageRecorderDatabase.DATE,record.getmDate().toString());
+               values.put(ImageRecorderDatabase.IS_UPLOADED,record.getmIsUploaded());
+               db.insert(ImageRecorderDatabase.TABLE_NAME,null,values);
+               values.clear();
+
+            }
+        }
+        else if(mEncounterId!=null){
+
+            DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
+
+            values.put(ImageRecorderDatabase.ENCOUNTER_ID,mEncounterId);
+            values.put(ImageRecorderDatabase.DATE, dTo.format(new Date()));
+            values.put(ImageRecorderDatabase.USER_NAME,mEmail);
+            db.insert(ImageRecorderDatabase.UPLOAD_RESPONSE,null,values);
+            values.clear();
         }
        //close the database.
         db.close();
@@ -232,6 +300,8 @@ public class Utilities {
     }
 
     }
+
+
     /**********************************
     This method starts the Sync Service.
      @buttonId refers to the Id of the button that initiates the sync. value is -1 if service is started internally
@@ -247,10 +317,10 @@ public class Utilities {
         }
         if(!SyncerService.IsRunning) {
             mContext.startService(intent);
-            Toast.makeText(mContext, "Service will be started!!", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mContext, "Service will be started!!", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(mContext, "Syncing in progress already!!", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mContext, "Syncing in progress already!!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -352,16 +422,19 @@ public class Utilities {
      *
      *******************************************************/
     public void prepareBatchForInsertToDB(Boolean isUploaded) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        //FirebaseAuth auth = FirebaseAuth.getInstance();
+        long encounterNum = getEncounterNumPreferences();
         mRecord=new ArrayList<ImageRecordDBRecord>();
         for (String filename : mImagePaths) {
             ImageRecordDBRecord record = new ImageRecordDBRecord();
             record.setFileName(filename);
-            record.setUsername(auth.getCurrentUser().getEmail());
+            record.setUsername(getUserEmail());
             Date date = new Date();
             record.setDate(date);
             record.setIsUploaded(isUploaded);
+            record.setmEncounterNum(encounterNum);
             mRecord.add(record);
+
         }
 
     }
@@ -371,6 +444,8 @@ public class Utilities {
         this.mRecord = records;
     }
 
+
+    //Volley!!! not used as of now....
     public void createPostRequest(String image){
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String API_URL="http://tobedecided.com/wildbook/";
@@ -455,9 +530,7 @@ public class Utilities {
                 JSONObject json = new JSONObject(responseForJSON);
                 Log.i(TAG,json.get("success")+" encounterId"+json.get("encounterId"));
 
-                Response2Json msg = new Gson().fromJson(responseForJSON,Response2Json.class);
-                reader.close();
-                Log.i("JSON_RESPONSE:","Success:"+msg.getSuccessStatus()+" Encounter ID:"+msg.getEncounterId());
+
                 httpURLConnection.disconnect();
                 return true;
             }
@@ -468,9 +541,72 @@ public class Utilities {
         }
         return false;
     }
-    public void addFile(String fileName){
-        File file = new File(fileName);
 
+    // Method used for sending Syncing Notifications....
+    public void sendNotification(String msg) {
+        NotificationManager mNotificationManager = (NotificationManager)
+                mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder;
+        PendingIntent contentIntent=null;
+        mBuilder =
+                new NotificationCompat.Builder(mContext)
+                        .setContentTitle("Wildbook")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(msg))
+                        .setContentText(msg);
+        if(msg.equals("Sync Started!")) {
+            contentIntent = PendingIntent.getActivity(mContext, 0,
+                    new Intent(mContext, MainActivity.class), 0);
+            mBuilder.setSmallIcon(R.drawable.notification_sync);
+
+
+        }
+        else if(msg.equals("Upload Started")){
+            mBuilder.setSmallIcon(R.drawable.imageuploading);
+        }
+        else if(msg.equals("Error")){
+            mBuilder.setSmallIcon(R.drawable.error);
+        }
+        else{
+            contentIntent = PendingIntent.getActivity(mContext, 0,
+                    new Intent(mContext, DisplayImagesUsingRecyclerView.class), 0);
+            mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
+
+        }
+        if(contentIntent!=null) {
+            mBuilder.setContentIntent(contentIntent);
+        }
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    public String getUserEmail(){
+        String email=null;
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mContext.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleApiClient googleApiClient= new GoogleApiClient.Builder(mContext)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .build();
+        googleApiClient.connect();
+        //email=\
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+
+            GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
+            Log.i(TAG,"getting Email Id:"+googleSignInAccount.getEmail());
+            return googleSignInAccount.getEmail();
+
+        } else {
+            Log.i(TAG,"No Email ID");
+        }
+
+        return "";
+        //return email;
     }
 
 }

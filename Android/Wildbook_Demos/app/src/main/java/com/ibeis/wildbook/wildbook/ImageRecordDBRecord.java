@@ -16,24 +16,26 @@ public class ImageRecordDBRecord {
     private String mUsername;
     private Date mDate;
     private boolean mIsUploaded;
+    private String mEncounterId;
+    private long mEncounterNum;
 
     public void setFileName(String fileName){
-    mFileName=fileName;
+    this.mFileName=fileName;
     }
     public void setLatitude(long latitude){
-        mLatitude=latitude;
+        this.mLatitude=latitude;
     }
     public void setLongitude(long longitude){
-        mLongitude=longitude;
+        this.mLongitude=longitude;
     }
     public void setUsername(String username){
-        mUsername=username;
+        this.mUsername=username;
     }
     public void setDate(Date date){
-        mDate=date;
+        this.mDate=date;
     }
     public void setIsUploaded(boolean isUploaded){
-        mIsUploaded=isUploaded;
+        this.mIsUploaded=isUploaded;
     }
     public String getmFileName(){return mFileName;}
     public String getmUsername(){return mUsername;}
@@ -41,5 +43,8 @@ public class ImageRecordDBRecord {
     public long getmLatitude(){return mLatitude;}
     public boolean getmIsUploaded(){return mIsUploaded;}
     public Date getmDate(){return mDate;}
-
+    public String getmEncounterId() {return mEncounterId;   }
+    public void setmEncounterId(String mEncounterId) {        this.mEncounterId = mEncounterId;    }
+    public long getmEncounterNum() {return mEncounterNum;    }
+    public void setmEncounterNum(long mEncounterNum) {this.mEncounterNum = mEncounterNum;    }
 }
