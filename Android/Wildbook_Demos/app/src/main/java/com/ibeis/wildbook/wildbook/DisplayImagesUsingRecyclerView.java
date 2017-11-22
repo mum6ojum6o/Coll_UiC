@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +44,34 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DisplayImagesUsingRecyclerView extends AppCompatActivity {
-public static String TAG = "DisplayImagesUsingRecyclerView ";
+    private static final int DOWNLOADING = 77;
+    private static final int COMPLETE = 200;
+    private static final int PROG_UPDATE = 853;
+    public static String TAG = "DisplayImagesUsingRecyclerView ";
+public Handler mHandler = new Handler(){
+    @Override
+    public void handleMessage(Message message){
+
+        switch(message.what){
+            case DOWNLOADING:
+                break;
+            case PROG_UPDATE:
+                break;
+            case 200:
+                Bundle b=message.getData();
+                ArrayList<String> images= b.getStringArrayList("JSON_RESPONE");
+                ArrayList<Uri> imagesPath= new ArrayList<Uri>();
+                for(String anImage:images){
+                    imagesPath.add(Uri.parse(anImage));
+                }
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagesPath);
+                recyclerView.setAdapter(adapter);
+                break;
+            case 404:
+                break;
+        }
+    }
+};
     private static final int DISPLAY=123;
     // Creating DatabaseReference.
     DatabaseReference databaseReference;
@@ -77,11 +105,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this,3));
 
-        // Assign activity this to progress dialog.
-        progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
 
-        // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading Images.");
 
         // Showing progress dialog.
 
@@ -93,11 +117,82 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
 
 
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        // Assign activity this to progress dialog.
+        progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
+
+        // Setting up message in Progress dialog.
+        progressDialog.setMessage("Loading Images.");
+        progressDialog.show();
+        //creating a worker thread to get images from the network.
+        new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                try {
+                    if (android.os.Build.VERSION.SDK_INT > 9)
+                    {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                    }
+                    URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getUserEmail());
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    JSONArray jsonArray=null;
+                    JSONObject jsonObject= null;
+                    int statusCode =httpURLConnection.getResponseCode();
+                    if(statusCode==HttpURLConnection.HTTP_OK){
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                httpURLConnection.getInputStream()));
+                        String line=null;
+                        StringBuilder sb=new StringBuilder();
+                        while ((line = reader.readLine()) != null) {
+                            Log.i(TAG, line);
+                            sb.append(line);
+                        }
+                        String response = sb.toString();
+                        jsonArray=new JSONArray(response);
+                        //jsonObject=new JSONObject(response);
+                        reader.close();
+                        httpURLConnection.disconnect();
+                        ArrayList<String>imagePaths = new ArrayList<String>();
+
+                        if (jsonArray!=null){
+                            int size=jsonArray.length();
+                            for(int i=0;i<size;i++){
+                                if(jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                                    imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                            }
+                            Message msg = mHandler.obtainMessage(200);
+                            Bundle bundle = new Bundle();
+                            bundle.putStringArrayList("JSON_RESPONE",imagePaths);
+                            msg.setData(bundle);
+                            msg.sendToTarget();
+                            /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
+                            recyclerView.setAdapter(adapter);*/
+                        }
+                    }
+                    //Thread.sleep(5000);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                    Log.i(TAG,"Error!!");
+                }
+
+                progressDialog.dismiss();
+
+            }
+        }).start();
+
+
+    }
     @Override
     public void onResume(){
 
         super.onResume();
-        progressDialog.show();
+        //progressDialog.show();
         /*databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -158,52 +253,7 @@ public static String TAG = "DisplayImagesUsingRecyclerView ";
         });*/
 
         ///this code should be in worker thread.
-        try {
-            if (android.os.Build.VERSION.SDK_INT > 9)
-            {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-            }
-            URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(this).getUserEmail());
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            JSONArray jsonArray=null;
-            JSONObject jsonObject= null;
-            int statusCode =httpURLConnection.getResponseCode();
-            if(statusCode==HttpURLConnection.HTTP_OK){
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpURLConnection.getInputStream()));
-                String line=null;
-                StringBuilder sb=new StringBuilder();
-                while ((line = reader.readLine()) != null) {
-                    Log.i(TAG, line);
-                   sb.append(line);
-                }
-                String response = sb.toString();
-                 jsonArray=new JSONArray(response);
-                //jsonObject=new JSONObject(response);
-                reader.close();
-                httpURLConnection.disconnect();
-            }
-            List<Uri>imagePaths = new ArrayList<Uri>();
 
-            if (jsonArray!=null){
-                int size=jsonArray.length();
-                for(int i=0;i<size;i++){
-                    if(jsonArray.getJSONObject(i).has("thumbnailUrl"))
-                        imagePaths.add(Uri.parse(jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
-                }
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
-                recyclerView.setAdapter(adapter);
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            Log.i(TAG,"Error!!");
-        }
-        finally{
-
-        }
-        progressDialog.dismiss();
     }
 
 }

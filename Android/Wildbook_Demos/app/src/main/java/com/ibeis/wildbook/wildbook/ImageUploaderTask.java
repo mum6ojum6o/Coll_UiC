@@ -104,7 +104,7 @@ public class ImageUploaderTask implements Runnable {
                     for(int i=0;i<filenames.size();i++){
                         files[i]=filenames.get(i);
                     }
-                    dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME, values, ImageRecorderDatabase.FILE_NAME + "=?", files);
+                    dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME, values, ImageRecorderDatabase.FILE_NAME + " IN "+placeholders(files.length), files);
                     dbHelper.close();
                     values.clear();
                 }}).start();
@@ -117,12 +117,8 @@ public class ImageUploaderTask implements Runnable {
             }
              //Context ctx= ActiveActivityTracker.getInstance().getmCurrentContext();
             new Utilities(mContext).sendNotification("Sync Completed!");
-            Log.i(TAG,"Server response error!!");
+           // Log.i(TAG,"Server response error!!");
             Log.i(TAG, "Saving Response to DB");
-
-
-
-
             Log.i(TAG,"saving encounterId:"+request.getResponse().getString("encounterId"));
             String email = new Utilities(mContext).getUserEmail();
             new Utilities(mContext,dbHelper,null).insertRecords(request.getResponse().getString("encounterId"));
@@ -133,5 +129,16 @@ public class ImageUploaderTask implements Runnable {
             Log.i(TAG,"Server response error!!");
             return;
         }
+    }
+    public String placeholders(int length){
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for (int i=0;i<length;i++){
+            sb.append("?");
+            if(i!=length-1)
+                sb.append(",");
+        }
+        sb.append(")");
+        return sb.toString();
     }
 }
