@@ -31,16 +31,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import android.os.Handler;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DisplayImagesUsingRecyclerView extends AppCompatActivity {
@@ -59,12 +57,22 @@ public Handler mHandler = new Handler(){
                 break;
             case 200:
                 Bundle b=message.getData();
+                JSONArray jsonArray=null;
                 ArrayList<String> images= b.getStringArrayList("JSON_RESPONE");
+
+                try {
+                    jsonArray= new JSONArray(b.getString("JSON_RESPONEI"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 ArrayList<Uri> imagesPath= new ArrayList<Uri>();
                 for(String anImage:images){
                     imagesPath.add(Uri.parse(anImage));
                 }
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagesPath);
+                //RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagesPath);
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),jsonArray);
                 recyclerView.setAdapter(adapter);
                 break;
             case 404:
@@ -95,7 +103,10 @@ public Handler mHandler = new Handler(){
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_images_using_recycler_view);
-
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.wildbook2);
+        getSupportActionBar().setTitle(R.string.historyString);
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -104,18 +115,6 @@ public Handler mHandler = new Handler(){
 
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this,3));
-
-
-
-        // Showing progress dialog.
-
-
-        // Setting up Firebase image upload folder path in databaseReference.
-        // The path is already defined in MainActivity.
-
-
-
-
     }
 
     @Override
@@ -125,7 +124,7 @@ public Handler mHandler = new Handler(){
         progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
 
         // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading Images.");
+        progressDialog.setMessage(getResources().getString(R.string.imageloading));
         progressDialog.show();
         //creating a worker thread to get images from the network.
         new Thread(new Runnable(){
@@ -168,6 +167,7 @@ public Handler mHandler = new Handler(){
                             Message msg = mHandler.obtainMessage(200);
                             Bundle bundle = new Bundle();
                             bundle.putStringArrayList("JSON_RESPONE",imagePaths);
+                            bundle.putString("JSON_RESPONEI",response);
                             msg.setData(bundle);
                             msg.sendToTarget();
                             /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);

@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /*IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
         IntentFilter filter2 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         */
+
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.wildbook2);
+        getSupportActionBar().setTitle(R.string.welcomeString);
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);

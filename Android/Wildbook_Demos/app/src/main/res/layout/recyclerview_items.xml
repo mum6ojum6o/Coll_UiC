@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="5dp"
-    card_view:cardElevation="12dp"
+    card_view:cardElevation="1dp"
     card_view:cardMaxElevation="5dp"
     card_view:contentPadding="1dp"
     card_view:cardUseCompatPadding="true">

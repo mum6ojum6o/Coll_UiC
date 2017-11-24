@@ -35,5 +35,7 @@
     <string name="encounter">EncounterNum</string>
     <string name="offline">You are offline</string>
     <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
+    <string name="imageloading">Loading Images...</string>
+    <string name="encounterdetails">Encounter Details</string>
 
 </resources>

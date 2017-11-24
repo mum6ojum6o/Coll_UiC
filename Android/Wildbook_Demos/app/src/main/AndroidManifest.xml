@@ -29,9 +29,6 @@
             android:name=".MainActivity"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".GoogleSignInActivity"
-            android:noHistory="true" />
-        <activity
             android:name=".DisplaySelectedImages"
             android:noHistory="false" />
         <activity android:name=".DisplayImagesUsingRecyclerView" />

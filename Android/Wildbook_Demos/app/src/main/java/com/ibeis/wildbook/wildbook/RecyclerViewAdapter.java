@@ -1,6 +1,8 @@
 package com.ibeis.wildbook.wildbook;
 
 /**
+ *
+ * Used to display the contributions
  * Created by Arjan on 9/25/2017.
  */
 
@@ -22,7 +24,12 @@ import android.widget.TextView;
         import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,16 +37,21 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    Context context;
-    List<Uri> MainImageUploadInfoList;
-
+    Context mContext;
+    List<Uri> mMainImageUploadInfoList;
+    JSONArray mJsonArray;
 
     public RecyclerViewAdapter(Context context, List<Uri> TempList) {
 
-        this.MainImageUploadInfoList = TempList;
+        this.mMainImageUploadInfoList = TempList;
 
-        this.context = context;
+        this.mContext = context;
         Log.i("RecyclerViewAdapter","constructor!!!"+"TempList.size()="+TempList.size());
+    }
+    public RecyclerViewAdapter(Context context, JSONArray jsonArray){
+        this.mContext =context;
+        this.mJsonArray=jsonArray;
+
     }
 
     @Override
@@ -47,27 +59,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_items, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view,context);
+        ViewHolder viewHolder = new ViewHolder(view,mContext);
         Log.i("RecyclerViewAdapter","ON_create_VIEW_HOLDER!!!");
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Uri UploadInfo = MainImageUploadInfoList.get(position);
+        if(mMainImageUploadInfoList!=null) {
+            Uri UploadInfo = mMainImageUploadInfoList.get(position);
+            // holder.imageNameTextView.setText(UploadInfo.getImageName());
+            Log.i("RecyclerViewAdapter", "ON_BIND_VIEW_HOLDER!!!");
+            //Loading image from Glide library.
+            Glide.with(mContext).load(UploadInfo).into(holder.imageView);
+        }
+        if(mJsonArray!=null){
 
-       // holder.imageNameTextView.setText(UploadInfo.getImageName());
-            Log.i("RecyclerViewAdapter","ON_BIND_VIEW_HOLDER!!!");
-        //Loading image from Glide library.
-
-
-        Glide.with(context).load(UploadInfo).into(holder.imageView);
+            try {
+                Uri uploadInfo = Uri.parse(mJsonArray.getJSONObject(position).getString("thumbnailUrl"));
+                Glide.with(mContext).load(uploadInfo).into(holder.imageView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-
-        return MainImageUploadInfoList.size();
+            if(mMainImageUploadInfoList!=null) {
+                return mMainImageUploadInfoList.size();
+            }
+            else{
+                return mJsonArray.length();
+            }
     }
 
 
@@ -87,12 +111,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         @Override
         public void onClick(View view){
-            Intent intent = new Intent(context,ImageViewActivity.class);
+            Intent intent = new Intent(mContext,ImageViewActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
-            intent.putExtra("POS",uri.toString());
-            intent.putExtra("Adapter","RecyclerView");
-            context.startActivity(intent);
+            if(mJsonArray==null) {
+                Uri uri = mMainImageUploadInfoList.get(getAdapterPosition());
+                intent.putExtra("POS", uri.toString());
+                intent.putExtra("Adapter", "RecyclerView");
+                mContext.startActivity(intent);
+            }
+            else{
+
+                try {
+
+                    JSONObject jsonObject = (mJsonArray.getJSONObject(getAdapterPosition()));
+                    //JSONArray encounterImages = jsonObject.getJSONArray("assets");
+                    ArrayList<String> imageUris = new ArrayList<String>();
+                    for(int i=0;i<jsonObject.getJSONArray("assets").length();i++){
+                        String aUri = jsonObject.getJSONArray("assets").getJSONObject(i).getString("url");
+                        imageUris.add(aUri);
+                    }
+                    intent.putStringArrayListExtra("assets",imageUris);
+
+                    mContext.startActivity(intent);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
            /* Glide
                     .with(mContext)
                     .load(uri) // the uri you got from Firebase

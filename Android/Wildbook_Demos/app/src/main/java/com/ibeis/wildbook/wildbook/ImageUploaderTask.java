@@ -5,11 +5,6 @@ import android.content.Context;
 import android.media.ExifInterface;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.ibeis.wildbook.wildbook.ActiveActivityTracker;
-import com.ibeis.wildbook.wildbook.MainActivity;
-import com.ibeis.wildbook.wildbook.Requestor;
 
 import java.io.IOException;
 import java.text.DateFormat;
