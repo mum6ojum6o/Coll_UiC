@@ -10,7 +10,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -57,6 +60,12 @@ public class ImageUploaderTask implements Runnable {
                     pe.printStackTrace();
                     Log.i(TAG, "Parsing Issue");
                 }
+            }
+            else{
+                //photo timestamp is null, then enter encounter date is entered as the current date.
+                dTo = new  SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                datepicker= dTo.format(date);
             }
                 request.addFormField("datepicker", datepicker);
 
