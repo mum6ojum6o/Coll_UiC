@@ -172,9 +172,16 @@ public class Utilities {
         else
             return true;
     }
-
+public String getSyncSharedPreference(){
+    mSharedPreference = mContext.getSharedPreferences(mContext.getString(
+            R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+    String username = getUserEmail();
+    return mSharedPreference.getString(username,"Sync_Preference");
+}
     /****************************************************************
     This method writes to the sharedpreferences file.
+     the latest encounter number that will be used to identify an encounter locally in the absence of network.
+     only maximum of 10 encounter numbers will be inserted in the SQLite table.
      ****************************************************************/
     public void writeSyncPreferences(String string){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(

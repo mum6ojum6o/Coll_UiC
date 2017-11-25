@@ -71,7 +71,7 @@ public Handler mHandler = new Handler(){
                 for(String anImage:images){
                     imagesPath.add(Uri.parse(anImage));
                 }
-                //RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagesPath);
+
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),jsonArray);
                 recyclerView.setAdapter(adapter);
                 break;
