@@ -8,7 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -56,6 +58,18 @@ public class ImageViewActivity extends AppCompatActivity {
         }
         else if(getIntent().getStringArrayListExtra("assets") !=null){
             setContentView(R.layout.activity_display_images_using_recycler_view);
+            findViewById(R.id.encounter_details).setVisibility(View.VISIBLE);
+            TextView longitude,latitude,date,encounterId;
+            longitude=(TextView)findViewById(R.id.encounter_long);
+            latitude=(TextView)findViewById(R.id.encounter_lat);
+            date=(TextView)findViewById(R.id.encounter_date);
+            encounterId=(TextView)findViewById(R.id.encounter_id);
+
+            date.setText(getIntent().getStringExtra("date"));
+            longitude.setText(getIntent().getStringExtra("longitude"));
+            latitude.setText(getIntent().getStringExtra("latitude"));
+            encounterId.setText(getIntent().getStringExtra("encounterId"));
+
             getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setIcon(R.mipmap.wildbook2);

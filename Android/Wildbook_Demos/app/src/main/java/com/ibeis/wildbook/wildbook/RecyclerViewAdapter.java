@@ -71,7 +71,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             // holder.imageNameTextView.setText(UploadInfo.getImageName());
             Log.i("RecyclerViewAdapter", "ON_BIND_VIEW_HOLDER!!!");
             //Loading image from Glide library.
-            Glide.with(mContext).load(UploadInfo).into(holder.imageView);
+            Glide.with(mContext)
+                    .load(UploadInfo)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.imageView);
         }
         if(mJsonArray!=null){
 
@@ -131,7 +134,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         imageUris.add(aUri);
                     }
                     intent.putStringArrayListExtra("assets",imageUris);
+                    String date=null,longitude=null,lat=null,encounterId = null;
 
+                    if (jsonObject.has("date"))
+                        date = jsonObject.get("date").toString();
+                    if (jsonObject.has("decimalLongitude"))
+                        longitude=jsonObject.get("decimalLongitude").toString();
+                    if (jsonObject.has("decimalLatitude"))
+                        lat=jsonObject.get("decimalLatitude").toString();
+                    if (jsonObject.has("catalogNumber"))
+                        encounterId=jsonObject.get("catalogNumber").toString();
+                    intent.putExtra("encounter_date",date);
+                    intent.putExtra("longitude",longitude);
+                    intent.putExtra("latitude",lat);
+                    intent.putExtra("encounterId",encounterId);
                     mContext.startActivity(intent);
 
                 } catch (JSONException e) {

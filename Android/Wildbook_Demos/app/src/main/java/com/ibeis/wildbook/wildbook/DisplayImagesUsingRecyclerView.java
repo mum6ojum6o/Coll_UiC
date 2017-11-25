@@ -115,6 +115,7 @@ public Handler mHandler = new Handler(){
 
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this,3));
+        findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
     }
 
     @Override

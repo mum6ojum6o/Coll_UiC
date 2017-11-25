@@ -7,17 +7,84 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="1dp"
         tools:context=".DisplayImagesUsingRecyclerView">
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/recyclerView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
      </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/encounter_details"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/encounter_date_label"
+            android:text="Date:"/>
+
+        <TextView
+            android:id="@+id/encounter_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/encounter_long"
+            android:layout_alignEnd="@+id/encounter_long"
+            android:text="Placeholder" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/encounter_long_label"
+            android:text="Longitude:"
+
+            android:layout_below="@+id/encounter_date_label" />
+
+        <TextView
+            android:id="@+id/encounter_long"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/encounter_long_label"
+            android:layout_alignBottom="@+id/encounter_long_label"
+            android:layout_alignStart="@+id/encounter_lat"
+            android:paddingLeft="5dp"
+            android:text="Placeholder" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/encounter_lat_label"
+            android:text="Latitude:"
+            android:layout_below="@+id/encounter_long_label"
+            />
+
+        <TextView
+            android:id="@+id/encounter_lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/encounter_long"
+            android:layout_toEndOf="@+id/encounter_id_label"
+            android:paddingLeft="5dp"
+            android:text="Placeholder" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/encounter_id_label"
+            android:text="Encounter ID:"
+            android:layout_below="@+id/encounter_lat_label"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/encounter_id"
+            android:text="Placeholder"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/encounter_lat"
+            android:layout_toRightOf="@+id/encounter_id_label"/>
     </RelativeLayout>
 
 </LinearLayout>

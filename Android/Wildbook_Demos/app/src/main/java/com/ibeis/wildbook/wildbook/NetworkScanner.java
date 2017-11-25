@@ -60,10 +60,9 @@ public class NetworkScanner extends BroadcastReceiver {
                 Log.i("NetScanner", "Startring Service MainActivity is Running?"
                         + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
                 takeAction(context);
-            } else {
+            } else if(!new Utilities(context).isNetworkAvailable()){
                 if (MainActivity.MAIN_ACTIVITY_IS_RUNNING) {
                     MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
-
                 }
 
             }
