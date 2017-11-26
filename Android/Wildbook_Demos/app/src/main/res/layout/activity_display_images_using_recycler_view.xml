@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/encounter_long"
             android:layout_alignLeft="@+id/encounter_long"
-            android:layout_alignEnd="@+id/encounter_long"
+            android:layout_alignEnd="@+id/encounter_id"
             android:paddingLeft="15dp"
             android:text="Placeholder"
             android:layout_toRightOf="@id/encounter_date_label"/>
