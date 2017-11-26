@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.util.List;
@@ -50,6 +51,7 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Uri UploadInfo = MainImageUploadInfoList.get(position);
+
       //  String path = testImageNames.get(position);
         BitmapFactory.Options mBitOptions = new BitmapFactory.Options();
         mBitOptions.inScaled=true;
@@ -57,7 +59,11 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         // holder.imageNameTextView.setText(UploadInfo.getImageName());
         Log.i("RecyclerViewAdapter","ON_BIND_VIEW_HOLDER!!!");
         //Loading image from Glide library.
-        Glide.with(context).load(new File(UploadInfo.getPath())).into(holder.imageView);
+        Glide.with(context).load(Uri.fromFile(new File(UploadInfo.getPath())))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .fitCenter()
+                .crossFade()
+                .into(holder.imageView);
         /*File imageFile = new File(path);
         Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(),mBitOptions);
         holder.getImageView().setImageBitmap(imageBitmap);*/
@@ -86,8 +92,11 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         public void onClick(View view){
             Intent intent = new Intent(context,ImageViewActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
+            //Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
+            Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
+            String filePath = new File(testImageNames.get(getAdapterPosition())).getPath();
             intent.putExtra("POS",uri.toString());
+            intent.putExtra("filePath",filePath);
             intent.putExtra("Adapter","DispPic");
             context.startActivity(intent);
         }

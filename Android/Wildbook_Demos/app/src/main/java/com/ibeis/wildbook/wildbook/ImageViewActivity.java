@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /*************************************************************************
@@ -31,6 +32,8 @@ public class ImageViewActivity extends AppCompatActivity {
         if(getIntent().getStringArrayListExtra("assets")==null) {
             setContentView(R.layout.activity_imageview_activity);
             Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
+            String filePath = getIntent().getStringExtra("filePath");
+
             ImageView imageView = new ImageView(getApplicationContext());
             ImageView imgView = (ImageView) findViewById(R.id.imgView);
             //imageView.setImageURI(uri);
@@ -49,7 +52,19 @@ public class ImageViewActivity extends AppCompatActivity {
                         .crossFade()
                         .into(imgView);
             } else {
-                imgView.setImageURI(uri);
+                //imgView.setImageURI(uri);
+                //Note:- Loading an image through uri with Glide can sometimes lead an issue.
+                //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
+                // 
+                Glide
+                        .with(ImageViewActivity.this)
+                        .load(new File(filePath).getPath())
+                        .placeholder(R.mipmap.wildbook2)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .fitCenter()
+                        .crossFade()
+                        .into(imgView);
+
             }
         }
         else if(getIntent().getStringArrayListExtra("assets") !=null){

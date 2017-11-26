@@ -3,7 +3,10 @@ package com.ibeis.wildbook.wildbook;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -36,6 +39,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Display;
@@ -67,14 +71,26 @@ import java.util.List;
 
 import static java.lang.System.load;
 
+/********************
+ * DISCLAIMER:-
+ * The code in the class file was referenced from multiple sources.
+ * References:-
+ * https://www.youtube.com/watch?v=69J2ycNCtpE - Nigel App Tuts
+ * https://github.com/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic -- Google AndroidCamera2 basic repository
+ * https://stackoverflow.com/questions/29971319/image-orientation-android/32747566#32747566 -- to help with the image display orientations...
+ */
+
+
 public class CameraMainActivity extends AppCompatActivity implements  View.OnClickListener{
     public static String SWAP="Rear";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
+        //ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
+
     }
     /*This will change based on the location of the device's sensor*/
     private static final SparseIntArray ORIENTATIONSFRONT = new SparseIntArray();
@@ -84,26 +100,46 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         ORIENTATIONSFRONT.append(Surface.ROTATION_180, 90);
         ORIENTATIONSFRONT.append(Surface.ROTATION_90, 0);
     }
-    protected static final int STORAGE_PERMISSION_REQUEST=99;
+    private static final int MAX_PREVIEW_WIDTH = 1920;
 
+    /**
+     * Max preview height that is guaranteed by Camera2 API
+     */
+    private static final int MAX_PREVIEW_HEIGHT = 1080;
+    protected static final int STORAGE_PERMISSION_REQUEST=99;
+    private int mSensorOrientation;
     private Handler mUIHandler = new Handler(){
         public void handleMessage(Message msg) {
             int what = msg.what;
             switch(what){
                 case UPDATE_PIC_PREVIEW:
                     getGeoTagData(mImageFile.getAbsolutePath());
-                    mPicPreview.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
-
-
                     mCapturedPics.add(mImageFile.getAbsoluteFile().toString());
                     Intent mediaScanIntent = new Intent(
                             Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(Uri.fromFile(mImageFile)); // may cause lags...
                     getApplicationContext().sendBroadcast(mediaScanIntent);
+
+
+                    mPicPreview.setImageBitmap(getUpdatedBitmap(mImageFile));
                     //mPicPreview.invalidate();
                     break;
             }
         }};
+    /**
+     * Gets the Amount of Degress of rotation using the exif integer to determine how much
+     * we should rotate the image.
+     * @param exifOrientation - the Exif data for Image Orientation
+     * @return - how much to rotate in degress
+     * Source:- https://stackoverflow.com/questions/29971319/image-orientation-android/32747566#32747566
+     */
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
+    }
+    private CameraCharacteristics mCameraCharacteristics;
     private ArrayList<String> mCapturedPics = new ArrayList<String>();
     private static File mImageFile;
     private File mImageFolder;
@@ -184,7 +220,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         mCapturedPics.clear();
         if(sortFilesToLatest(mImageFolder).length>0) {
             mLatestFile = sortFilesToLatest(mImageFolder)[0];
-            mPicPreview.setImageBitmap(BitmapFactory.decodeFile(mLatestFile.getAbsolutePath()));
+            mPicPreview.setImageBitmap(getUpdatedBitmap(mLatestFile));
             currentPreview = mLatestFile.getAbsolutePath().toString();
         }
         if(mTextureView.isAvailable()) {
@@ -239,6 +275,8 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     }
     private Size mPreviewSize;
     private String mCameraId;
+
+
     private void setupCamera(int width, int height) {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         mCameraManager =cameraManager;
@@ -246,10 +284,12 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             try {
                 for (String cameraId : cameraManager.getCameraIdList()) {
                     CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+                    mCameraCharacteristics = cameraCharacteristics;
                     if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) !=
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
                     }
+                    //Get the largest supported imageSize....
                     StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     Size largestImageSize = Collections.max(
                             Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
@@ -261,14 +301,77 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                                 }
                             }
                     );
+
+
+
                     mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
                             largestImageSize.getHeight(),
                             ImageFormat.JPEG,
                             1);
                     mImageReader.setOnImageAvailableListener(mOnImageAvailableListener,
                             mBackgroundHandler);
-                    mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
+
+                    int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
+                    //noinspection ConstantConditions
+                    // Source :-https://github.com/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic
+                    //this is being done to streamline the Sensor Orientation along with the camera Orientation...
+                    mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+                    boolean swappedDimensions = false;
+                    switch (displayRotation) {
+                        case Surface.ROTATION_0:
+                        case Surface.ROTATION_180:
+                            if (mSensorOrientation == 90 || mSensorOrientation == 270) {
+                                swappedDimensions = true;
+                            }
+                            break;
+                        case Surface.ROTATION_90:
+                        case Surface.ROTATION_270:
+                            if (mSensorOrientation == 0 || mSensorOrientation == 180) {
+                                swappedDimensions = true;
+                            }
+                            break;
+                        default:
+                            Log.e("CamAct", "Display rotation is invalid: " + displayRotation);
+                    }
+
+                    Point displaySize = new Point();
+                    getWindowManager().getDefaultDisplay().getSize(displaySize);
+                    int rotatedPreviewWidth = width;
+                    int rotatedPreviewHeight = height;
+                    int maxPreviewWidth = displaySize.x;
+                    int maxPreviewHeight = displaySize.y;
+
+                    if (swappedDimensions) {
+                        rotatedPreviewWidth = height;
+                        rotatedPreviewHeight = width;
+                        maxPreviewWidth = displaySize.y;
+                        maxPreviewHeight = displaySize.x;
+                    }
+
+                    if (maxPreviewWidth > MAX_PREVIEW_WIDTH) {
+                        maxPreviewWidth = MAX_PREVIEW_WIDTH;
+                    }
+
+                    if (maxPreviewHeight > MAX_PREVIEW_HEIGHT) {
+                        maxPreviewHeight = MAX_PREVIEW_HEIGHT;
+                    }
+                    //Updating the previewSize depending on the orientation of the screen....
+                   // mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
+                    mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), rotatedPreviewWidth, rotatedPreviewHeight);
+
+                    int orientation = getResources().getConfiguration().orientation;
+                    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        mTextureView.setMinimumWidth(mPreviewSize.getWidth());
+                        mTextureView.setMinimumHeight(mPreviewSize.getHeight());
+                    } else {
+
+                        mTextureView.setMinimumWidth(mPreviewSize.getHeight());
+                        mTextureView.setMinimumHeight(mPreviewSize.getWidth());
+
+                    }
+
                     mCameraId = cameraId;
+
                 }
                 return;
 
@@ -303,8 +406,10 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
                             1);
                     mImageReader.setOnImageAvailableListener(mOnImageAvailableListener,
                             mBackgroundHandler);
+
                     mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
                     mCameraId = cameraId;
+
                     return;
                 }
 
@@ -621,14 +726,18 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             CaptureRequest.Builder captureStillBuilder =
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureStillBuilder.addTarget(mImageReader.getSurface());
-            int rotation = getWindowManager().getDefaultDisplay().getRotation(); CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+            CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
+            mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT){
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
+                /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
                         ORIENTATIONSFRONT.get(rotation));
+                */captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
             }
             else {
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
-                        ORIENTATIONS.get(rotation));
+                /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
+                        ORIENTATIONS.get(rotation));*/
+                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
             }
             CameraCaptureSession.CaptureCallback captureCallback =
                     new CameraCaptureSession.CaptureCallback() {
@@ -763,6 +872,27 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
             return sb.toString();
         }
     }
+    private int getOrientation(int rotation) {
+        // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+        // We have to take that into account and rotate JPEG properly.
+        // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
+        // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+    }
+public Bitmap getUpdatedBitmap(File imageFile){
+    Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
+    Bitmap rotatedBitmap=null;
+    try{
+        ExifInterface exif = new ExifInterface(imageFile.getPath());
+        int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+        int rotationInDegrees = exifToDegrees(rotation);
+        Matrix matrix = new Matrix();
+        if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
+        rotatedBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
-
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+    return rotatedBitmap;
+    }
 }
