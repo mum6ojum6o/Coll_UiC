@@ -186,6 +186,10 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_main);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.wildbook2);
+        getSupportActionBar().setTitle(R.string.live_encounter);
         createImageFolder();
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mCaptureButton = (Button) findViewById(R.id.photoButton);

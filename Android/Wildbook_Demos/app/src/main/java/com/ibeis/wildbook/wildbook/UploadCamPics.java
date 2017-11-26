@@ -50,7 +50,7 @@ cameraMainActivity.
 This activity also enables user to either Upload or Discard the pictures clicked by the user.
 
  */
-public class UploadCamPics extends Activity implements View.OnClickListener {
+public class UploadCamPics extends AppCompatActivity implements View.OnClickListener {
     public static final String url="http://uidev.scribble.com/v2/EncounterForm";
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
@@ -64,6 +64,10 @@ public class UploadCamPics extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_upload_preview);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.wildbook2);
+        getSupportActionBar().setTitle(R.string.imagePreviewString);
         mUploadBtn = (Button) findViewById(R.id.UploadBtn2);
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
         Intent intent = getIntent();

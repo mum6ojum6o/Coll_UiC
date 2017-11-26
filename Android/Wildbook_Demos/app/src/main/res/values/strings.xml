@@ -37,5 +37,6 @@
     <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
     <string name="imageloading">Loading Images...</string>
     <string name="encounterdetails">Encounter Details</string>
+    <string name="live_encounter">Report Encounter</string>
 
 </resources>
