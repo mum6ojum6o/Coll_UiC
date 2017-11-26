@@ -55,7 +55,7 @@ public class ImageViewActivity extends AppCompatActivity {
                 //imgView.setImageURI(uri);
                 //Note:- Loading an image through uri with Glide can sometimes lead an issue.
                 //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
-                // 
+                //
                 Glide
                         .with(ImageViewActivity.this)
                         .load(new File(filePath).getPath())

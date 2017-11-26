@@ -38,10 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/encounter_long"
+            android:layout_alignLeft="@+id/encounter_long"
             android:layout_alignEnd="@+id/encounter_long"
             android:paddingLeft="15dp"
             android:text="Placeholder"
-            android:layout_toLeftOf="@id/encounter_date_label"/>
+            android:layout_toRightOf="@id/encounter_date_label"/>
 
         <TextView
             android:id="@+id/encounter_long_label"
