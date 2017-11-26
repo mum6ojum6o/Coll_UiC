@@ -2,6 +2,7 @@ package com.ibeis.wildbook.wildbook;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.media.ExifInterface;
 import android.os.Message;
 import android.util.Log;
@@ -42,6 +43,11 @@ public class ImageUploaderTask implements Runnable {
     }
     @Override
     public void run() {
+        int progress=3;
+        Intent intent1 = new Intent();
+        intent1.setAction("com.ibeis.Wildbook.Wildbook_demos");
+        intent1.putExtra("progress",progress);
+        mContext.sendBroadcast(intent1);
         Log.i(TAG,"Worker Thread started");
         String url = "http://uidev.scribble.com/v2/EncounterForm";
         Requestor request = new Requestor(url,"UTF-8","POST");
@@ -82,7 +88,9 @@ public class ImageUploaderTask implements Runnable {
             e.printStackTrace();
             Log.i(TAG,"Coordinates could not be extracted!!");
         }
+
         request.addFormField("submitterEmail",new Utilities(mContext).getUserEmail());
+
         for(String file:filenames){
             try {
                 request.addFile("theFiles", file);
@@ -94,7 +102,9 @@ public class ImageUploaderTask implements Runnable {
                 return;
 
             }
+
         }
+
         try{
             ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(mContext);
 //            dbHelper.deleteDatabase();
@@ -114,11 +124,12 @@ public class ImageUploaderTask implements Runnable {
                 }}).start();
             Log.i(TAG,"Reuest Completed!!");
             //communicate with the active activity of the application....
-            if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
+            /*if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
                 //too easy. may not be the best approach. I want to reduce the use static variables as much as possible.
                 Message msg=MainActivity.handler.obtainMessage(200);
                 MainActivity.handler.sendMessage(msg);
-            }
+            }*/
+
              //Context ctx= ActiveActivityTracker.getInstance().getmCurrentContext();
             new Utilities(mContext).sendNotification("Sync Completed!");
            // Log.i(TAG,"Server response error!!");
@@ -133,6 +144,8 @@ public class ImageUploaderTask implements Runnable {
             Log.i(TAG,"Server response error!!");
             return;
         }
+        intent1.putExtra("progress",0);
+        mContext.sendBroadcast(intent1);
     }
     public String placeholders(int length){
         StringBuilder sb = new StringBuilder();

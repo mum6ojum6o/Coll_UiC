@@ -19,17 +19,19 @@
         android:layout_alignParentStart="true">
      </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
+
     <RelativeLayout
+        android:id="@+id/encounter_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/encounter_details"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
         <TextView
+            android:id="@+id/encounter_date_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/encounter_date_label"
-            android:text="Date:"/>
+            android:text="Date:" />
 
         <TextView
             android:id="@+id/encounter_date"
@@ -37,31 +39,32 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/encounter_long"
             android:layout_alignEnd="@+id/encounter_long"
-            android:text="Placeholder" />
+            android:paddingLeft="15dp"
+            android:text="Placeholder"
+            android:layout_toLeftOf="@id/encounter_date_label"/>
+
         <TextView
+            android:id="@+id/encounter_long_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/encounter_long_label"
-            android:text="Longitude:"
-
-            android:layout_below="@+id/encounter_date_label" />
+            android:layout_below="@+id/encounter_date_label"
+            android:text="Longitude:" />
 
         <TextView
             android:id="@+id/encounter_long"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/encounter_long_label"
-            android:layout_alignBottom="@+id/encounter_long_label"
             android:layout_alignStart="@+id/encounter_lat"
+            android:layout_alignBottom="@id/encounter_long_label"
             android:paddingLeft="5dp"
             android:text="Placeholder" />
+
         <TextView
+            android:id="@+id/encounter_lat_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/encounter_lat_label"
-            android:text="Latitude:"
             android:layout_below="@+id/encounter_long_label"
-            />
+            android:text="Latitude:" />
 
         <TextView
             android:id="@+id/encounter_lat"
@@ -71,20 +74,22 @@
             android:layout_toEndOf="@+id/encounter_id_label"
             android:paddingLeft="5dp"
             android:text="Placeholder" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/encounter_id_label"
-            android:text="Encounter ID:"
-            android:layout_below="@+id/encounter_lat_label"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/encounter_lat_label"
+            android:text="Encounter ID:" />
+
+        <TextView
             android:id="@+id/encounter_id"
-            android:text="Placeholder"
-            android:paddingLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/encounter_lat"
-            android:layout_toRightOf="@+id/encounter_id_label"/>
+            android:layout_toRightOf="@+id/encounter_id_label"
+            android:paddingLeft="5dp"
+            android:text="Placeholder" />
     </RelativeLayout>
 
 </LinearLayout>

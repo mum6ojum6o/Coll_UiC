@@ -1,4 +1,5 @@
 package com.ibeis.wildbook.wildbook;
+import android.content.Intent;
 import android.os.StrictMode;
 import android.util.Log;
 import org.json.JSONException;

@@ -55,6 +55,7 @@ public class SyncerService extends IntentService {
    //The service also has to be syncronized.
     @Override
     public void onHandleIntent(Intent intent){
+
         Log.i(TAG,"Service started");
         Bundle extras=intent.getExtras();
         IsRunning=true;
@@ -93,6 +94,7 @@ public class SyncerService extends IntentService {
             int encounterNum=-1,rowCount=0;
         filesUploadedIds=new ArrayList<Integer>();
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
+
                 Log.i(TAG,"Network Available & Sync Started!");
                 new Utilities(this).sendNotification("Sync Started!");
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
@@ -184,7 +186,7 @@ public class SyncerService extends IntentService {
 
 
 
-        if(extras!=null && extras.get("Messenger")!=null) {
+       /* if(extras!=null && extras.get("Messenger")!=null) {
             msngr = (Messenger) extras.get("Messenger");
             Message msg1 = Message.obtain();
             msg1.what = MainActivity.SYNC_COMPLETE;
@@ -195,7 +197,7 @@ public class SyncerService extends IntentService {
                     Log.w(getClass().getName(), "Exception sending message", e1);
                 }
             }
-        }
+        }*/
 
             // h = new Handler(Looper.getMainLooper());
             Log.i(TAG, "IsRunning is now set to False");

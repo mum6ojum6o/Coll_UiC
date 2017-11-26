@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
     public static Handler handler;
     private GoogleSignInAccount googleSignInAccount;
+    private ProgressBar mProgressBar;
     public final Handler mUiHandler = new Handler(){
        @Override
         public void handleMessage(Message message){
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
 
         MAIN_ACTIVITY_IS_RUNNING=true;
-        handler = mUiHandler;
+        //handler = mUiHandler;
         NetworkScanner scanner = new NetworkScanner();
         /*IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
         IntentFilter filter2 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
@@ -112,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.activity_main);
             setLAYOUT();
         mAuth=FirebaseAuth.getInstance();
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar_main);
+
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if(storagePath.equals("Photos/"))
             storagePath = storagePath+firebaseUser.getEmail();
@@ -199,6 +203,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume(){
 
         super.onResume();
+        mProgressBar.setVisibility(View.GONE);
+        ActivityUpdater.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
         if(SyncerService.IsRunning){
             Log.i(TAG,"Service is running");
@@ -410,6 +416,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG,"OnResume");
         selectedImages=null;
         MAIN_ACTIVITY_IS_RUNNING=false;
+        ActivityUpdater.activeActivity = this;
     }
 
 
@@ -441,10 +448,27 @@ public static void displayOnlineStatus(int status){
         }
 
     }
+    public void updateProgressBar(int value){
+    if(value ==0){
+        mProgressBar.setVisibility(View.GONE);
+    }
+    else {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setProgress(value);
+    }
+    }
     public static void  dispSnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;
         snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_LONG);
+        snackView = snack.getView();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
+    }
+    public void  displaySnackBar(int message,int bgcolor){
+        Snackbar snack=null;
+        View snackView;
+        snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
         snackView = snack.getView();
         snackView.setBackgroundColor(bgcolor);
         snack.show();

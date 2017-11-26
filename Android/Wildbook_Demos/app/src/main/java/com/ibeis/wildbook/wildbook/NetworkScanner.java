@@ -26,7 +26,8 @@ public class NetworkScanner extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext=context;
-
+            Intent broadcastIntent = new Intent();//intent used to send broadcast to ActivityUpdater Broadcast receiver.
+            broadcastIntent.setAction("com.ibeis.Wildbook.Wildbook_demos");
             Bundle bundle = intent.getExtras();
             NetworkInfo networkInfo = (NetworkInfo) bundle.get(WifiManager.EXTRA_NETWORK_INFO);
             boolean noConnectivity = bundle.getBoolean(EXTRA_NO_CONNECTIVITY);
@@ -61,9 +62,12 @@ public class NetworkScanner extends BroadcastReceiver {
                         + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
                 takeAction(context);
             } else if(!new Utilities(context).isNetworkAvailable()){
-                if (MainActivity.MAIN_ACTIVITY_IS_RUNNING) {
-                    MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
-                }
+                //if (MainActivity.MAIN_ACTIVITY_IS_RUNNING) {
+                    //MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
+                    int message = com.ibeis.wildbook.wildbook.R.string.offline;
+                    broadcastIntent.putExtra("string",message);
+                    mContext.sendBroadcast(broadcastIntent);
+                //}
 
             }
        /* }
@@ -73,9 +77,14 @@ public class NetworkScanner extends BroadcastReceiver {
         }*/
     }
     public void takeAction(Context context){
-        if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
-            MainActivity.displayOnlineStatus(MainActivity.ONLINE);
-        }
+        //if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
+            Intent broadcastIntent = new Intent();//intent used to send broadcast to ActivityUpdater Broadcast receiver.
+            broadcastIntent.setAction("com.ibeis.Wildbook.Wildbook_demos");
+            int message = com.ibeis.wildbook.wildbook.R.string.online;
+            broadcastIntent.putExtra("string",message);
+            context.sendBroadcast(broadcastIntent);
+
+        //}
         if(!SyncerService.IsRunning) {
 
             Utilities utility = new Utilities(context);

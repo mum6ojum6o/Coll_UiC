@@ -48,6 +48,16 @@
             <action android:name="android.net.wifi.STATE_CHANGE"></action>
         </intent-filter>
         </receiver>-->
+        <receiver android:name=".ActivityUpdater"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Displays updates on the resumed activity">
+            <intent-filter android:priority="10">
+                <action android:name="com.ibeis.Wildbook.Wildbook_demos"></action>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

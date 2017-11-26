@@ -32,9 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by AndroidJSon.com on 6/18/2017.
- */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     Context mContext;

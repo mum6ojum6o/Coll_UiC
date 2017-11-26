@@ -28,10 +28,6 @@ public class ImageViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Bundle bundle = getIntent().getExtras();
-
-       // Log.i("IMAGEVIEWACTIVITY", getIntent().getStringExtra("POS"));
         if(getIntent().getStringArrayListExtra("assets")==null) {
             setContentView(R.layout.activity_imageview_activity);
             Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
@@ -65,7 +61,7 @@ public class ImageViewActivity extends AppCompatActivity {
             date=(TextView)findViewById(R.id.encounter_date);
             encounterId=(TextView)findViewById(R.id.encounter_id);
 
-            date.setText(getIntent().getStringExtra("date"));
+            date.setText(getIntent().getStringExtra("encounter_date"));
             longitude.setText(getIntent().getStringExtra("longitude"));
             latitude.setText(getIntent().getStringExtra("latitude"));
             encounterId.setText(getIntent().getStringExtra("encounterId"));
