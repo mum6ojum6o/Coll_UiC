@@ -19,14 +19,15 @@ public class ActivityUpdater extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "in OnReceiive!!!");
         int textToDisplay = intent.getIntExtra("string",0);
+
         if (activeActivity!=null){
             //do the updating....
             //this is just a test.
             if(activeActivity instanceof MainActivity){
 
-                if(textToDisplay== (R.string.offline))
+                if(textToDisplay== (R.string.offline) && textToDisplay!=0)
                     ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.WARNING);
-                else{
+                else if(textToDisplay!=0){
                     ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
                 }
             }

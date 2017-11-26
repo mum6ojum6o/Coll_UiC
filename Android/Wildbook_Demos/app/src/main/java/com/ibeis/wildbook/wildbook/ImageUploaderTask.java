@@ -46,7 +46,7 @@ public class ImageUploaderTask implements Runnable {
         int progress=3;
         Intent intent1 = new Intent();
         intent1.setAction("com.ibeis.Wildbook.Wildbook_demos");
-        intent1.putExtra("progress",progress);
+        intent1.putExtra("string",R.string.uploading_images);
         mContext.sendBroadcast(intent1);
         Log.i(TAG,"Worker Thread started");
         String url = "http://uidev.scribble.com/v2/EncounterForm";
@@ -144,7 +144,7 @@ public class ImageUploaderTask implements Runnable {
             Log.i(TAG,"Server response error!!");
             return;
         }
-        intent1.putExtra("progress",0);
+        intent1.putExtra("string",R.string.imageUploadedString);
         mContext.sendBroadcast(intent1);
     }
     public String placeholders(int length){
