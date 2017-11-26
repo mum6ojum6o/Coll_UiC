@@ -8,4 +8,5 @@
     <color name="font">#000000</color>
    <color name="red">#db2f23</color>
     <color name="green">#078e10</color>
+    <color name="action_bar">#75a4ef</color>
 </resources>

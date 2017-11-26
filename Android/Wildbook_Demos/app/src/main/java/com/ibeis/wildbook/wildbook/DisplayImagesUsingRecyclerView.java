@@ -3,6 +3,7 @@ package com.ibeis.wildbook.wildbook;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Message;
 import android.os.StrictMode;
@@ -107,6 +108,8 @@ public Handler mHandler = new Handler(){
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.wildbook2);
         getSupportActionBar().setTitle(R.string.historyString);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 

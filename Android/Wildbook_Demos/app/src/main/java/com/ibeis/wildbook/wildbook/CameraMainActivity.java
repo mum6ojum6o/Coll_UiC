@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -190,6 +191,8 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
         getSupportActionBar().setTitle(R.string.live_encounter);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
         createImageFolder();
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mCaptureButton = (Button) findViewById(R.id.photoButton);

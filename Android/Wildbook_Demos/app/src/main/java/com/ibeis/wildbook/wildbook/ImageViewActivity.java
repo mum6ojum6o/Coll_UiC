@@ -1,6 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,14 @@ public class ImageViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.wildbook2);
+        getSupportActionBar().setTitle(R.string.imagePreviewString);
+        RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recyclerView);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
+
         if(getIntent().getStringArrayListExtra("assets")==null) {
             setContentView(R.layout.activity_imageview_activity);
             Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
@@ -81,11 +90,7 @@ public class ImageViewActivity extends AppCompatActivity {
             latitude.setText(getIntent().getStringExtra("latitude"));
             encounterId.setText(getIntent().getStringExtra("encounterId"));
 
-            getSupportActionBar().setDisplayUseLogoEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.mipmap.wildbook2);
-            getSupportActionBar().setTitle(R.string.encounterdetails);
-            RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recyclerView);
+
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,3));
             //JSONArray jsonObject = new JSONObject(getIntent().getStringArrayListExtra("assets"));

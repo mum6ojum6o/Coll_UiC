@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -102,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
         getSupportActionBar().setTitle(R.string.welcomeString);
+        getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume(){
 
         super.onResume();
-        mProgressBar.setVisibility(View.GONE);
+
         ActivityUpdater.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
         if(SyncerService.IsRunning){
