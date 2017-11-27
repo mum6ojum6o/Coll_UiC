@@ -34,7 +34,7 @@ public class ImageViewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.wildbook2);
         getSupportActionBar().setTitle(R.string.imagePreviewString);
-        RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recyclerView);
+        RecyclerView recyclerView =null;
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
 
@@ -42,7 +42,7 @@ public class ImageViewActivity extends AppCompatActivity {
             setContentView(R.layout.activity_imageview_activity);
             Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
             String filePath = getIntent().getStringExtra("filePath");
-
+            recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
             ImageView imageView = new ImageView(getApplicationContext());
             ImageView imgView = (ImageView) findViewById(R.id.imgView);
             //imageView.setImageURI(uri);
@@ -78,6 +78,7 @@ public class ImageViewActivity extends AppCompatActivity {
         }
         else if(getIntent().getStringArrayListExtra("assets") !=null){
             setContentView(R.layout.activity_display_images_using_recycler_view);
+            recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             findViewById(R.id.encounter_details).setVisibility(View.VISIBLE);
             TextView longitude,latitude,date,encounterId;
             longitude=(TextView)findViewById(R.id.encounter_long);

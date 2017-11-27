@@ -93,12 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
 
         MAIN_ACTIVITY_IS_RUNNING=true;
-        //handler = mUiHandler;
-        NetworkScanner scanner = new NetworkScanner();
-        /*IntentFilter filter = new IntentFilter("android.net.wifi.STATE_CHANGE");
-        IntentFilter filter2 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        */
 
+        NetworkScanner scanner = new NetworkScanner();
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
@@ -217,8 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.i(TAG,"Service is not running");
             mSync.setEnabled(true);
         }
-        //UserName.setText(googleSignInAccount.getEmail()+"!");
-        //selectedImages = new ArrayList<String>();
+
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
     @Override
@@ -245,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.GallUpload:
-                //Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")==PackageManager.PERMISSION_GRANTED) {
                     requestPictureGalleryUpload();
                 }
@@ -258,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
                 else {
                     MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
-                    //displayToasts(INTERNET_NOT_CONNECTED);
+
                 }
                 break;
             case R.id.SingOut:
