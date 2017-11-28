@@ -45,7 +45,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
-    protected static View LAYOUT;
+    protected View LAYOUT;
     protected static int WARNING,POS_FEEDBACK;
     protected static final int ONLINE=1;
     protected static final int OFFLINE=0;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
     public static Handler handler;
     private GoogleSignInAccount googleSignInAccount;
-    private ProgressBar mProgressBar;
+
     public final Handler mUiHandler = new Handler(){
        @Override
         public void handleMessage(Message message){
@@ -80,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                    mSync.setEnabled(false);
                    break;
                case 200:
-                   dispSnackBar(R.string.imageUploadedString,POS_FEEDBACK);
+                   //dispSnackBar(R.string.imageUploadedString,POS_FEEDBACK);
                    break;
                case 404:
-                   dispSnackBar(R.string.imagesNotUploaded,WARNING);
+                   //dispSnackBar(R.string.imagesNotUploaded,WARNING);
                    break;
            }
        }
@@ -112,14 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             setContentView(R.layout.activity_main);
             setLAYOUT();
-        mAuth=FirebaseAuth.getInstance();
+       /* mAuth=FirebaseAuth.getInstance();
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar_main);
 
-        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if(storagePath.equals("Photos/"))
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();*/
+        /*if(storagePath.equals("Photos/"))
             storagePath = storagePath+firebaseUser.getEmail();
          if(databasePath.equals("Photos/"))
-            databasePath = databasePath+firebaseUser.getUid();
+            databasePath = databasePath+firebaseUser.getUid();*/
         Log.i(TAG,"storagePath"+storagePath);
 
         Log.i(TAG,"databasePath"+databasePath);
@@ -131,10 +131,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        if(firebaseUser==null){
+       /* if(firebaseUser==null){
             finish();
             startActivity(new Intent(this,Login.class));
-        }
+        }*/
         WARNING=getColor(R.color.red);
         POS_FEEDBACK=getColor(R.color.green);
         UserName=(TextView)findViewById(R.id.username);
@@ -252,7 +252,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(new Utilities(this).isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
                 else {
-                    MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
+                    //MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
+                    displaySnackBar(R.string.offline,MainActivity.WARNING);
 
                 }
                 break;
@@ -434,19 +435,19 @@ public static void displayOnlineStatus(int status){
                  snackView = snack.getView();
                 snackView.setBackgroundColor(WARNING);
                 snack.show();*/
-                dispSnackBar(R.string.offline,WARNING);
+              //  dispSnackBar(R.string.offline,WARNING);
                 break;
             case ONLINE:
                /* snack=Snackbar.make(LAYOUT,R.string.online,Snackbar.LENGTH_LONG);
                  snackView = snack.getView();
                 snackView.setBackgroundColor(POS_FEEDBACK);
                 snack.show();*/
-                dispSnackBar(R.string.online,POS_FEEDBACK);
+                //dispSnackBar(R.string.online,POS_FEEDBACK);
                 break;
         }
 
     }
-    public void updateProgressBar(int value){
+    /*public void updateProgressBar(int value){
     if(value ==0){
         mProgressBar.setVisibility(View.GONE);
     }
@@ -454,15 +455,15 @@ public static void displayOnlineStatus(int status){
         mProgressBar.setVisibility(View.VISIBLE);
         mProgressBar.setProgress(value);
     }
-    }
-    public static void  dispSnackBar(int message,int bgcolor){
+    }*/
+    /*public static void  dispSnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;
         snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_LONG);
         snackView = snack.getView();
         snackView.setBackgroundColor(bgcolor);
         snack.show();
-    }
+    }*/
     public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;

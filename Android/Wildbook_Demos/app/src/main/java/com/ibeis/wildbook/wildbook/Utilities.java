@@ -316,12 +316,12 @@ public long getEncounterNumPreferences(){
      *************************************/
     public void startSyncing(){
         Intent intent = new Intent(mContext,SyncerService.class);
-        if(MainActivity.handler!=null && !SyncerService.IsRunning) {
+        if(!SyncerService.IsRunning) {
             intent.putExtra("SyncStarted", MainActivity.SYNC_STARTED);
             intent.putExtra("SyncComplete", MainActivity.SYNC_COMPLETE);
-            Log.i("Utilities", "Mainactivity.handler" + (MainActivity.handler == null) + " MainActivity.SYNC_STARTED=" +
+           /* Log.i("Utilities", "Mainactivity.handler" + (MainActivity.handler == null) + " MainActivity.SYNC_STARTED=" +
                     MainActivity.SYNC_STARTED + "MainActivity.SYNC_COMPLETE" + MainActivity.SYNC_COMPLETE);
-            intent.putExtra("Messenger", new Messenger(MainActivity.handler));
+            intent.putExtra("Messenger", new Messenger(MainActivity.handler));*/
         }
         if(!SyncerService.IsRunning) {
             mContext.startService(intent);

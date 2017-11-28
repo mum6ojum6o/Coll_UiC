@@ -45,8 +45,8 @@ public class NetworkScanner extends BroadcastReceiver {
                     new Utilities(mContext).getSyncSharedPreference()
                             .equals(mContext.getResources()
                                     .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) {
-                Log.i("NetScanner","Wifi is connected");
-                Log.i("NetScanner", "Startring Service MainActivity is Running?" + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
+                Log.i(TAG,"Wifi is connected");
+                Log.i(TAG, "Startring Service MainActivity is Running?" + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
                 takeAction(context);
 
             } else if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE
