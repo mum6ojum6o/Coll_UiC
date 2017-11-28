@@ -100,7 +100,10 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                     ImageUploaderTask task = new ImageUploaderTask(this,imagesNames);
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....");
-                    redirect(imagesNames.size(), imagesNames.size());
+                    //redirect(imagesNames.size(), imagesNames.size());
+
+                    startActivity(new Intent(UploadCamPics.this , MainActivity.class));
+                    finish();
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());*/
@@ -176,11 +179,16 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                     }
                     else {
                         utility.insertRecords();
-                        redirect(0, 0);
+                        Log.i(TAG,"Results saved to SQLite3");
+                        Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
+                       // redirect(0, 0);
+                        startActivity(new Intent(UploadCamPics.this , MainActivity.class));
+                        finish();
                     }
 
 
                 }
+
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(UploadCamPics.this , CameraMainActivity.class));

@@ -125,7 +125,7 @@ public class Utilities {
                     @Override
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG,"+ve Button");
-                        Toast.makeText(mContext,"positive Button",Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext,"positive Button",Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.wifiString));
                         //TODO - call a function that enters records to the SQLite database
                         //Challenge- how to get the values from the UploadCamPics class?
@@ -137,7 +137,7 @@ public class Utilities {
                 .setNegativeButton(R.string.mobiledataString,new  DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int id){
-                        Log.i(TAG," -ve Button");
+                      //  Log.i(TAG," -ve Button");
                         Toast.makeText(mContext,"negative Button",Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.mobiledataString));
                         //TODO - call a function that enters records to the SQLite database
@@ -151,7 +151,7 @@ public class Utilities {
                     @Override
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG," = Button");
-                        Toast.makeText(mContext,"neutral Button",Toast.LENGTH_SHORT).show();
+                   //     Toast.makeText(mContext,"neutral Button",Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.anyString));
                         //TODO - call a function that enters records to the SQLite database
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
@@ -301,9 +301,9 @@ public long getEncounterNumPreferences(){
        //close the database.
         db.close();
         //Start the Syncing Service.
-        if(!SyncerService.IsRunning && !isNetworkAvailable()) {
+      /*  if(!SyncerService.IsRunning && !isNetworkAvailable()) {
             startSyncing();
-        }
+        }*/
 
     }
 

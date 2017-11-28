@@ -67,27 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static Handler handler;
     private GoogleSignInAccount googleSignInAccount;
 
-    public final Handler mUiHandler = new Handler(){
-       @Override
-        public void handleMessage(Message message){
-           switch(message.what){
-               case SYNC_COMPLETE:
-                   Log.i(TAG,"SYNC_COMPLETED");
-                   mSync.setEnabled(true);
-                   break;
-               case SYNC_STARTED:
-                   Log.i(TAG,"SYNC_STARTED");
-                   mSync.setEnabled(false);
-                   break;
-               case 200:
-                   //dispSnackBar(R.string.imageUploadedString,POS_FEEDBACK);
-                   break;
-               case 404:
-                   //dispSnackBar(R.string.imagesNotUploaded,WARNING);
-                   break;
-           }
-       }
-    } ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,10 +260,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResult(Status status) {
 
                         mGoogleApiClient.disconnect();
-                        mAuth.signOut(); //comment for production
+//                        mAuth.signOut(); //comment for production
                         mGoogleApiClient=null;
-                        mAuth.signOut();
-                        mAuth=null;
+  //                      mAuth.signOut();
+    //                    mAuth=null;
                         finish();
                         databasePath="Photos/"; //comment for production
                         storagePath="Photos/";//comment for production
@@ -298,9 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /***********************************************************
     *fetch the pictures from Firebase.
      ***********************************************************/
-    public void retrieveFirebaseData(){
 
-    }
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
         switch(requestCode) {
@@ -403,12 +381,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(), "Internet connection is needed to perform this operation ", Toast.LENGTH_LONG).show();
         }
     }
-   /* private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }*/
+
     @Override
     public void onPause(){
         super.onPause();
@@ -426,44 +399,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         startActivity(new Intent(MainActivity.this,Login.class));
     }
-public static void displayOnlineStatus(int status){
-    Snackbar snack=null;
-    View snackView=null;
-        switch(status){
-            case OFFLINE://make a function out of it.
-                /*snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
-                 snackView = snack.getView();
-                snackView.setBackgroundColor(WARNING);
-                snack.show();*/
-              //  dispSnackBar(R.string.offline,WARNING);
-                break;
-            case ONLINE:
-               /* snack=Snackbar.make(LAYOUT,R.string.online,Snackbar.LENGTH_LONG);
-                 snackView = snack.getView();
-                snackView.setBackgroundColor(POS_FEEDBACK);
-                snack.show();*/
-                //dispSnackBar(R.string.online,POS_FEEDBACK);
-                break;
-        }
 
-    }
-    /*public void updateProgressBar(int value){
-    if(value ==0){
-        mProgressBar.setVisibility(View.GONE);
-    }
-    else {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar.setProgress(value);
-    }
-    }*/
-    /*public static void  dispSnackBar(int message,int bgcolor){
-        Snackbar snack=null;
-        View snackView;
-        snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_LONG);
-        snackView = snack.getView();
-        snackView.setBackgroundColor(bgcolor);
-        snack.show();
-    }*/
+
     public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;

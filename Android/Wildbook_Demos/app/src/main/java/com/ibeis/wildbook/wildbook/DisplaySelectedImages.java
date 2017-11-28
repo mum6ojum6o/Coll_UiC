@@ -95,7 +95,10 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     Log.i(TAG,"Starting fileupload request using worker thread!!");
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....to mainActivity");
-                    redirect(selectedImages.size(), selectedImages.size());
+                    //redirect(selectedImages.size(), selectedImages.size());
+                    startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
+                    finish();
+
 
                 }
                 else{//no connectivity
@@ -109,10 +112,14 @@ protected ArrayList<String> selectedImages = new ArrayList<String>();
                     else {
 
                         utility.insertRecords();
-
-                        redirect(0, 0);
+                        Log.i(TAG,"Results saved to SQLite3");
+                        Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
+                        finish();
+                       // redirect(0, 0);
                     }
                 }
+
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));

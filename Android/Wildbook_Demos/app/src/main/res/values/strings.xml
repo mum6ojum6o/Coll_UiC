@@ -39,5 +39,6 @@
     <string name="imageloading">Loading Images...</string>
     <string name="encounterdetails">Encounter Details</string>
     <string name="live_encounter">Report Encounter</string>
+    <string name="uploadRequestOnNoNetwork">The images will be uploaded on the availability of appropriate network!</string>
 
 </resources>

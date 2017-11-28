@@ -71,13 +71,13 @@ public class SyncerService extends IntentService {
         Cursor c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
                 new String[]{"0"},null,null,ImageRecorderDatabase.ENCOUNTER_NUM);
         c.moveToFirst();
-        Messenger msngr;
+
         ArrayList<Integer> filesUploadedIds= new ArrayList<Integer>();
         //String groupBy
         final ArrayList<Uri> successUploads = new ArrayList<Uri>();
         if(new Utilities(getApplicationContext()).isNetworkAvailable()) {
 
-            if(extras!=null && extras.get("Messenger")!=null) {
+            /*if(extras!=null && extras.get("Messenger")!=null) {
                 msngr = (Messenger) extras.get("Messenger");
                 Message msg = Message.obtain();
                 msg.what = MainActivity.SYNC_STARTED;
@@ -86,7 +86,7 @@ public class SyncerService extends IntentService {
                 } catch (android.os.RemoteException e1) {
                     Log.w(getClass().getName(), "Exception sending message", e1);
                 }
-            }
+            }*/
 
             Log.i(TAG, "Checking NetworkAvailability!!");
         }
@@ -113,7 +113,8 @@ public class SyncerService extends IntentService {
                 }
                 else if(count>0&& encounterNum!=currEncNum){
                     ImageUploaderTask task = new ImageUploaderTask(this,filenames);
-                    task.run();
+                    //task.run(); // why not a separate thread???
+                    new Thread(task).start();
                     encounterNum=currEncNum;
                     filenames=null;
                     filenames = new ArrayList<String>();
