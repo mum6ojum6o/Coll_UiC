@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        MAIN_ACTIVITY_IS_RUNNING=true;
+        //MAIN_ACTIVITY_IS_RUNNING=true;
 
         NetworkScanner scanner = new NetworkScanner();
         getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         finish();
                         databasePath="Photos/"; //comment for production
                         storagePath="Photos/";//comment for production
-
+                        ActivityUpdater.activeActivity=null;
                         startActivity(new Intent(MainActivity.this,Login.class));
                     }
                 });

@@ -60,11 +60,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         // [START initialize_auth]
-           mAuth = FirebaseAuth.getInstance();
+           //mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
-        if(null !=mAuth.getCurrentUser()){
+        /*if(null !=mAuth.getCurrentUser()){
             updateUI(mAuth.getCurrentUser());
-        }
+        }*/
 
 
     }
@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            mAuth = FirebaseAuth.getInstance();
+            //mAuth = FirebaseAuth.getInstance();
             handleSignInResult(result);
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
@@ -143,14 +143,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     }
         // [START auth_with_google]
         private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-            if(new Utilities(getApplicationContext()).isNetworkAvailable()) {
+
                 Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
                 // [START_EXCLUDE silent]
                 progressDialog.show();
                 // [END_EXCLUDE]
 
-                AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-                mAuth.signInWithCredential(credential)
+                //AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+                updateUI(acct.getEmail());
+
+                //Below Commented Code will help authentication user in Firebase...
+               /* mAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -172,11 +175,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                                 progressDialog.dismiss();
                                 // [END_EXCLUDE]
                             }
-                        });
-            }
+                        });*/
+           /* }
             else{
                 Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
-            }
+            }*/
 
         }
 
@@ -184,7 +187,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
      * This method would be deprecated.
      * @param user
      */
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(String user) {
         progressDialog.dismiss();
         if (user != null) {
 

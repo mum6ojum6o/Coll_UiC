@@ -25,9 +25,12 @@ public class ActivityUpdater extends BroadcastReceiver {
             //this is just a test.
             if(activeActivity instanceof MainActivity){
 
-                if(textToDisplay== (R.string.offline) && textToDisplay!=0)
-                    ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.WARNING);
+                if(textToDisplay== (R.string.offline) && textToDisplay!=0) {
+                    Log.i(TAG,"Displaying Ofline Message");
+                    ((MainActivity) activeActivity).displaySnackBar(textToDisplay, MainActivity.WARNING);
+                }
                 else if(textToDisplay!=0){
+                    Log.i(TAG,"Displaying Online Message");
                     ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
                 }
             }

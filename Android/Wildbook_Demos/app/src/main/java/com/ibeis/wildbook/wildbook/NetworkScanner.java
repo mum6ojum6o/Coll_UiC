@@ -46,7 +46,7 @@ public class NetworkScanner extends BroadcastReceiver {
                             .equals(mContext.getResources()
                                     .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) {
                 Log.i(TAG,"Wifi is connected");
-                Log.i(TAG, "Startring Service MainActivity is Running?" + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
+               // Log.i(TAG, "Startring Service MainActivity is Running?" + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
                 takeAction(context);
 
             } else if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE
@@ -58,8 +58,8 @@ public class NetworkScanner extends BroadcastReceiver {
                             .equals(mContext.getResources()
                                     .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) { //if mobile data is connected.
                 Log.i("NetScanner","Mobiledata is connected");
-                Log.i("NetScanner", "Startring Service MainActivity is Running?"
-                        + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
+                /*Log.i("NetScanner", "Startring Service MainActivity is Running?"
+                        + MainActivity.MAIN_ACTIVITY_IS_RUNNING);*/
                 takeAction(context);
             } else if(!new Utilities(context).isNetworkAvailable()){
                 //if (MainActivity.MAIN_ACTIVITY_IS_RUNNING) {
