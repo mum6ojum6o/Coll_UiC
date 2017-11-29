@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected  static final int INTERNET_NOT_CONNECTED =11;
     public static final String TAG ="MainActivity";
     protected Button RepEncounter,SignOutBut,UploadFromGallery,History,mSync;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
     protected TextView UserName;
     protected ArrayList<String> selectedImages= new ArrayList<String>();
     protected static String storagePath="Photos/";
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
-    public static Handler handler;
     private GoogleSignInAccount googleSignInAccount;
 
 
@@ -146,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
-            mAuth = FirebaseAuth.getInstance();
+            //mAuth = FirebaseAuth.getInstance();
             googleSignInAccount = result.getSignInAccount();
             Log.i("SilentLogin",googleSignInAccount.getEmail());
-            UserName.setText(googleSignInAccount.getEmail()+"!");
+            UserName.setText(googleSignInAccount.getEmail());
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device

@@ -188,7 +188,7 @@ public String getSyncSharedPreference(){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
                 R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreference.edit();
-        editor.putString(FirebaseAuth.getInstance().getCurrentUser().getEmail(),string);
+        editor.putString(getUserEmail(),string);
         editor.commit();
     }
 public void writeEncounterNumPreferences(long encounterNum){

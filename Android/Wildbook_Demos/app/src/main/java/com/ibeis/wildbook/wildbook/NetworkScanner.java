@@ -57,11 +57,15 @@ public class NetworkScanner extends BroadcastReceiver {
                     new Utilities(mContext).getSyncSharedPreference()
                             .equals(mContext.getResources()
                                     .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) { //if mobile data is connected.
-                Log.i("NetScanner","Mobiledata is connected");
+                Log.i(TAG,"Mobiledata is connected");
                 /*Log.i("NetScanner", "Startring Service MainActivity is Running?"
                         + MainActivity.MAIN_ACTIVITY_IS_RUNNING);*/
                 takeAction(context);
-            } else if(!new Utilities(context).isNetworkAvailable()){
+            }else if(networkInfo != null && networkInfo.isConnected() && new Utilities(mContext).getSyncSharedPreference().equals("Sync_Preference")){
+                Log.i(TAG,"Connected but no user preferences found...");
+                takeAction(context);
+            }
+            else if(!new Utilities(context).isNetworkAvailable()){
                 //if (MainActivity.MAIN_ACTIVITY_IS_RUNNING) {
                     //MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
                     int message = com.ibeis.wildbook.wildbook.R.string.offline;

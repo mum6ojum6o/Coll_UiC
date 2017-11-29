@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
     private Button mUploadBtn,mDiscardBtn;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
 
     private ArrayList<Uri> imagesList=new ArrayList<Uri>();
     private ArrayList<String> imagesNames = new ArrayList<String>();
@@ -71,7 +72,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
         mUploadBtn = (Button) findViewById(R.id.UploadBtn2);
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
         Intent intent = getIntent();
-        mAuth = FirebaseAuth.getInstance();
+       // mAuth = FirebaseAuth.getInstance();
         imagesNames =intent.getStringArrayListExtra("Files");
         for(String file: imagesNames){
             imagesList.add(Uri.parse(new File(file).toString()));
@@ -82,7 +83,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
         recyclerView.setHasFixedSize(true);
 
         // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new LinearLayoutManager(UploadCamPics.this));
+        recyclerView.setLayoutManager(new  GridLayoutManager(UploadCamPics.this,3));
         adapter = new DispPicAdapter(getApplicationContext(), imagesList,imagesNames);
         //adapter = new RecyclerViewAdapter(getApplicationContext(),imagesList);
         recyclerView.setAdapter(adapter);
@@ -174,7 +175,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                     Utilities utility = new Utilities(this,imagesNames,dbHelper);
                     utility.prepareBatchForInsertToDB(false);
-                    if(!(new Utilities(this).checkSharedPreference(mAuth.getCurrentUser().getEmail()))) {
+                    if(!(utility.checkSharedPreference(utility.getUserEmail()))) {
                        utility.connectivityAlert().show();
                     }
                     else {
@@ -197,10 +198,6 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
         }
 
     }
-    public void redirect(int imagesUploaded, int imagesRequested){
-       finish();
-        startActivity(new Intent(UploadCamPics.this,MainActivity.class));
-
-    }
+  
 
 }

@@ -683,7 +683,7 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         //Log.i(TAG,"createImageFolder");
         if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")== PackageManager.PERMISSION_GRANTED) {
             File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            mImageFolder = new File(imageFile, "camera2Api");
+            mImageFolder = new File(imageFile, "Wildbook");
             if (!mImageFolder.exists()) {
                 mImageFolder.mkdirs();
             }

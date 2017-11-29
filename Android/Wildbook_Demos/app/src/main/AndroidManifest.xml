@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -17,12 +18,8 @@
         android:roundIcon="@mipmap/wildbook2"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-
         <activity android:name=".Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+           
         </activity>
         <activity
             android:name=".MainActivity"
@@ -39,24 +36,32 @@
         <service android:name=".SyncerService" />
 
         <activity android:name=".ImageViewActivity" />
-        <!--<receiver
+        <!--
+        <receiver
             android:name=".NetworkScanner"
             android:enabled="true"
             android:label="WiFi Scanner Broadcast Receiver">
         <intent-filter android:priority="10">
             <action android:name="android.net.wifi.STATE_CHANGE"></action>
         </intent-filter>
-        </receiver>-->
-        <receiver android:name=".ActivityUpdater"
+        </receiver>
+        -->
+        <receiver
+            android:name=".ActivityUpdater"
             android:enabled="true"
             android:exported="false"
             android:label="Displays updates on the resumed activity">
             <intent-filter android:priority="10">
-                <action android:name="com.ibeis.Wildbook.Wildbook_demos"></action>
+                <action android:name="com.ibeis.Wildbook.Wildbook_demos" />
             </intent-filter>
         </receiver>
 
-
+        <activity android:name=".SplashActivity" android:theme="@style/SplashTheme">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
