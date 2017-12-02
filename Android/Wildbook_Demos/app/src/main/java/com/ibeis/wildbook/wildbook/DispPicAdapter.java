@@ -28,12 +28,12 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
 
     Context context;
     List<Uri> MainImageUploadInfoList;
-    List<String> testImageNames;
+    List<String> mImagePaths;
 
     public DispPicAdapter(Context context, List<Uri> TempList,List<String>imagePaths) {
 
         this.MainImageUploadInfoList = TempList;
-        this.testImageNames = imagePaths;
+        this.mImagePaths = imagePaths;
         this.context = context;
         Log.i("RecyclerViewAdapter","constructor!!!"+"TempList.size()="+TempList.size());
     }
@@ -59,11 +59,22 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         // holder.imageNameTextView.setText(UploadInfo.getImageName());
         Log.i("RecyclerViewAdapter","ON_BIND_VIEW_HOLDER!!!");
         //Loading image from Glide library.
+        if(context instanceof UploadCamPics) {
         Glide.with(context).load(Uri.fromFile(new File(UploadInfo.getPath())))
+                .override(100,100)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .crossFade()
+
                 .into(holder.imageView);
+        }
+        else {
+            Glide.with(context).load(UploadInfo)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter()
+                    .crossFade()
+                    .into(holder.imageView);
+        }
         /*File imageFile = new File(path);
         Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(),mBitOptions);
         holder.getImageView().setImageBitmap(imageBitmap);*/
@@ -92,11 +103,15 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         public void onClick(View view){
             Intent intent = new Intent(context,ImageViewActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
-            Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
-            String filePath = new File(testImageNames.get(getAdapterPosition())).getPath();
-            intent.putExtra("POS",uri.toString());
-            intent.putExtra("filePath",filePath);
+            Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
+            //Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
+            String filePath=null;
+            if(mImagePaths.get(getAdapterPosition())!=null)
+                filePath = new File(mImagePaths.get(getAdapterPosition())).getPath();
+            if("content".equalsIgnoreCase(uri.getScheme()))
+                intent.putExtra("POS",uri.toString());
+            else
+                intent.putExtra("filePath",filePath);
             intent.putExtra("Adapter","DispPic");
             context.startActivity(intent);
         }

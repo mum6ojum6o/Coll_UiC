@@ -40,5 +40,6 @@
     <string name="encounterdetails">Encounter Details</string>
     <string name="live_encounter">Report Encounter</string>
     <string name="uploadRequestOnNoNetwork">The images will be uploaded on the availability of appropriate network!</string>
+    <string name="server_offline">Unfortunately, you contribution could not be retrieved.\n Please try again after sometime</string>
 
 </resources>

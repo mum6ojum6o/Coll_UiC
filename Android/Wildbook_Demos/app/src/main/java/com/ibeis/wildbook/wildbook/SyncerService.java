@@ -47,7 +47,7 @@ public class SyncerService extends IntentService {
     private static final String TAG = "SyncerService";
     private SQLiteCursor mSQLiteCursor;
     private ImageRecorderDatabase mDBHelper;
-    private Button syncButton;
+
    public SyncerService(){
        super(TAG);
    }
@@ -64,7 +64,9 @@ public class SyncerService extends IntentService {
         mDBHelper.getReadableDatabase();
         String where = "isUploaded = 0";
         //String orderBy= "ORDER BY "
-        String columns[]={ImageRecorderDatabase._ID,ImageRecorderDatabase.ENCOUNTER_NUM,ImageRecorderDatabase.FILE_NAME,ImageRecorderDatabase.LONGITUDE,ImageRecorderDatabase.LATITUDE};
+        String columns[]={ImageRecorderDatabase._ID,ImageRecorderDatabase.ENCOUNTER_NUM,
+                ImageRecorderDatabase.FILE_NAME,ImageRecorderDatabase.LONGITUDE,
+                ImageRecorderDatabase.LATITUDE,ImageRecorderDatabase.USER_NAME};
         String column[]={ImageRecorderDatabase.ENCOUNTER_NUM};
 
 
@@ -90,29 +92,30 @@ public class SyncerService extends IntentService {
 
             Log.i(TAG, "Checking NetworkAvailability!!");
         }
+        String name=null;
         ArrayList<String> filenames=new ArrayList<String>();
             int encounterNum=-1,rowCount=0;
         filesUploadedIds=new ArrayList<Integer>();
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
 
                 Log.i(TAG,"Network Available & Sync Started!");
-                new Utilities(this).sendNotification("Sync Started!");
+                new Utilities(this).sendNotification("Sync Started!",null);
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
-
+                name=c.getString(c.getColumnIndex(ImageRecorderDatabase.USER_NAME));
                 int fileId = c.getInt(c.getColumnIndex(ImageRecorderDatabase._ID));
                 filesUploadedIds.add(fileId);
                 int currEncNum=c.getInt(c.getColumnIndex(ImageRecorderDatabase.ENCOUNTER_NUM));
                 Log.i(TAG, "record:"+fileId+", "+filename+", "+currEncNum);
                 Log.i(TAG,"filename Uploading..."+filename);
                 if(encounterNum==-1){
-                    encounterNum=currEncNum;
+                    encounterNum=currEncNum;// ENCOUNTER_NUM is identifies whether two Images are associated to the same encounter or not.
                     filenames.add(filename);
                 }
                 else if(encounterNum==currEncNum){
                     filenames.add(filename);
                 }
                 else if(count>0&& encounterNum!=currEncNum){
-                    ImageUploaderTask task = new ImageUploaderTask(this,filenames);
+                    ImageUploaderTask task = new ImageUploaderTask(this,filenames,name);
                     //task.run(); // why not a separate thread???
                     new Thread(task).start();
                     encounterNum=currEncNum;
@@ -172,11 +175,12 @@ public class SyncerService extends IntentService {
                 /*try{
                     Thread.sleep(1000);
                 }catch(Exception e){e.printStackTrace();}*/
+                Log.i(TAG,name);
             }
             if(count>0) {
                 Log.i(TAG,"Instantiating Http Request");
                 Log.i(TAG, "filesRead:"+filenames.size());
-                ImageUploaderTask task = new ImageUploaderTask(this,filenames); //the last record....
+                ImageUploaderTask task = new ImageUploaderTask(this,filenames,name); //the last record....
                 task.run();
 
             }
@@ -205,14 +209,15 @@ public class SyncerService extends IntentService {
             IsRunning = false;
             //if no records were uploaded... do not send any notification...
             if(count>0) {
-                new Utilities(this).sendNotification("Sync Completed!");
+                Log.i(TAG,"name:"+name);
+                new Utilities(this).sendNotification("Sync Completed!",name);
                // sendNotification("Sync Completed!");
             }
         Log.i(TAG,"Service ended");
 
     }
 
-    private void sendNotification(String msg) {
+    /*private void sendNotification(String msg) {
         NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder;
@@ -238,6 +243,6 @@ public class SyncerService extends IntentService {
         }
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(1, mBuilder.build());
-    }
+    }*/
 
 }

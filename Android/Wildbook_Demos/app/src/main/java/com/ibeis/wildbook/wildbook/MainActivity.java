@@ -1,7 +1,10 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -11,9 +14,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -39,8 +45,10 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -58,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //private FirebaseAuth mAuth;
     protected TextView UserName;
     protected ArrayList<String> selectedImages= new ArrayList<String>();
-    protected static String storagePath="Photos/";
-    protected static String databasePath="Photos/";
+   // protected static String storagePath="Photos/";
+   // protected static String databasePath="Photos/";
     private GoogleApiClient mGoogleApiClient;
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
@@ -99,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             storagePath = storagePath+firebaseUser.getEmail();
          if(databasePath.equals("Photos/"))
             databasePath = databasePath+firebaseUser.getUid();*/
-        Log.i(TAG,"storagePath"+storagePath);
+        /*Log.i(TAG,"storagePath"+storagePath);
 
-        Log.i(TAG,"databasePath"+databasePath);
+        Log.i(TAG,"databasePath"+databasePath);*/
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -264,8 +273,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   //                      mAuth.signOut();
     //                    mAuth=null;
                         finish();
-                        databasePath="Photos/"; //comment for production
-                        storagePath="Photos/";//comment for production
+                       // databasePath="Photos/"; //comment for production
+                        //storagePath="Photos/";//comment for production
                         ActivityUpdater.activeActivity=null;
                         startActivity(new Intent(MainActivity.this,Login.class));
                     }
@@ -304,25 +313,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     @Override
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
+    public void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String selectedImage=null;
-        if(resultCode==RESULT_OK){
-            Log.i(TAG,"OnActivityResult OK");
-            if(requestCode==IMAGE_GALLERY_REQUEST) {
-                selectedImages=new ArrayList<String>();
-                ContentResolver contentResolver = getContentResolver();
-                String [] filePathColumn = {MediaStore.Images.Media.DATA};
+        String selectedImage = null;
 
-                    if (data.getClipData() != null ) {
 
+        if (resultCode == RESULT_OK) {
+            Log.i(TAG, "OnActivityResult OK");
+
+            if (requestCode == IMAGE_GALLERY_REQUEST) {  //Handling images selected by the users....
+                Uri dataUri = data.getData();
+                selectedImages = new ArrayList<String>();
+                //ontentResolver contentResolver = getContentResolver();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                //Log.i(TAG,"Scheme:" +data.getData().getScheme());
+                if (data.getClipData() != null) {
                     ClipData mClipData = data.getClipData();
-                    if (mClipData.getItemCount()>10){
+                    if (mClipData.getItemCount() > 10) {
                         Log.i(TAG, "More than 10 images selected");
                         Toast.makeText(getApplicationContext(), "Please select upto 10 images only", Toast.LENGTH_LONG).show();
-                    }
-                    else {
+                    } else {
                         ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
@@ -330,44 +341,163 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mArrayUri.add(uri);
                             // Get the cursor
                             Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+
                             // Move to first row
                             cursor.moveToFirst();
 
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                             selectedImage = cursor.getString(columnIndex);
-                            selectedImages.add(selectedImage);
+                            try {
+                                selectedImages.add(getFilePath(this, uri));
+                            }catch(Exception e){
+                                Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
+                            }
+
+                          /*  if(selectedImages.get(0)==null){
+                                File f;
+                                getContentResolver().openInputStream(uri)
+                            }*/
                             cursor.close();
 
                         }
-                        showGallPicturesPreview(selectedImages);
-                    }
-                }
-                else if (data.getData()!=null){
-                    Cursor cursor = getContentResolver().query(data.getData(),filePathColumn,null,null, null);
-                    cursor.moveToFirst();
-                    while(!cursor.isAfterLast()) {
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        selectedImages.add(cursor.getString(columnIndex));
-                        cursor.moveToNext();
-                    }
-                    cursor.close();
-                    showGallPicturesPreview(selectedImages);
-                }
 
+                            showGallPicturesPreview(selectedImages, mArrayUri,dataUri);
+
+                    }
+                } else if (data.getData() != null) {
+                    Uri uri = data.getData();
+                         /*final int takeFlags = data.getFlags()
+                                 & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        //
+                         //getContentResolver().takePersistableUriPermission(uri,takeFlags);
+                         Cursor cursor = getContentResolver().query(uri,filePathColumn,null,null, null);
+
+                         Log.i(TAG,"Cursor Size:"+ cursor.getCount());
+                        cursor.moveToFirst();
+                        while(!cursor.isAfterLast()) {
+                            int columnIndex = cursor.getColumnIndexOrThrow(filePathColumn[0]);
+                            String imagePath = cursor.getString(columnIndex);
+                            if (null==imagePath){
+                                File f = new File(uri.getPath());
+                                imagePath=f.getAbsolutePath();
+                            }
+                            selectedImages.add(imagePath);
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                }*/
+
+                    /*try {
+                        selectedImages.add(getFilePath(this, uri));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_LONG).show();
+                    }*/
+                    ArrayList<Uri> uris = new ArrayList<Uri>();
+                    uris.add(uri);
+                    try{
+                        selectedImages.add(getFilePath(this,uri));
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
+                    }
+                    showGallPicturesPreview(selectedImages, uris,uri);
+                }
             }
         }
     }
+
+    @SuppressLint("NewApi")
+    public  String getFilePath(Context context, Uri uri) throws URISyntaxException {
+        String selection = null;
+        String[] selectionArgs = null;
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
     //metho
-    public void showGallPicturesPreview(ArrayList<String> images){
+    public void showGallPicturesPreview(ArrayList<String> images,ArrayList<Uri> uris,Uri uriData){
         Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
+        if(uriData!=null)
+            intent.setData(uriData);
         intent.putExtra("selectedImages",images);
+        ArrayList<String> uriToString = new ArrayList<String>();
+        if(uris!=null) {
+            for (Uri uri : uris) {
+
+                uriToString.add(uri.toString());
+            }
+        }
+        if(uriToString!=null && uriToString.size()>0)
+            intent.putExtra("ImageUris",uriToString);
+
         startActivity(intent);
+
     }
     //this method enables users to select multiple pictures from the mobile device.
     public void requestPictureGalleryUpload(){
+
         Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         photoPickerIntent.setType("image/*");
+        photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
         startActivityForResult(Intent.createChooser(photoPickerIntent, "Select Picture"), IMAGE_GALLERY_REQUEST);
     }
 

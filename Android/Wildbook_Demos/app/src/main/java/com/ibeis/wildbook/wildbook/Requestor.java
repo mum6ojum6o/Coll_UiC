@@ -1,5 +1,6 @@
 package com.ibeis.wildbook.wildbook;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.util.Log;
 import org.json.JSONException;
@@ -16,11 +17,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
+/*************************************************************************************************
  * Created by Arjan on 11/16/2017.
  *
  * This application creates the http request and uploads the mutlipart/form-data to the database API!!
- */
+ *************************************************************************************************/
 
 public class Requestor {
     public static final String TAG="Requestor";
@@ -70,6 +71,9 @@ public class Requestor {
     }
     public void addFile(String fieldname,String filename){
         File file =new File(filename);
+        if(!file.exists()){
+
+        }
         String absFileName=file.getName();
         mWriter.append("--"+mBoundary).append("\r\n");
         mWriter.append("Content-Disposition: form-data; name=\""+fieldname+"\"; filename=\""+absFileName+"\"").append("\r\n");

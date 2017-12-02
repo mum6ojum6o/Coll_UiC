@@ -37,11 +37,14 @@ public class ImageViewActivity extends AppCompatActivity {
         RecyclerView recyclerView =null;
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
-
+        Uri uri=null;
+        String filePath=null;
         if(getIntent().getStringArrayListExtra("assets")==null) {
             setContentView(R.layout.activity_imageview_activity);
-            Uri uri = Uri.parse(getIntent().getStringExtra("POS"));
-            String filePath = getIntent().getStringExtra("filePath");
+            if(getIntent().hasExtra("POS"))
+                uri= Uri.parse(getIntent().getStringExtra("POS"));
+            if(getIntent().hasExtra("filePath"))
+                filePath= getIntent().getStringExtra("filePath");
             recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
             ImageView imageView = new ImageView(getApplicationContext());
             ImageView imgView = (ImageView) findViewById(R.id.imgView);
@@ -65,15 +68,26 @@ public class ImageViewActivity extends AppCompatActivity {
                 //Note:- Loading an image through uri with Glide can sometimes lead an issue.
                 //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
                 //
+                if(filePath!=null) {
+                    Glide
+                            .with(ImageViewActivity.this)
+                            .load(new File(filePath).getPath())
+                            .placeholder(R.mipmap.wildbook2)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .fitCenter()
+                            .crossFade()
+                            .into(imgView);
+                }
+                else if(uri!=null) {
                 Glide
-                        .with(ImageViewActivity.this)
-                        .load(new File(filePath).getPath())
+                        .with(this)
+                        .load(uri)
                         .placeholder(R.mipmap.wildbook2)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .fitCenter()
                         .crossFade()
                         .into(imgView);
-
+                }
             }
         }
         else if(getIntent().getStringArrayListExtra("assets") !=null){

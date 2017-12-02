@@ -26,9 +26,11 @@ public class ImageUploaderTask implements Runnable {
     public static final String TAG="com.ibeis.wildbook.wildbook.ImageUploaderTask";
     Context mContext;
     List<String> filenames;
-    public ImageUploaderTask(Context context,List<String> images){
+    String naam;
+    public ImageUploaderTask(Context context,List<String> images,String naam){
         this.mContext=context;
         this.filenames = new ArrayList<String>();
+        this.naam = naam;
         //hardcopy
         for(String image:images){
             this.filenames.add(image);
@@ -51,7 +53,7 @@ public class ImageUploaderTask implements Runnable {
         Log.i(TAG,"Worker Thread started");
         String url = "http://uidev.scribble.com/v2/EncounterForm";
         Requestor request = new Requestor(url,"UTF-8","POST");
-        new Utilities(mContext).sendNotification("Upload Started");
+        new Utilities(mContext).sendNotification("Upload Started",null);
         request.addFormField("jsonResponse","true");
         try {
             ExifInterface exif = new ExifInterface(filenames.get(0));
@@ -89,7 +91,7 @@ public class ImageUploaderTask implements Runnable {
             Log.i(TAG,"Coordinates could not be extracted!!");
         }
 
-        request.addFormField("submitterEmail",new Utilities(mContext).getUserEmail());
+        request.addFormField("submitterEmail",naam);
 
         for(String file:filenames){
             try {
@@ -97,7 +99,7 @@ public class ImageUploaderTask implements Runnable {
             }catch(Exception e){
                 e.printStackTrace();
                 Log.i(TAG,"case UploadBtn2: exception occured while building request");
-                new Utilities(mContext).sendNotification("Error");
+                new Utilities(mContext).sendNotification("Error",null);
                 request=null;
                 return;
 
@@ -131,14 +133,14 @@ public class ImageUploaderTask implements Runnable {
             }*/
 
              //Context ctx= ActiveActivityTracker.getInstance().getmCurrentContext();
-            new Utilities(mContext).sendNotification("Sync Completed!");
+            new Utilities(mContext).sendNotification("Sync Completed!",naam);
            // Log.i(TAG,"Server response error!!");
             Log.i(TAG, "Saving Response to DB");
             Log.i(TAG,"saving encounterId:"+request.getResponse().getString("encounterId"));
             String email = new Utilities(mContext).getUserEmail();
             new Utilities(mContext,dbHelper,null).insertRecords(request.getResponse().getString("encounterId"));
         }catch(Exception e){
-            new Utilities(mContext).sendNotification("Error");
+            new Utilities(mContext).sendNotification("Error",null);
             e.printStackTrace();
             request=null;
             Log.i(TAG,"Server response error!!");

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Messenger;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
@@ -334,10 +335,10 @@ public long getEncounterNumPreferences(){
     }
 
     /**********************************************************
-     * This method uploads pictures.....
+     * This method uploads pictures to Firebase.....
      * and then redirects to the mainactivity....
      **********************************************************/
-    public void uploadPictures(ArrayList<String> _images ){
+    /*public void uploadPictures(ArrayList<String> _images ){
         ArrayList<ImageModel> imageModels=new ArrayList<ImageModel>();
         for(String image:_images){
             ImageModel anImage=new ImageModel(image);
@@ -397,7 +398,7 @@ public long getEncounterNumPreferences(){
             }
         });
         //redirect(successUploads.size(), selectedImages.size(),this,MainActivity.class);
-    }
+    }*/
 
     /*********************
      *
@@ -551,7 +552,7 @@ public long getEncounterNumPreferences(){
     }
 
     // Method used for sending Syncing Notifications....
-    public void sendNotification(String msg) {
+    public void sendNotification(String msg,  String naam) {
         NotificationManager mNotificationManager = (NotificationManager)
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder;
@@ -559,6 +560,7 @@ public long getEncounterNumPreferences(){
         mBuilder =
                 new NotificationCompat.Builder(mContext)
                         .setContentTitle("Wildbook")
+                        .setAutoCancel(true)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg);
@@ -576,8 +578,12 @@ public long getEncounterNumPreferences(){
             mBuilder.setSmallIcon(R.drawable.error);
         }
         else{
+            Intent intent = new Intent(mContext,DisplayImagesUsingRecyclerView.class);
+            Log.i(TAG,"naam in Utilities:"+naam);
+            intent.putExtra("UploadedBy",naam);
+            intent.putExtra("source","notification");
             contentIntent = PendingIntent.getActivity(mContext, 0,
-                    new Intent(mContext, DisplayImagesUsingRecyclerView.class), 0);
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
 
         }
@@ -585,6 +591,42 @@ public long getEncounterNumPreferences(){
             mBuilder.setContentIntent(contentIntent);
         }
         mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    public String checkUsername(){
+        String email=null;
+        try {
+            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(mContext.getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                    .build();
+            googleApiClient.connect();
+            //email=\
+            googleApiClient.clearDefaultAccountAndReconnect();
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+            if (opr.isDone()) {
+                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+                // and the GoogleSignInResult will be available instantly.
+                Log.d(TAG, "Got cached sign-in");
+                GoogleSignInResult result = opr.get();
+
+                GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
+                Log.i(TAG, "getting Email Id:" + googleSignInAccount.getEmail());
+                return googleSignInAccount.getEmail();
+            }
+            else {
+                Log.i(TAG, "No Email ID");
+                return "Not connected";
+            }
+        }catch(Exception e){
+               e.printStackTrace();
+               return "Not connected";
+
+        }
+
     }
 
     public String getUserEmail(){

@@ -1,6 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
@@ -17,8 +18,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +55,7 @@ public class DisplayImagesUsingRecyclerView extends AppCompatActivity {
     private static final int COMPLETE = 200;
     private static final int PROG_UPDATE = 853;
     public static String TAG = "DisplayImagesUsingRecyclerView ";
+
 public Handler mHandler = new Handler(){
     @Override
     public void handleMessage(Message message){
@@ -77,6 +86,10 @@ public Handler mHandler = new Handler(){
                 recyclerView.setAdapter(adapter);
                 break;
             case 404:
+                errorMessage.setText(getResources().getString(R.string.server_offline));
+                errorMessage.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
                 break;
         }
     }
@@ -90,7 +103,7 @@ public Handler mHandler = new Handler(){
 
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter ;
-
+    private TextView errorMessage;
     // Creating Progress dialog
     ProgressDialog progressDialog;
     StorageReference storageReference;
@@ -103,22 +116,46 @@ public Handler mHandler = new Handler(){
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_images_using_recycler_view);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.historyString);
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
-        // Assign id to RecyclerView.
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        Log.i(TAG,getIntent().hasExtra("source")+" From Notification????");
+        Log.i(TAG, getIntent().hasExtra("UploadedBy")+ "User INFORMATION");
+       // Log.i(TAG, "checking user: "+new Utilities(this).checkUsername());
+        String naam=new Utilities(this).getUserEmail();
+        String uploadedBy=getIntent().getStringExtra("UploadedBy");
+        if(getIntent().hasExtra("source")
+                && naam.equals("")) {//means no user has logged in....
+            Log.i(TAG,"Not connected with the same user");
+            Toast.makeText(this,"Please login with the appropriate userId.",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this,Login.class));
+            finish();
+        }
+        //someone has logged in but with different account
+        else if(getIntent().hasExtra("source")
+                && ((!uploadedBy.equals(naam) && !naam.equals("")))){
+            Toast.makeText(this,"The previous sync was requested for another user",Toast.LENGTH_LONG);
+            startActivity(new Intent(this,MainActivity.class));
+            finish();
+        }
+        else {
+            setContentView(R.layout.activity_display_images_using_recycler_view);
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setIcon(R.mipmap.wildbook2);
+            getSupportActionBar().setTitle(R.string.historyString);
+            getSupportActionBar().setBackgroundDrawable(
+                    new ColorDrawable(getResources().getColor(R.color.action_bar, null)));
+            // Assign id to RecyclerView.
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        // Setting RecyclerView size true.
-        recyclerView.setHasFixedSize(true);
+            // Setting RecyclerView size true.
+            recyclerView.setHasFixedSize(true);
 
-        // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this,3));
-        findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
+            // Setting RecyclerView layout as LinearLayout.
+            recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 3));
+            findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
+            errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
+            errorMessage.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -131,65 +168,71 @@ public Handler mHandler = new Handler(){
         progressDialog.setMessage(getResources().getString(R.string.imageloading));
         progressDialog.show();
         //creating a worker thread to get images from the network.
-        new Thread(new Runnable(){
 
-            @Override
-            public void run() {
-                try {
-                    if (android.os.Build.VERSION.SDK_INT > 9)
-                    {
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                    }
-                    URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getUserEmail());
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    JSONArray jsonArray=null;
-                    JSONObject jsonObject= null;
-                    int statusCode =httpURLConnection.getResponseCode();
-                    if(statusCode==HttpURLConnection.HTTP_OK){
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                httpURLConnection.getInputStream()));
-                        String line=null;
-                        StringBuilder sb=new StringBuilder();
-                        while ((line = reader.readLine()) != null) {
-                            Log.i(TAG, line);
-                            sb.append(line);
+
+
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                            StrictMode.setThreadPolicy(policy);
                         }
-                        String response = sb.toString();
-                        jsonArray=new JSONArray(response);
-                        //jsonObject=new JSONObject(response);
-                        reader.close();
-                        httpURLConnection.disconnect();
-                        ArrayList<String>imagePaths = new ArrayList<String>();
-
-                        if (jsonArray!=null){
-                            int size=jsonArray.length();
-                            for(int i=0;i<size;i++){
-                                if(jsonArray.getJSONObject(i).has("thumbnailUrl"))
-                                    imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getUserEmail());
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                        JSONArray jsonArray = null;
+                        JSONObject jsonObject = null;
+                        int statusCode = httpURLConnection.getResponseCode();
+                        if (statusCode == HttpURLConnection.HTTP_OK) {
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                    httpURLConnection.getInputStream()));
+                            String line = null;
+                            StringBuilder sb = new StringBuilder();
+                            while ((line = reader.readLine()) != null) {
+                                Log.i(TAG, line);
+                                sb.append(line);
                             }
-                            Message msg = mHandler.obtainMessage(200);
-                            Bundle bundle = new Bundle();
-                            bundle.putStringArrayList("JSON_RESPONE",imagePaths);
-                            bundle.putString("JSON_RESPONEI",response);
-                            msg.setData(bundle);
-                            msg.sendToTarget();
+                            String response = sb.toString();
+                            jsonArray = new JSONArray(response);
+                            //jsonObject=new JSONObject(response);
+                            reader.close();
+                            httpURLConnection.disconnect();
+                            ArrayList<String> imagePaths = new ArrayList<String>();
+
+                            if (jsonArray != null) {
+                                int size = jsonArray.length();
+                                for (int i = 0; i < size; i++) {
+                                    if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                                        imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                                }
+                                Message msg = mHandler.obtainMessage(200);
+                                Bundle bundle = new Bundle();
+                                bundle.putStringArrayList("JSON_RESPONE", imagePaths);
+                                bundle.putString("JSON_RESPONEI", response);
+                                msg.setData(bundle);
+                                msg.sendToTarget();
                             /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
                             recyclerView.setAdapter(adapter);*/
+                            } else {
+                                Message msg = mHandler.obtainMessage(404);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("404", getResources().getString(R.string.server_offline));
+                                msg.setData(bundle);
+                                msg.sendToTarget();
+                            }
                         }
+                        //Thread.sleep(5000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i(TAG, "Error!!");
                     }
-                    //Thread.sleep(5000);
+
+                    progressDialog.dismiss();
+
                 }
-                catch(Exception e){
-                    e.printStackTrace();
-                    Log.i(TAG,"Error!!");
-                }
-
-                progressDialog.dismiss();
-
-            }
-        }).start();
-
+            }).start();
 
     }
     @Override

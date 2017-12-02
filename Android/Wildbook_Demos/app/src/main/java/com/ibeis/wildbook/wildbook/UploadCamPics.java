@@ -84,7 +84,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
 
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new  GridLayoutManager(UploadCamPics.this,3));
-        adapter = new DispPicAdapter(getApplicationContext(), imagesList,imagesNames);
+        adapter = new DispPicAdapter(this, imagesList,imagesNames);
         //adapter = new RecyclerViewAdapter(getApplicationContext(),imagesList);
         recyclerView.setAdapter(adapter);
         mUploadBtn.setOnClickListener(this);
@@ -98,7 +98,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                 if (new Utilities(this).isNetworkAvailable()) {
 
                     int uploadCount=0;
-                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames);
+                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames, new Utilities(this).getUserEmail());
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....");
                     //redirect(imagesNames.size(), imagesNames.size());
@@ -198,6 +198,6 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
         }
 
     }
-  
+
 
 }
