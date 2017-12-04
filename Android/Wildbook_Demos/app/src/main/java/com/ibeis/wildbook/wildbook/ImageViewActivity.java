@@ -1,5 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -11,10 +13,14 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,22 +31,22 @@ import java.util.ArrayList;
 /*************************************************************************
  * Class to view Higher resolution of the images
  *********************************************************************/
-public class ImageViewActivity extends AppCompatActivity {
+public class ImageViewActivity extends BaseActivity {
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.imagePreviewString);
+
         RecyclerView recyclerView =null;
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
+      /*  getSupportActionBar().setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
         Uri uri=null;
         String filePath=null;
         if(getIntent().getStringArrayListExtra("assets")==null) {
             setContentView(R.layout.activity_imageview_activity);
+            LinearLayout ll = (LinearLayout)findViewById(R.id.linearLayout_imageview_act);
+            ll.setBackgroundColor(getColor(R.color.font));
             if(getIntent().hasExtra("POS"))
                 uri= Uri.parse(getIntent().getStringExtra("POS"));
             if(getIntent().hasExtra("filePath"))
@@ -116,5 +122,26 @@ public class ImageViewActivity extends AppCompatActivity {
             RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(ImageViewActivity.this,imageUris);
             recyclerView.setAdapter(recyclerViewAdapter);
         }
+    }
+    protected void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        mGoogleApiClient.disconnect();
+                        mGoogleApiClient=null;
+                        finish();
+                        ActivityUpdater.activeActivity=null;
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        new Utilities(ImageViewActivity.this).setCurrentIdentity("");
+                        startActivity(intent);
+                        Log.i("ImageViewActivity","Logging out from ImageViewActivity");
+                        new Utilities(ImageViewActivity.this).setCurrentIdentity("");
+                        finishAffinity();
+                    }
+                });
+
+
     }
 }

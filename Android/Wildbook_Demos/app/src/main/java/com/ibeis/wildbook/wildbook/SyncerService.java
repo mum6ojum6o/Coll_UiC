@@ -1,37 +1,15 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.Thread.sleep;
 
@@ -55,7 +33,8 @@ public class SyncerService extends IntentService {
    //The service also has to be syncronized.
     @Override
     public void onHandleIntent(Intent intent){
-
+        Utilities utilities = new Utilities(this);
+        int totalRowsToBeSynced=0;
         Log.i(TAG,"Service started");
         Bundle extras=intent.getExtras();
         IsRunning=true;
@@ -93,35 +72,54 @@ public class SyncerService extends IntentService {
             Log.i(TAG, "Checking NetworkAvailability!!");
         }
         String name=null;
+        HashMap<Integer,String> filesRead = new HashMap<Integer, String>();  //to keep track of whether the file has been read or not.
+        HashMap<Integer,HashMap<Integer,String>> recordTracker = new HashMap<>();
         ArrayList<String> filenames=new ArrayList<String>();
             int encounterNum=-1,rowCount=0;
         filesUploadedIds=new ArrayList<Integer>();
+         totalRowsToBeSynced= c.getCount();
+         String prevName=null;
             while (c.getCount() > 0 && !c.isAfterLast() && new Utilities(this).isNetworkAvailable()) {
 
                 Log.i(TAG,"Network Available & Sync Started!");
-                new Utilities(this).sendNotification("Sync Started!",null);
+
                 final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
-                name=c.getString(c.getColumnIndex(ImageRecorderDatabase.USER_NAME));
+                int colIndex = c.getColumnIndex(ImageRecorderDatabase.USER_NAME);
+                name=c.getString(colIndex);
+                Log.i(TAG,"Image for the user:"+name);
                 int fileId = c.getInt(c.getColumnIndex(ImageRecorderDatabase._ID));
                 filesUploadedIds.add(fileId);
                 int currEncNum=c.getInt(c.getColumnIndex(ImageRecorderDatabase.ENCOUNTER_NUM));
                 Log.i(TAG, "record:"+fileId+", "+filename+", "+currEncNum);
                 Log.i(TAG,"filename Uploading..."+filename);
+                String userNetworkPref = utilities.getSyncSharedPreference(name);
+
+                if(!userNetworkPref.equals(this.getResources().getString(R.string.anyString)) && !utilities.getNetworkType().equals(utilities.getSyncSharedPreference(name))){
+                    Log.i(TAG,"Network preferences donot match");
+                    c.moveToNext();
+                    continue;
+                }
+                utilities.sendNotification("Sync Started!",null);
                 if(encounterNum==-1){
                     encounterNum=currEncNum;// ENCOUNTER_NUM is identifies whether two Images are associated to the same encounter or not.
                     filenames.add(filename);
+                    prevName=name;
                 }
                 else if(encounterNum==currEncNum){
                     filenames.add(filename);
+
                 }
                 else if(count>0&& encounterNum!=currEncNum){
-                    ImageUploaderTask task = new ImageUploaderTask(this,filenames,name);
+                    ImageUploaderTask task = new ImageUploaderTask(this,filenames,prevName);
                     //task.run(); // why not a separate thread???
                     new Thread(task).start();
+                   // updateStatus(fileId);
                     encounterNum=currEncNum;
-                    filenames=null;
-                    filenames = new ArrayList<String>();
+                    /*filenames=null;
+                    filenames = new ArrayList<String>();*/
+                    filenames.clear();
                     filenames.add(filename);
+                    prevName=name;
                 }
              /*   StorageReference storage;
                 FirebaseAuth auth;
@@ -177,7 +175,7 @@ public class SyncerService extends IntentService {
                 }catch(Exception e){e.printStackTrace();}*/
                 Log.i(TAG,name);
             }
-            if(count>0) {
+            if(count>0 && filenames.size()>0) {
                 Log.i(TAG,"Instantiating Http Request");
                 Log.i(TAG, "filesRead:"+filenames.size());
                 ImageUploaderTask task = new ImageUploaderTask(this,filenames,name); //the last record....
@@ -217,6 +215,18 @@ public class SyncerService extends IntentService {
 
     }
 
+
+    public void updateStatus(int fileId){
+        Log.i(TAG,"updattng status of fileId "+fileId);
+        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
+        dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ImageRecorderDatabase.IS_UPLOADED, "1");
+        dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME, values, ImageRecorderDatabase._ID + " = "+"?",new String[]{Integer.toString(fileId)});
+        dbHelper.close();
+        values.clear();
+
+    }
     /*private void sendNotification(String msg) {
         NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);

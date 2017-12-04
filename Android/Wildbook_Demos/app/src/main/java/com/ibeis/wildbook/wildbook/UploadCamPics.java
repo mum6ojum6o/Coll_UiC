@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,7 +54,7 @@ cameraMainActivity.
 This activity also enables user to either Upload or Discard the pictures clicked by the user.
 
  */
-public class UploadCamPics extends AppCompatActivity implements View.OnClickListener {
+public class UploadCamPics extends BaseActivity implements View.OnClickListener {
     public static final String url="http://uidev.scribble.com/v2/EncounterForm";
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
@@ -63,16 +66,13 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
     private ArrayList<String> imagesNames = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_camera_upload_preview);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.imagePreviewString);
+
         mUploadBtn = (Button) findViewById(R.id.UploadBtn2);
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
         Intent intent = getIntent();
-       // mAuth = FirebaseAuth.getInstance();
+
         imagesNames =intent.getStringArrayListExtra("Files");
         for(String file: imagesNames){
             imagesList.add(Uri.parse(new File(file).toString()));
@@ -89,6 +89,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
         recyclerView.setAdapter(adapter);
         mUploadBtn.setOnClickListener(this);
         mDiscardBtn.setOnClickListener(this);
+        super.onCreate(savedInstanceState);
 
     }
     @Override
@@ -98,7 +99,7 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                 if (new Utilities(this).isNetworkAvailable()) {
 
                     int uploadCount=0;
-                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames, new Utilities(this).getUserEmail());
+                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames, new Utilities(this).getCurrentIdentity());
                     new Thread(task).start();
                     Log.i(TAG,"redirecting....");
                     //redirect(imagesNames.size(), imagesNames.size());
@@ -175,7 +176,8 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
                     ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                     Utilities utility = new Utilities(this,imagesNames,dbHelper);
                     utility.prepareBatchForInsertToDB(false);
-                    if(!(utility.checkSharedPreference(utility.getUserEmail()))) {
+                    Log.i(TAG,"Loggedin as: "+utility.getCurrentIdentity());
+                    if(!(utility.checkSharedPreference(utility.getCurrentIdentity()))) {
                        utility.connectivityAlert().show();
                     }
                     else {
@@ -199,5 +201,25 @@ public class UploadCamPics extends AppCompatActivity implements View.OnClickList
 
     }
 
+    protected void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        mGoogleApiClient.disconnect();
+                        mGoogleApiClient=null;
+                        finish();
+                        ActivityUpdater.activeActivity=null;
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        Log.i("ImageViewActivity","Logging out from ImageViewActivity");
+                        new Utilities(UploadCamPics.this).setCurrentIdentity("");
+                        startActivity(intent);
 
+                        finishAffinity();
+                    }
+                });
+
+
+    }
 }

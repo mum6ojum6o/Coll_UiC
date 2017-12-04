@@ -6,115 +6,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLinearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="com.ibeis.wildbook.wildbook.MainActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mainLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        tools:context="com.ibeis.wildbook.wildbook.MainActivity"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="81dp">
 
 
-    <Button
-        android:id="@+id/RepEnc"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:layout_marginTop="100dp"
-        android:background="#6093e0"
-        android:drawableLeft="@drawable/ic_camera"
-        android:text="@string/reportEncounterString"
-        app:layout_constraintBottom_toTopOf="@+id/historyBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/GallUpload"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        <TextView
+            android:id="@+id/WelcomeTextViewPort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="42dp"
+            android:layout_marginTop="41dp"
+            android:alpha="0.75"
+            android:text=""
+            android:textColor="#ffffff"
+           />
 
-    <Button
-        android:id="@+id/SingOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="#6093e0"
-        android:text="@string/signoutString"
-        android:drawableLeft="@drawable/ic_logout"
-        app:layout_constraintBottom_toTopOf="@+id/syncBtn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/syncBtn"
-        app:layout_constraintRight_toRightOf="@+id/syncBtn"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="42dp"
+            android:layout_marginTop="41dp"
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="42dp"
-        android:layout_marginTop="41dp"
-        android:text=""
-        android:textColor="@color/font"
-        app:layout_constraintBottom_toTopOf="@+id/RepEnc"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+            android:text=""
+            android:textColor="#ffffff"
+           />
 
-    <Button
-        android:id="@+id/GallUpload"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="67dp"
-        android:layout_marginLeft="-101dp"
-        android:layout_marginTop="74dp"
-        android:background="#6093e0"
-        android:drawableLeft="@drawable/gallery_icon"
-        android:text="@string/uploadPicsString"
-        app:layout_constraintBottom_toBottomOf="@+id/historyBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/historyBtn"
-        app:layout_constraintTop_toTopOf="@+id/RepEnc"
-        app:layout_constraintVertical_bias="0.428"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        <Button
+            android:id="@+id/RepEnc"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/username"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="23dp"
+            android:alpha="0.85"
+            android:background="@drawable/rounded_button"
+            android:drawableStart="@drawable/ic_camera"
+            android:layout_marginLeft="15dp"
+            android:padding="15dp"
+            android:text="@string/reportEncounterString"
+            android:textColor="#ffffff" />
 
-    <Button
-        android:id="@+id/historyBtn"
-        android:layout_width="161dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:background="#6093e0"
-        android:text="@string/historyString"
-        android:drawableLeft="@drawable/ic_photo_album"
-        app:layout_constraintBottom_toTopOf="@+id/SingOut"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        <Button
+            android:id="@+id/GallUpload"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/RepEnc"
+            android:layout_below="@+id/RepEnc"
+            android:layout_marginTop="27dp"
+            android:alpha="0.85"
+            android:padding="15dp"
+            android:background="@drawable/rounded_button"
+            android:drawableStart="@drawable/gallery_icon"
+            android:text="@string/uploadPicsString"
+            android:textColor="#ffffff" />
 
-    <Button
+        <Button
+            android:id="@+id/historyBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/GallUpload"
+            android:layout_below="@+id/GallUpload"
+            android:layout_marginTop="31dp"
+            android:alpha="0.85"
+            android:padding="15dp"
+            android:background="@drawable/rounded_button"
+            android:drawableStart="@drawable/ic_photo_album"
+            android:text="@string/historyString"
+            android:textColor="#ffffff" />
+
+        <!--<Button
         android:id="@+id/syncBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="41dp"
-        android:background="#6093e0"
+        android:layout_marginBottom="48dp"
+        android:alpha="0.75"
+        android:background="@drawable/rounded_button"
+        android:drawableStart="@drawable/ic_sync"
         android:text="Sync"
-        android:drawableLeft="@drawable/ic_sync"
+        android:textColor="#1027ac"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        tools:layout_constraintRight_creator="1" />-->
 
 
-</android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

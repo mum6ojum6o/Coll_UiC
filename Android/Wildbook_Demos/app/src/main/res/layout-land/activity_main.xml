@@ -1,139 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.design.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/myCoordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:background="@drawable/oceanic_bg_land">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/myConstraintLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:layout_editor_absoluteY="73dp"
-    android:background="@android:color/white"
+
     >
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="397dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/GallUpload"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="32dp"
         android:gravity="center"
         android:text="@string/welcomeString"
-        android:textColor="@color/font"
+        android:textColor="@android:color/white"
         android:textSize="19dp"
         app:layout_constraintBottom_toTopOf="@+id/username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="215dp"
-        android:layout_marginTop="8dp"
-        android:text="Bla bla bla"
-        android:textColor="@color/font"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+       />
 
     <Button
         android:id="@+id/RepEnc"
-        android:layout_width="161dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/GallUpload"
-        android:layout_marginEnd="156dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="35dp"
-        android:background="#6093e0"
+        android:layout_below="@+id/textView2"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="45dp"
+        android:alpha="0.85"
+        android:background="@drawable/rounded_button"
         android:drawableLeft="@drawable/ic_camera"
+        android:drawablePadding="10dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="10dp"
         android:text="@string/reportEncounterString"
-        app:layout_constraintEnd_toStartOf="@+id/syncBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/GallUpload"
-        android:layout_width="161dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#6093e0"
+
+        android:layout_alignStart="@+id/RepEnc"
+        android:layout_below="@+id/RepEnc"
+        android:layout_marginTop="13dp"
+        android:alpha="0.85"
+        android:background="@drawable/rounded_button"
         android:drawableLeft="@drawable/gallery_icon"
+        android:drawablePadding="10dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="10dp"
         android:text="@string/uploadPicsString"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RepEnc" />
+        android:textColor="#ffffff" />
 
 
     <Button
         android:id="@+id/historyBtn"
-        android:layout_width="161dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/GallUpload"
-        android:layout_alignBottom="@+id/GallUpload"
-        android:layout_alignStart="@+id/syncBtn"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#6093e0"
-        android:text="@string/historyString"
+
+        android:layout_alignStart="@+id/GallUpload"
+        android:layout_below="@+id/GallUpload"
+        android:layout_marginTop="15dp"
+
+        android:alpha="0.85"
+        android:background="@drawable/rounded_button"
         android:drawableLeft="@drawable/ic_photo_album"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/GallUpload" />
+        android:drawablePadding="10dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="10dp"
+        android:text="@string/historyString"
+        android:textColor="#ffffff" />
 
-    <Button
-        android:id="@+id/syncBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="35dp"
-        android:layout_toEndOf="@+id/textView2"
-        android:background="#6093e0"
-        android:text="Sync"
-        android:drawableLeft="@drawable/ic_sync"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <Button
-        android:id="@+id/SingOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/historyBtn"
-        android:layout_below="@+id/historyBtn"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/signoutString"
-        android:drawableLeft="@drawable/ic_logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="#6093e0"
-        app:layout_constraintTop_toBottomOf="@+id/syncBtn" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="25dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

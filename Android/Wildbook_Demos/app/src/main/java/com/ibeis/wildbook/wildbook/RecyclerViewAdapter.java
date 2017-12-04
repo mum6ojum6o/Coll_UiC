@@ -77,7 +77,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             try {
                 Uri uploadInfo = Uri.parse(mJsonArray.getJSONObject(position).getString("thumbnailUrl"));
-                Glide.with(mContext).load(uploadInfo).into(holder.imageView);
+                Glide.with(mContext)
+                        .load(uploadInfo)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.imageView);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

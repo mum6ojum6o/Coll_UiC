@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -115,6 +116,26 @@ public class Utilities {
     }
 
     /***************************************************************
+     * This method will return a string that will suggest the type of network connected
+     * it would return Wifi or MobileData
+     ****************************************************************/
+    public String getNetworkType(){
+        String networkType=null;
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo newNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if(newNetworkInfo.getType()== ConnectivityManager.TYPE_WIFI){
+            networkType=mContext.getResources()
+                    .getString(R.string.wifiString);
+        }
+        else if(newNetworkInfo.getType()== ConnectivityManager.TYPE_MOBILE){
+            networkType=mContext.getResources()
+                    .getString(R.string.mobiledataString);
+        }
+        return networkType;
+
+    }
+
+    /***************************************************************
     This method displays a dialog to get user preferences
      for syncing images in the absence of Network.
      ***************************************************************/
@@ -177,9 +198,14 @@ public class Utilities {
 public String getSyncSharedPreference(){
     mSharedPreference = mContext.getSharedPreferences(mContext.getString(
             R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
-    String username = getUserEmail();
+    String username = getCurrentIdentity();
     return mSharedPreference.getString(username,"Sync_Preference");
 }
+    public String getSyncSharedPreference(String zzxxyz){
+        mSharedPreference = mContext.getSharedPreferences(mContext.getString(
+                R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+        return mSharedPreference.getString(zzxxyz,"Sync_Preference");
+    }
     /****************************************************************
     This method writes to the sharedpreferences file.
      the latest encounter number that will be used to identify an encounter locally in the absence of network.
@@ -189,9 +215,14 @@ public String getSyncSharedPreference(){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
                 R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreference.edit();
-        editor.putString(getUserEmail(),string);
+        editor.putString(getCurrentIdentity(),string);
         editor.commit();
     }
+    /****************************************************************
+     This method writes to the sharedpreferences file.
+     the latest encounter number that will be used to identify an encounter locally in the absence of network.
+     only maximum of 10 encounter numbers will be inserted in the SQLite table.
+     ****************************************************************/
 public void writeEncounterNumPreferences(long encounterNum){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
                 R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
@@ -212,6 +243,19 @@ public long getEncounterNumPreferences(){
     }
     writeEncounterNumPreferences(enctrNum+1);
     return enctrNum;
+}
+public String getCurrentIdentity(){
+    mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+    if(mSharedPreference.contains("zzxxyz"))
+        return mSharedPreference.getString("zzxxyz","");
+    else
+        return "";
+}
+public void setCurrentIdentity(String zzxxyz){
+    mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor=mSharedPreference.edit();
+    editor.putString("zzxxyz",zzxxyz);
+    editor.commit();
 }
 
     /****
@@ -264,14 +308,18 @@ public long getEncounterNumPreferences(){
         public InsertToDB(ImageRecorderDatabase dbHelper,String encounterId){
             this.mDbhelper=dbHelper;
             this.mEncounterId=encounterId;
-            this.mEmail=getUserEmail();
+            this.mEmail=getCurrentIdentity();
             this.mRecords=null;
         }
     @Override
     public void run() {
         Log.i(TAG,"inserting records");
 
-        SQLiteDatabase db=mDbhelper.getWritableDatabase();
+        SQLiteDatabase db=null;
+                if(mDbhelper==null) {
+                    mDbhelper=new ImageRecorderDatabase(mContext);
+                }
+               db= mDbhelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         if(mRecords !=null){
            for (ImageRecordDBRecord record: this.mRecords){
@@ -437,7 +485,7 @@ public long getEncounterNumPreferences(){
         for (String filename : mImagePaths) {
             ImageRecordDBRecord record = new ImageRecordDBRecord();
             record.setFileName(filename);
-            record.setUsername(getUserEmail());
+            record.setUsername(getCurrentIdentity());
             Date date = new Date();
             record.setDate(date);
             record.setIsUploaded(isUploaded);
@@ -576,6 +624,7 @@ public long getEncounterNumPreferences(){
         }
         else if(msg.equals("Error")){
             mBuilder.setSmallIcon(R.drawable.error);
+            //mBuilder.setContentText(mContext.getResources().getString(R.string.sync_error));
         }
         else{
             Intent intent = new Intent(mContext,DisplayImagesUsingRecyclerView.class);
@@ -593,41 +642,7 @@ public long getEncounterNumPreferences(){
         mNotificationManager.notify(1, mBuilder.build());
     }
 
-    public String checkUsername(){
-        String email=null;
-        try {
-            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(mContext.getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
-            GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                    .build();
-            googleApiClient.connect();
-            //email=\
-            googleApiClient.clearDefaultAccountAndReconnect();
-            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-            if (opr.isDone()) {
-                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-                // and the GoogleSignInResult will be available instantly.
-                Log.d(TAG, "Got cached sign-in");
-                GoogleSignInResult result = opr.get();
 
-                GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
-                Log.i(TAG, "getting Email Id:" + googleSignInAccount.getEmail());
-                return googleSignInAccount.getEmail();
-            }
-            else {
-                Log.i(TAG, "No Email ID");
-                return "Not connected";
-            }
-        }catch(Exception e){
-               e.printStackTrace();
-               return "Not connected";
-
-        }
-
-    }
 
     public String getUserEmail(){
         String email=null;

@@ -18,6 +18,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +33,7 @@ import java.util.List;
 import static android.R.attr.start;
 import static android.R.attr.tag;
 
-public class DisplaySelectedImages extends AppCompatActivity implements View.OnClickListener{
+public class DisplaySelectedImages extends BaseActivity implements View.OnClickListener{
     final static public String TAG= "DisplaySelectedImages";
     protected ArrayList<String> selectedImages = new ArrayList<String>();
     protected  ArrayList<Uri> imageUri = new ArrayList<Uri>();
@@ -44,12 +48,12 @@ public class DisplaySelectedImages extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_grid_view);
         setContentView(R.layout.activity_camera_upload_preview);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        /*getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.imagePreviewString);
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
+        getSupportActionBar().setTitle(R.string.imagePreviewString);*/
+        /*action.setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
        // mAuth = FirebaseAuth.getInstance();
         //FirebaseUser user = mAuth.getCurrentUser();
        // mStorage= FirebaseStorage.getInstance().getReference();
@@ -202,7 +206,7 @@ public class DisplaySelectedImages extends AppCompatActivity implements View.OnC
         Utilities utility = new Utilities(this,selectedImages,dbHelper);
         utility.prepareBatchForInsertToDB(false);
         Log.i(TAG,"prepared");
-        if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getUserEmail()))) {
+        if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getCurrentIdentity()))) {
             utility.connectivityAlert().show();
         }
         else {
@@ -216,8 +220,13 @@ public class DisplaySelectedImages extends AppCompatActivity implements View.OnC
         }
     }
 
+    public void onResume(){
+        super.onResume();
+
+    }
+
     public void startUpload(){
-        ImageUploaderTask task = new ImageUploaderTask(this, selectedImages,new Utilities(this).getUserEmail());
+        ImageUploaderTask task = new ImageUploaderTask(this, selectedImages,new Utilities(this).getCurrentIdentity());
         Log.i(TAG, "Starting fileupload request using worker thread!!");
         new Thread(task).start();
         Log.i(TAG, "redirecting....to mainActivity");
@@ -304,5 +313,24 @@ public class DisplaySelectedImages extends AppCompatActivity implements View.OnC
         }
         return false;
     }
+    protected void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        mGoogleApiClient.disconnect();
+                        mGoogleApiClient=null;
+                        finish();
+                        ActivityUpdater.activeActivity=null;
+                        Intent intent = new Intent(DisplaySelectedImages.this, Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
+                        new Utilities(DisplaySelectedImages.this).setCurrentIdentity("");
+                        DisplaySelectedImages.this.finish();
+                    }
+                });
 
+
+    }
 }

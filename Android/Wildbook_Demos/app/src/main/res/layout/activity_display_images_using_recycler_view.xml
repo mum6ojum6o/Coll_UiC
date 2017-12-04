@@ -3,100 +3,156 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:id="@+id/errormsgtxtvw"
-    android:visibility="gone" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="1dp"
-        tools:context=".DisplayImagesUsingRecyclerView">
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recyclerView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-     </android.support.v7.widget.RecyclerView>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/encounter_details"
+    android:orientation="vertical"
+    android:background="@drawable/oceanic_bg_land">
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/errormsgtxtvw"
+        android:visibility="gone" />
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight=".7"
+                android:padding="1dp"
+                android:id="@+id/recycler_layout"
 
-        <TextView
-            android:id="@+id/encounter_date_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date:" />
+                tools:context=".DisplayImagesUsingRecyclerView">
 
-        <TextView
-            android:id="@+id/encounter_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/encounter_long"
-            android:layout_alignLeft="@+id/encounter_long"
-            android:layout_alignEnd="@+id/encounter_id"
-            android:paddingLeft="15dp"
-            android:text="Placeholder"
-            android:layout_toRightOf="@id/encounter_date_label"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"></android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/encounter_long_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/encounter_date_label"
-            android:text="Longitude:" />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".3"
 
-        <TextView
-            android:id="@+id/encounter_long"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/encounter_lat"
-            android:layout_alignBottom="@id/encounter_long_label"
-            android:paddingLeft="5dp"
-            android:text="Placeholder" />
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                android:id="@+id/encounter_details"
+                android:alpha="0.85"
+                android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/encounter_lat_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/encounter_long_label"
-            android:text="Latitude:" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/encounter_lat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/encounter_long"
-            android:layout_toEndOf="@+id/encounter_id_label"
-            android:paddingLeft="5dp"
-            android:text="Placeholder" />
+                    <TextView
+                        android:id="@+id/encounter_date_label"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/recyclerView"
+                        android:layout_weight="0.29"
+                        android:text="Date:"
+                        android:textColor="@color/font" />
 
-        <TextView
-            android:id="@+id/encounter_id_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/encounter_lat_label"
-            android:text="Encounter ID:" />
+                    <TextView
+                        android:id="@+id/encounter_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/encounter_long"
+                        android:layout_alignEnd="@+id/encounter_id"
+                        android:layout_alignLeft="@+id/encounter_long"
+                        android:layout_toRightOf="@id/encounter_date_label"
+                        android:layout_weight="0.71"
+                        android:paddingLeft="0dp"
+                        android:text="Placeholder"
+                        android:textColor="@color/font" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/encounter_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/encounter_lat"
-            android:layout_toRightOf="@+id/encounter_id_label"
-            android:paddingLeft="5dp"
-            android:text="Placeholder" />
-    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/encounter_long_label"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/encounter_date_label"
+                        android:layout_weight="0.4"
+                        android:text="Longitude:"
+                        android:textColor="@color/font" />
 
+                    <TextView
+                        android:id="@+id/encounter_long"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/encounter_long_label"
+                        android:layout_alignStart="@+id/encounter_lat"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="0dp"
+                        android:text="Placeholder"
+                        android:textColor="@color/font" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/encounter_lat_label"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/encounter_long_label"
+                        android:layout_weight="0.4"
+                        android:text="Latitude:"
+                        android:textColor="@color/font" />
+
+                    <TextView
+                        android:id="@+id/encounter_lat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/encounter_long"
+                        android:layout_toEndOf="@+id/encounter_id_label"
+                        android:layout_weight="0.6"
+
+                        android:text="Placeholder"
+                        android:textColor="@color/font"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/encounter_id_label"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/encounter_lat_label"
+                        android:layout_weight="0.4"
+                        android:text="Encounter ID:"
+                        android:textColor="@color/font" />
+
+                    <TextView
+                        android:id="@+id/encounter_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="0.6"
+
+                        android:text="Placeholder"
+
+                        android:textColor="@color/font" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

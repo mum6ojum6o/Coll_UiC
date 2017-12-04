@@ -53,6 +53,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -82,7 +85,7 @@ import static java.lang.System.load;
  */
 
 
-public class CameraMainActivity extends AppCompatActivity implements  View.OnClickListener{
+public class CameraMainActivity extends BaseActivity implements  View.OnClickListener{
     public static String SWAP="Rear";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -187,12 +190,12 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_main);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        /*getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.live_encounter);
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
+        getSupportActionBar().setTitle(R.string.live_encounter);*/
+        /*action.setBackgroundDrawable(
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
         createImageFolder();
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mCaptureButton = (Button) findViewById(R.id.photoButton);
@@ -941,12 +944,12 @@ public class CameraMainActivity extends AppCompatActivity implements  View.OnCli
         }
     }
 
-    //from google github repository. doesn't help with the front facing camera....
+    //from google github repository.
     private int getOrientation(int rotation) {
         // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-        // We have to take that into account and rotate JPEG properly.
-        // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
-        // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+        // have to take that into account and rotate JPEG properly.
+        // For devices with orientation of 90,  return mapping from ORIENTATIONS.
+        // For devices with orientation of 270, rotate the JPEG 180 degrees.
 
         return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
     }
@@ -967,5 +970,28 @@ public Bitmap getUpdatedBitmap(File imageFile){
     }
     return rotatedBitmap;
     }
+    protected void signOut() {
+        final Context ctx = getApplicationContext();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        mGoogleApiClient.disconnect();
+                        mGoogleApiClient=null;
+                        finish();
+                        ActivityUpdater.activeActivity=null;
+                        Intent intent = new Intent(CameraMainActivity.this, Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        startActivity(intent);
+                        Log.i("CameraMainActivity","Logging out from DisplayImagesUsingRecyclerView");
+                        new Utilities(CameraMainActivity.this).setCurrentIdentity("");
+                        CameraMainActivity.this.finish();
+                        CameraMainActivity.this.finishAffinity();
 
+                    }
+                });
+
+
+    }
 }

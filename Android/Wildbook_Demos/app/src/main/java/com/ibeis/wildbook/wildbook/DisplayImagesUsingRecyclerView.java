@@ -1,7 +1,9 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
@@ -27,18 +29,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -50,7 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DisplayImagesUsingRecyclerView extends AppCompatActivity {
+public class DisplayImagesUsingRecyclerView extends BaseActivity {
     private static final int DOWNLOADING = 77;
     private static final int COMPLETE = 200;
     private static final int PROG_UPDATE = 853;
@@ -96,7 +91,7 @@ public Handler mHandler = new Handler(){
 };
     private static final int DISPLAY=123;
     // Creating DatabaseReference.
-    DatabaseReference databaseReference;
+    //DatabaseReference databaseReference;
 
     // Creating RecyclerView.
     RecyclerView recyclerView;
@@ -106,7 +101,7 @@ public Handler mHandler = new Handler(){
     private TextView errorMessage;
     // Creating Progress dialog
     ProgressDialog progressDialog;
-    StorageReference storageReference;
+   // StorageReference storageReference;
 
     // Creating List of ImageUploadInfo class.
     List<ImageUploadInfo> list = new ArrayList<>();
@@ -119,7 +114,7 @@ public Handler mHandler = new Handler(){
         Log.i(TAG,getIntent().hasExtra("source")+" From Notification????");
         Log.i(TAG, getIntent().hasExtra("UploadedBy")+ "User INFORMATION");
        // Log.i(TAG, "checking user: "+new Utilities(this).checkUsername());
-        String naam=new Utilities(this).getUserEmail();
+        String naam=new Utilities(this).getCurrentIdentity();
         String uploadedBy=getIntent().getStringExtra("UploadedBy");
         if(getIntent().hasExtra("source")
                 && naam.equals("")) {//means no user has logged in....
@@ -137,12 +132,13 @@ public Handler mHandler = new Handler(){
         }
         else {
             setContentView(R.layout.activity_display_images_using_recycler_view);
-            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            /*getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setIcon(R.mipmap.wildbook2);
-            getSupportActionBar().setTitle(R.string.historyString);
-            getSupportActionBar().setBackgroundDrawable(
-                    new ColorDrawable(getResources().getColor(R.color.action_bar, null)));
+            getSupportActionBar().setTitle(R.string.historyString);*/
+            /*action.setBackgroundDrawable(
+                    new ColorDrawable(getResources().getColor(R.color.action_bar, null)));*/
+
             // Assign id to RecyclerView.
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -150,7 +146,7 @@ public Handler mHandler = new Handler(){
             recyclerView.setHasFixedSize(true);
 
             // Setting RecyclerView layout as LinearLayout.
-            recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 3));
+            recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 4));
             findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setVisibility(View.GONE);
@@ -180,7 +176,7 @@ public Handler mHandler = new Handler(){
                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                             StrictMode.setThreadPolicy(policy);
                         }
-                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getUserEmail());
+                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
                         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                         JSONArray jsonArray = null;
                         JSONObject jsonObject = null;
@@ -300,6 +296,37 @@ public Handler mHandler = new Handler(){
         });*/
 
         ///this code should be in worker thread.
+        String naam=new Utilities(this).getCurrentIdentity();
+        Log.i(TAG,"in on Resume:"+ naam);
+        if(naam.equals("No Email ID")||naam==null){
+            startActivity(new Intent(this,Login.class));
+            finish();
+
+        }
+    }
+
+    protected void signOut() {
+       final Context ctx = getApplicationContext();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        mGoogleApiClient.disconnect();
+                        mGoogleApiClient=null;
+                        finish();
+                        ActivityUpdater.activeActivity=null;
+                        Intent intent = new Intent(DisplayImagesUsingRecyclerView.this, Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        startActivity(intent);
+                        Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
+                        new Utilities(DisplayImagesUsingRecyclerView.this).setCurrentIdentity("");
+                        DisplayImagesUsingRecyclerView.this.finish();
+                        DisplayImagesUsingRecyclerView.this.finishAffinity();
+
+                    }
+                });
+
 
     }
 

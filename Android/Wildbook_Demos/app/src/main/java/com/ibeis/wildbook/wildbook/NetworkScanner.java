@@ -89,8 +89,10 @@ public class NetworkScanner extends BroadcastReceiver {
             context.sendBroadcast(broadcastIntent);
 
         //}
+        Log.i(TAG,"Is ServiceRunning"+SyncerService.IsRunning);
         if(!SyncerService.IsRunning) {
-
+            Log.i(TAG,"Is ServiceRunning"+SyncerService.IsRunning);
+            //SyncerService.IsRunning=true;
             Utilities utility = new Utilities(context);
             Log.i(TAG," Starting Service");
             utility.startSyncing(); //start service....

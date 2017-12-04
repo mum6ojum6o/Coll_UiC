@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.i(TAG,"in OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 //        GoogleSignIn = (Button)findViewById(R.id.sign_in_button);
@@ -104,6 +104,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             Log.i(TAG,"Result is Success!!");
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            Log.i(TAG,"LOGGED IN AS:"+acct.getEmail());
            /* if(acct!=null)
                 updateUI(true);*/  //UNCOMMENT in PRODUCTIONS
            firebaseAuthWithGoogle(acct);
@@ -123,6 +124,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
+                Log.i(TAG,"in onActivityResult:"+ result.getSignInAccount().getEmail());
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 //updateUI(true);
@@ -184,7 +186,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         }
 
     /***********************
-     * This method would be deprecated.
+     *
      * @param user
      */
     private void updateUI(String user) {
@@ -192,8 +194,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         if (user != null) {
 
            Intent i = new Intent(this,MainActivity.class);
-
+            new Utilities(this).setCurrentIdentity(user);
             startActivity(i);
+
             //finishAndRemoveTask();
             finish();
         } else {
@@ -205,6 +208,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     private void updateUI(boolean isLoggedIn){
         if (isLoggedIn){
             Intent i = new Intent(this,MainActivity.class);
+
             startActivity(i);
             //finishAndRemoveTask();
             finish();

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -24,15 +25,23 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -51,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
     protected View LAYOUT;
     protected static int WARNING,POS_FEEDBACK;
@@ -68,32 +77,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected ArrayList<String> selectedImages= new ArrayList<String>();
    // protected static String storagePath="Photos/";
    // protected static String databasePath="Photos/";
-    private GoogleApiClient mGoogleApiClient;
+    //private GoogleApiClient mGoogleApiClient;
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
-    private GoogleSignInAccount googleSignInAccount;
-
+    //private GoogleSignInAccount googleSignInAccount;
+    //private ImageView mCricleImageView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //MAIN_ACTIVITY_IS_RUNNING=true;
-
+        super.onCreate(savedInstanceState);
         NetworkScanner scanner = new NetworkScanner();
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+       /* getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.mipmap.wildbook2);
         getSupportActionBar().setTitle(R.string.welcomeString);
         getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));
+                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
+
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         getApplicationContext().registerReceiver(scanner,filter);
         Log.i(TAG,"MainActivity onCreate");
-        super.onCreate(savedInstanceState);
+
        // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
         Log.i("Logging window","Orientation is"+getResources().getConfiguration().orientation);
 
@@ -111,14 +122,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Log.i(TAG,"databasePath"+databasePath);*/
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this *//* FragmentActivity *//*, this *//* OnConnectionFailedListener *//*)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+                .build();*/
        /* if(firebaseUser==null){
             finish();
             startActivity(new Intent(this,Login.class));
@@ -129,17 +140,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //UserName.setText(firebaseUser.getEmail()+"!");
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
-        mSync = (Button)findViewById(R.id.syncBtn);
-        SignOutBut = (Button)findViewById(R.id.SingOut);
+        //mSync = (Button)findViewById(R.id.syncBtn);
+       // SignOutBut = (Button)findViewById(R.id.SingOut);
         History = (Button)findViewById(R.id.historyBtn);
-        SignOutBut.setOnClickListener(this);
+
+       // SignOutBut.setOnClickListener(this);
         RepEncounter.setOnClickListener(this);
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
-        mSync.setOnClickListener(this);
+        //mSync.setOnClickListener(this);
        Log.i("Login",Auth.GOOGLE_SIGN_IN_API.getName());
-        mGoogleApiClient.connect();
-
+       // mGoogleApiClient.connect();
+       /*ActionBar action =getSupportActionBar();
+       action.setCustomView(R.layout.circular_imageview_for_action_bar);
+        LinearLayout ll = (LinearLayout)findViewById(R.id.circular_image_view_layout);
+        mCricleImageView = action.getCustomView().findViewById(R.id.circle_imgeview);
+        action.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);*/
 
     }
 
@@ -148,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onStart();
         MAIN_ACTIVITY_IS_RUNNING=true;
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+       /* OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
@@ -158,6 +174,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             googleSignInAccount = result.getSignInAccount();
             Log.i("SilentLogin",googleSignInAccount.getEmail());
             UserName.setText(googleSignInAccount.getEmail());
+            Uri uri = googleSignInAccount.getPhotoUrl();
+            *//*Glide.with(this)
+                    .load(uri)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mCricleImageView);*//*
+            Glide.with(getApplicationContext())
+                    .load(uri)
+                    .asBitmap()
+                    .fitCenter()
+                    .into(new BitmapImageViewTarget(mCricleImageView) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+
+                            circularBitmapDrawable.setCircular(true);
+                            mCricleImageView.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
@@ -179,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }//else closes
                 }
             });
-        }
+        }*/
     }
     @Override
     public void onStop(){
@@ -188,19 +224,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     public void onResume(){
-
         super.onResume();
 
         ActivityUpdater.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
-        if(SyncerService.IsRunning){
+        /*if(SyncerService.IsRunning){
             Log.i(TAG,"Service is running");
-            mSync.setEnabled(false);
+            //mSync.setEnabled(false);
         }
         else{
             Log.i(TAG,"Service is not running");
             mSync.setEnabled(true);
+        }*/
+        String naam=new Utilities(this).getCurrentIdentity();
+        /*String naam=null;
+        if(googleSignInAccount!=null)
+             naam = googleSignInAccount.getEmail();*/
+        Log.i(TAG,""+new Utilities(this).getCurrentIdentity());
+        if(new Utilities(this).getCurrentIdentity().equals("")){
+            Log.i(TAG,"zzxxyz not set!!");
+            signOut();
+            finish();
         }
+        Log.i(TAG,"in on Resume:"+ naam);
+       /* if(naam.equals("No Email ID")||naam==null||(naam.equals("")&& !(mGoogleApiClient.isConnected()))){
+         signOut();
+            finish();
+
+        }*/
 
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
@@ -245,10 +296,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 break;
-            case R.id.SingOut:
+           /* case R.id.SingOut:
                 signOut();
-                break;
-            case R.id.syncBtn:
+                break;*/
+           /* case R.id.syncBtn:
                 if(!SyncerService.IsRunning) {
                     mSync.setEnabled(false);
                     new Utilities(this).startSyncing();
@@ -256,32 +307,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     Toast.makeText(getApplicationContext(),"Service is already Running!!",Toast.LENGTH_SHORT).show();
                 }
-                break;
+                break;*/
 
         }
     }
 
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
 
-                        mGoogleApiClient.disconnect();
-//                        mAuth.signOut(); //comment for production
-                        mGoogleApiClient=null;
-  //                      mAuth.signOut();
-    //                    mAuth=null;
-                        finish();
-                       // databasePath="Photos/"; //comment for production
-                        //storagePath="Photos/";//comment for production
-                        ActivityUpdater.activeActivity=null;
-                        startActivity(new Intent(MainActivity.this,Login.class));
-                    }
-                });
-
-
-    }
 
     /***********************************************************
     *fetch the pictures from Firebase.
@@ -549,6 +580,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else{
             LAYOUT=findViewById(R.id.myCoordinatorLayout);
         }
+    }
+    protected void signOut() {
+       final Context ctx = getApplicationContext();
+        //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+        if(mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+
+                            mGoogleApiClient.disconnect();
+                            mGoogleApiClient = null;
+                            finish();
+                            ActivityUpdater.activeActivity = null;
+                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
+                            new Utilities(MainActivity.this).setCurrentIdentity("");
+                            MainActivity.this.finish();
+
+                        }
+                    });
+        }
+
+
     }
 
 }

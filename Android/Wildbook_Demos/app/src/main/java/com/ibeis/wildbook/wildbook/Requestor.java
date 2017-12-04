@@ -8,14 +8,17 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 
 /*************************************************************************************************
  * Created by Arjan on 11/16/2017.
@@ -31,7 +34,7 @@ public class Requestor {
     private OutputStream mOutputStream;
     private PrintWriter mWriter;
     private JSONObject jsonResponse;
-    public Requestor(String applUrl,String charset,String requestMethod){
+    public Requestor (String applUrl,String charset,String requestMethod) throws ProtocolException, UnknownHostException, IOException {
         jsonResponse= new JSONObject();
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -52,10 +55,20 @@ public class Requestor {
             mOutputStream = mHttpURLConnection.getOutputStream();
             mWriter = new PrintWriter(new OutputStreamWriter(mOutputStream,charset),true);
 
-        }catch(Exception e){
-            e.printStackTrace();
-            Log.i(TAG,"Something went wrong!!");
+
+        }catch(UnknownHostException unknownHostException){
+            Log.i(TAG,"unknownHostException");
+            throw unknownHostException;
         }
+        catch(IOException ioexception){
+
+            throw ioexception;
+        }
+        /*catch(ProtocolException e){
+            //e.printStackTrace();
+            Log.i(TAG,"Something went wrong!!");
+            throw e;
+        }*/
     }
     public void addHeaderField(String name, String value) {
         mWriter.append(name + ": " + value).append("\r\n");
@@ -69,7 +82,7 @@ public class Requestor {
         mWriter.append(value).append("\r\n");
         mWriter.flush();
     }
-    public void addFile(String fieldname,String filename){
+    public void addFile(String fieldname,String filename) throws FileNotFoundException,IOException{
         File file =new File(filename);
         if(!file.exists()){
 
@@ -92,9 +105,14 @@ public class Requestor {
             inputStream.close();
             mWriter.append("\r\n");
             mWriter.flush();
-        }catch (Exception e){
+        }catch (FileNotFoundException e){
             Log.i(TAG,"methog: addFileError: Error in addFile!!");
-            e.printStackTrace();
+           // e.printStackTrace();
+            throw e;
+        }
+        catch(IOException ioexception){
+
+            throw ioexception;
         }
     }
     public void finishRequesting() throws IOException,JSONException {
@@ -115,6 +133,7 @@ public class Requestor {
 
                 if (jsonResponse == null) {
                     Log.i(TAG,"Throwing Exception!!");
+                    mHttpURLConnection.disconnect();
                     throw new JSONException("Server returned empty JSON response");
                 }
             }
@@ -123,6 +142,7 @@ public class Requestor {
 
         } else {
             Log.i(TAG,"Throwing Exception!! IOException");
+            mHttpURLConnection.disconnect();
             throw new IOException("Server returned non-OK status: " + status);
         }
         Log.i(TAG,"Disconnecting httpURLConnection!!");

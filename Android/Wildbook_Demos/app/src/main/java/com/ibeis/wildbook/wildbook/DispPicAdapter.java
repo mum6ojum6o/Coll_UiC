@@ -61,7 +61,6 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         //Loading image from Glide library.
         if(context instanceof UploadCamPics) {
         Glide.with(context).load(Uri.fromFile(new File(UploadInfo.getPath())))
-                .override(100,100)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .crossFade()

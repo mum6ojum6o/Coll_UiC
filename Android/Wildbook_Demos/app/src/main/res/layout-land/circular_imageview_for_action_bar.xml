@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/circular_image_view_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:background="@drawable/actionbar_landscape">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="0.2"
+
+        android:paddingBottom="5dp"
+        android:src="@drawable/wildbook2" />
+
+    <TextView
+        android:id="@+id/actionbartitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.7"
+        android:paddingBottom="10dp"
+        android:paddingTop="15dp"
+        android:text="Wildbook"
+        android:textAlignment="gravity"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+
+    <ImageView
+        android:id="@+id/circle_imgeview"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_weight="0.2"
+
+        android:paddingBottom="3dp"
+        android:src="@drawable/common_google_signin_btn_icon_light" />
+</LinearLayout>
