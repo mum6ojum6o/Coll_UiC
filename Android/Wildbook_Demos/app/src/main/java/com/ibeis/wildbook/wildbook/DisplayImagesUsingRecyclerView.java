@@ -147,7 +147,7 @@ public Handler mHandler = new Handler(){
 
             // Setting RecyclerView layout as LinearLayout.
             recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 4));
-            findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
+            findViewById(R.id.encounter_details).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setVisibility(View.GONE);
         }

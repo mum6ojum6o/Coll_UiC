@@ -19,7 +19,32 @@
     <string name="imagePreviewString">Anteprima immagine</string>
     <string name="yesString">Sì</string>
     <string name="noString">No</string>
-    <string name="speciesValidationString">Seleziona una specie</string>
+    <string name="speciesValidationString">Please select a Species</string>
     <string name="imageUploadedString">Immagine caricata!</string>
     <string name="anotherIncidentString">Segnala un altro incidente?</string>
+    <string name="historyString">Il tuo contributo</string>
+    <string name="wifiString">Wifi</string>
+    <string name="mobiledataString">Dati mobili</string>
+    <string name="anyString">Qualunque</string>
+    <string name="online">Sei online!</string>
+    <string name="imagesNotUploaded">Le immagini non sono state caricate</string>
+    <string name="uploading_images">Caricamento immagini ...</string>
+    <string name="connectivityLossMessageString">Dal momento che non sei più connesso a Internet,
+         le immagini selezionate verranno caricate automaticamente una volta ripristinata la connettività del dispositivo.
+         Quale tipo di connessione preferiresti per la sincronizzazione delle immagini?
+    </string>
+    <string name="encounter">EncounterNum</string>
+    <string name="offline">Sei offline</string>
+    <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
+    <string name="imageloading">Caricamento immagini ...</string>
+    <string name="encounterdetails">Dettagli dell\'incontro</string>
+    <string name="live_encounter">Segnala incontro</string>
+    <string name="uploadRequestOnNoNetwork">Le immagini verranno caricate sulla disponibilità della rete appropriata!</string>
+    <string name="server_offline">Sfortunatamente, il tuo contributo non può essere recuperato. \ N Riprova dopo qualche tempo</string>
+    <string name="sync_error">C\'è stato un problema durante la sincronizzazione. Si prega di riprovare dopo un po \'di tempo</string>
+    <string name="file_not_found_error">Il file che stavi tentando di caricare non è stato trovato!</string>
+    <string name="preferences">Preferenze</string>
+    <string name="sync">Sincronizzare</string>
+    <string name="logout">Disconnettersi</string>
+    <string name="syncpreferences">Preferenze di sincronizzazione</string>
 </resources>

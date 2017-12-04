@@ -132,7 +132,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
-                Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
+                if(result==null)
+                    Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
                     //updateUI(null);
                 // [END_EXCLUDE]
             }

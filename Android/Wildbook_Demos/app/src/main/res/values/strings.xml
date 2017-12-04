@@ -19,7 +19,7 @@
     <string name="imagePreviewString">Image Preview</string>
     <string name="yesString">Yes</string>
     <string name="noString">No</string>
-    <string name="speciesValidationString">Please selecte a Species</string>
+    <string name="speciesValidationString">Please select a Species</string>
     <string name="imageUploadedString">Image(s) Uploaded!</string>
     <string name="anotherIncidentString">Report another Incident?</string>
     <string name="historyString">Your Contribution</string>
@@ -42,5 +42,9 @@
     <string name="uploadRequestOnNoNetwork">The images will be uploaded on the availability of appropriate network!</string>
     <string name="server_offline">Unfortunately, you contribution could not be retrieved.\n Please try again after sometime</string>
     <string name="sync_error">There was an issue during syncing. Please try again after some time</string>
-    <string name="file_not_found_error">The File youu were trying to upload could not be found!</string>
+    <string name="file_not_found_error">The File you were trying to upload could not be found!</string>
+    <string name="preferences">Preferences</string>
+    <string name="sync">Sync</string>
+    <string name="logout">Logout</string>
+    <string name="syncpreferences">Sync Preferences</string>
 </resources>

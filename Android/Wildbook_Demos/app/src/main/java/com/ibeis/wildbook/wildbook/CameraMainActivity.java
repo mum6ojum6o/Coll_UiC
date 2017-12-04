@@ -815,8 +815,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         @Override
                         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                             super.onCaptureCompleted(session, request, result);
-                            Toast.makeText(getApplicationContext(),
-                                    "Image Captured!", Toast.LENGTH_SHORT).show();
+
                             unLockFocus();
                         }
                         public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {

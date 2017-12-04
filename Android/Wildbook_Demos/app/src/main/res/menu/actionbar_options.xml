@@ -7,13 +7,15 @@
                 android:id="@+id/menu_name"
                 android:title="Name"
                  />
+        <item android:id="@+id/menu_preferences"
+                android:title="@string/preferences"/>
         <item
                 android:id="@+id/menu_sync"
-                android:title="Sync"
+                android:title="@string/sync"
                  />
         <item
                 android:id="@+id/menu_logout"
-                android:title="Logout"
+                android:title="@string/logout"
                  />
 
 

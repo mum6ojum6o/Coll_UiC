@@ -1,5 +1,6 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,12 +19,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -34,13 +39,16 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+import java.util.ArrayList;
+
+public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+{
     protected GoogleApiClient mGoogleApiClient;
     protected GoogleSignInAccount googleSignInAccount;
     private ImageView mCircleImageView;
     protected ActionBar action;
     private MenuItem menuItem;
-    private SubMenu subMenuItem;
+    private RadioGroup mRadioGroup ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,11 +207,67 @@ public void onResume() {
             case R.id.menu_logout:
                 signOut();
                 return true;
+            case R.id.menu_preferences:
+                showPreferencesDialog();
+                return true;
 
         }
         return false;
     }
+    public void showPreferencesDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.preferences_radio);
 
+
+        dialog.setTitle(R.string.syncpreferences);
+       final Utilities util = new Utilities(this);
+        ArrayList<String> preferences = new ArrayList<>();
+        preferences.add(getResources().getString(R.string.wifiString));
+        preferences.add(getResources().getString(R.string.mobiledataString));
+        preferences.add(getResources().getString(R.string.anyString));
+        String getPref = util.getSyncSharedPreference(util.getCurrentIdentity());
+        Log.i("BASE", "selected pref="+getPref);
+        mRadioGroup = (RadioGroup) dialog.findViewById(R.id.radio_group);
+        RadioButton rb = new RadioButton(this);
+        rb.setText(getResources().getString(R.string.wifiString));
+        RadioButton rb2 = new RadioButton(this);
+        rb2.setText(getResources().getString(R.string.mobiledataString));
+        RadioButton rb3 = new RadioButton(this);
+        rb3.setText(getResources().getString(R.string.anyString));
+        switch(preferences.indexOf(getPref)){
+            case 0:
+                rb.setChecked(true);
+                break;
+            case 1:
+                rb2.setChecked(true);
+                break;
+            case 2:rb3.setChecked(true);
+                break;
+        }
+        mRadioGroup.addView(rb2);
+        mRadioGroup.addView(rb);
+        mRadioGroup.addView(rb3);
+        dialog.show();
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int childCount = radioGroup.getChildCount();
+                Log.i("BASE","radioGroup="+childCount);
+                for (int x = 0; x < childCount; x++) {
+                    RadioButton btn = (RadioButton) radioGroup.getChildAt(x);
+                    if (btn.getId() == i) {
+
+                        Log.e("selected RadioButton->",btn.getText().toString());
+                        btn.setChecked(true);
+                        new Utilities(getApplicationContext()).writeSyncPreferences(btn.getText().toString());
+                        dialog.hide();
+                    }
+                }
+            }
+        });
+    }
     @Override
     public void onStop(){
         super.onStop();
@@ -212,4 +276,6 @@ public void onResume() {
         Log.i("BASE", "bye bye!! "+ new Utilities(this).getCurrentIdentity());
 
     }
+
+
 }

@@ -20,8 +20,34 @@
     <string name="imagePreviewString">Beeldvoorskou</string>
     <string name="yesString">Ja</string>
     <string name="noString">Geen</string>
+
     <string name="speciesValidationString">Kies asseblief \'n spesie</string>
-    <string name="imageUploadedString">Beeld opgelaai!</string>
-    <string name="anotherIncidentString">Gee \'n ander voorval aan?</string>
+    <string name="imageUploadedString">Prente opgelaai!</string>
+    <string name="anotherIncidentString">Report another Incident?</string>
+    <string name="historyString">Jou bydrae</string>
+    <string name="wifiString">Wifi</string>
+    <string name="mobiledataString">Mobiele data</string>
+    <string name="anyString">Any</string>
+    <string name="online">Enige</string>
+    <string name="imagesNotUploaded">Prente is nie opgelaai nie !!</string>
+    <string name="uploading_images">Laai tans prente op ...</string>
+    <string name="connectivityLossMessageString">Aangesien jy nie meer aan die internet gekoppel is nie,
+         Die geselekteerde beelde sal outomaties opgelaai word sodra jou toestelkonneksie hervat word.
+         Watter tipe konneksie sal jy verkies vir beeldsinkronisering?
+    </string>
+    <string name="encounter">EncounterNum</string>
+    <string name="offline">Jy is vanlyn</string>
+    <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
+    <string name="imageloading">Laai tans prente ...</string>
+    <string name="encounterdetails">Ontmoeting besonderhede</string>
+    <string name="live_encounter">Rapporteer ontmoeting</string>
+    <string name="uploadRequestOnNoNetwork">Die beelde sal opgelaai word op die beskikbaarheid van toepaslike netwerk!</string>
+    <string name="server_offline">Ongelukkig kan u bydrae nie opgespoor word nie. \ N Probeer asseblief weer na iewers</string>
+    <string name="sync_error">Daar was \'n probleem tydens sinkronisering. Probeer asseblief weer na \'n geruime tyd</string>
+    <string name="file_not_found_error">Die lêer wat jy probeer oplaai, kon nie gevind word nie!</string>
+    <string name="preferences">voorkeure</string>
+    <string name="sync">Oplaai</string>
+    <string name="logout">Teken uit</string>
+    <string name="syncpreferences">Oplaai Voorkeure</string>
 
 </resources>
