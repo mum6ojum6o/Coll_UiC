@@ -18,7 +18,7 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
     <style name="OceanicTheme" parent="@style/Theme.AppCompat">
-        <item name="android:windowBackground">@drawable/oceanic_bg</item>
+        <item name="android:windowBackground">@drawable/bg_your_contributions</item>
         <item name="android:itemBackground">#4286f4</item>
 
     </style>

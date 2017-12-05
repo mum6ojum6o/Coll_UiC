@@ -66,35 +66,21 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                 case 200:
                     Bundle b = message.getData();
                     JSONArray jsonArray = null,reversedJSONArray=new JSONArray();
-                    ArrayList<String> images = new ArrayList<String>();
-
                     try {
                         jsonArray = new JSONArray(b.getString("JSON_RESPONEI"));
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    ArrayList<Uri> imagesPath = new ArrayList<Uri>();
-                   
                     try {
                         for (int i = jsonArray.length() - 1; i >= 0; i--) {
                             reversedJSONArray.put(jsonArray.getJSONObject(i));
                         }
 
-                       /* for (int i = reversedJSONArray.length() - 1; i >= 0; i--) {
-                            if (reversedJSONArray.getJSONObject(i).has("thumbnailUrl"))
-                                images.add((reversedJSONArray.getJSONObject(i).get("thumbnailUrl").toString()));
-                        }*/
                     }catch(JSONException je) {
                         Toast.makeText(getApplicationContext(), "Error receiving response from Server", Toast.LENGTH_SHORT).show();
                         je.printStackTrace();
                     }
-
-                    for (String anImage : images) {
-                        imagesPath.add(Uri.parse(anImage));  // where is imagesPath being used???
-                    }
-
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), reversedJSONArray);
                     recyclerView.setAdapter(adapter);
                     break;

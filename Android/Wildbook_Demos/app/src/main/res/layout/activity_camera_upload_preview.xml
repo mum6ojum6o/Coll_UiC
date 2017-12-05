@@ -25,11 +25,12 @@
 
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
-        android:background="#c11a0b"
+        android:background="@drawable/rounded_button"
         android:gravity="center_vertical|center"
         android:text="@string/discardString"
         android:textAlignment="gravity"
-        android:textColor="#ffffFF"
+        android:textColor="#9c3535"
+        android:textStyle="bold"
         android:visibility="visible" />
 
     <Button
@@ -39,12 +40,14 @@
         android:layout_above="@+id/recyclerView"
         android:layout_alignBottom="@+id/DiscardBtn2"
         android:layout_alignParentRight="true"
-        android:background="#13a51b"
+        android:background="@drawable/rounded_button"
+
         android:gravity="center_vertical|center"
         android:text="@string/uploadString"
+        android:textStyle="bold"
         android:textAlignment="gravity"
 
-        android:textColor="#ffffFF"
+        android:textColor="#23512c"
         android:visibility="visible" />
 
 </RelativeLayout>
