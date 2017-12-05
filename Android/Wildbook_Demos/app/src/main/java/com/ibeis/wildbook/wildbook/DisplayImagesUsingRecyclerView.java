@@ -34,13 +34,16 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.os.Handler;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,45 +54,60 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     private static final int PROG_UPDATE = 853;
     public static String TAG = "DisplayImagesUsingRecyclerView ";
 
-public Handler mHandler = new Handler(){
-    @Override
-    public void handleMessage(Message message){
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
 
-        switch(message.what){
-            case DOWNLOADING:
-                break;
-            case PROG_UPDATE:
-                break;
-            case 200:
-                Bundle b=message.getData();
-                JSONArray jsonArray=null;
-                ArrayList<String> images= b.getStringArrayList("JSON_RESPONE");
+            switch (message.what) {
+                case DOWNLOADING:
+                    break;
+                case PROG_UPDATE:
+                    break;
+                case 200:
+                    Bundle b = message.getData();
+                    JSONArray jsonArray = null,reversedJSONArray=new JSONArray();
+                    ArrayList<String> images = new ArrayList<String>();
 
-                try {
-                    jsonArray= new JSONArray(b.getString("JSON_RESPONEI"));
+                    try {
+                        jsonArray = new JSONArray(b.getString("JSON_RESPONEI"));
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                ArrayList<Uri> imagesPath= new ArrayList<Uri>();
-                for(String anImage:images){
-                    imagesPath.add(Uri.parse(anImage));
-                }
+                    ArrayList<Uri> imagesPath = new ArrayList<Uri>();
+                   
+                    try {
+                        for (int i = jsonArray.length() - 1; i >= 0; i--) {
+                            reversedJSONArray.put(jsonArray.getJSONObject(i));
+                        }
 
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),jsonArray);
-                recyclerView.setAdapter(adapter);
-                break;
-            case 404:
-                errorMessage.setText(getResources().getString(R.string.server_offline));
-                errorMessage.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
-                break;
+                       /* for (int i = reversedJSONArray.length() - 1; i >= 0; i--) {
+                            if (reversedJSONArray.getJSONObject(i).has("thumbnailUrl"))
+                                images.add((reversedJSONArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                        }*/
+                    }catch(JSONException je) {
+                        Toast.makeText(getApplicationContext(), "Error receiving response from Server", Toast.LENGTH_SHORT).show();
+                        je.printStackTrace();
+                    }
+
+                    for (String anImage : images) {
+                        imagesPath.add(Uri.parse(anImage));  // where is imagesPath being used???
+                    }
+
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), reversedJSONArray);
+                    recyclerView.setAdapter(adapter);
+                    break;
+                case 404:
+                    errorMessage.setText(getResources().getString(R.string.server_offline));
+                    errorMessage.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    findViewById(R.id.encounter_details).setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
-    }
-};
-    private static final int DISPLAY=123;
+    };
+    private static final int DISPLAY = 123;
     // Creating DatabaseReference.
     //DatabaseReference databaseReference;
 
@@ -97,11 +115,11 @@ public Handler mHandler = new Handler(){
     RecyclerView recyclerView;
 
     // Creating RecyclerView.Adapter.
-    RecyclerView.Adapter adapter ;
+    RecyclerView.Adapter adapter;
     private TextView errorMessage;
     // Creating Progress dialog
     ProgressDialog progressDialog;
-   // StorageReference storageReference;
+    // StorageReference storageReference;
 
     // Creating List of ImageUploadInfo class.
     List<ImageUploadInfo> list = new ArrayList<>();
@@ -111,26 +129,25 @@ public Handler mHandler = new Handler(){
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG,getIntent().hasExtra("source")+" From Notification????");
-        Log.i(TAG, getIntent().hasExtra("UploadedBy")+ "User INFORMATION");
-       // Log.i(TAG, "checking user: "+new Utilities(this).checkUsername());
-        String naam=new Utilities(this).getCurrentIdentity();
-        String uploadedBy=getIntent().getStringExtra("UploadedBy");
-        if(getIntent().hasExtra("source")
+        Log.i(TAG, getIntent().hasExtra("source") + " From Notification????");
+        Log.i(TAG, getIntent().hasExtra("UploadedBy") + "User INFORMATION");
+        // Log.i(TAG, "checking user: "+new Utilities(this).checkUsername());
+        String naam = new Utilities(this).getCurrentIdentity();
+        String uploadedBy = getIntent().getStringExtra("UploadedBy");
+        if (getIntent().hasExtra("source")
                 && naam.equals("")) {//means no user has logged in....
-            Log.i(TAG,"Not connected with the same user");
-            Toast.makeText(this,"Please login with the appropriate userId.",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this,Login.class));
+            Log.i(TAG, "Not connected with the same user");
+            Toast.makeText(this, "Please login with the appropriate userId.", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, Login.class));
             finish();
         }
         //someone has logged in but with different account
-        else if(getIntent().hasExtra("source")
-                && ((!uploadedBy.equals(naam) && !naam.equals("")))){
-            Toast.makeText(this,"The previous sync was requested for another user",Toast.LENGTH_LONG);
-            startActivity(new Intent(this,MainActivity.class));
+        else if (getIntent().hasExtra("source")
+                && ((!uploadedBy.equals(naam) && !naam.equals("")))) {
+            Toast.makeText(this, "The previous sync was requested for another user", Toast.LENGTH_LONG);
+            startActivity(new Intent(this, MainActivity.class));
             finish();
-        }
-        else {
+        } else {
             setContentView(R.layout.activity_display_images_using_recycler_view);
             /*getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -155,7 +172,7 @@ public Handler mHandler = new Handler(){
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         // Assign activity this to progress dialog.
         progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
@@ -166,73 +183,76 @@ public Handler mHandler = new Handler(){
         //creating a worker thread to get images from the network.
 
 
+        new Thread(new Runnable() {
 
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        if (android.os.Build.VERSION.SDK_INT > 9) {
-                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                            StrictMode.setThreadPolicy(policy);
+            @Override
+            public void run() {
+                try {
+                    if (android.os.Build.VERSION.SDK_INT > 9) {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                    }
+                    URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    JSONArray jsonArray = null,reversedJSONArray=null;
+                    JSONObject jsonObject = null;
+                    int statusCode = httpURLConnection.getResponseCode();
+                    if (statusCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                httpURLConnection.getInputStream()));
+                        String line = null;
+                        StringBuilder sb = new StringBuilder();
+                        while ((line = reader.readLine()) != null) {
+                            Log.i(TAG, line);
+                            sb.append(line);
                         }
-                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        JSONArray jsonArray = null;
-                        JSONObject jsonObject = null;
-                        int statusCode = httpURLConnection.getResponseCode();
-                        if (statusCode == HttpURLConnection.HTTP_OK) {
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                    httpURLConnection.getInputStream()));
-                            String line = null;
-                            StringBuilder sb = new StringBuilder();
-                            while ((line = reader.readLine()) != null) {
-                                Log.i(TAG, line);
-                                sb.append(line);
-                            }
-                            String response = sb.toString();
-                            jsonArray = new JSONArray(response);
-                            //jsonObject=new JSONObject(response);
-                            reader.close();
-                            httpURLConnection.disconnect();
-                            ArrayList<String> imagePaths = new ArrayList<String>();
+                        String response = sb.toString();
+                        jsonArray = new JSONArray(response);
+                        reader.close();
+                        httpURLConnection.disconnect();
+                        ArrayList<String> imagePaths = new ArrayList<String>();
 
-                            if (jsonArray != null) {
-                                int size = jsonArray.length();
-                                for (int i = 0; i < size; i++) {
-                                    if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
-                                        imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
-                                }
-                                Message msg = mHandler.obtainMessage(200);
-                                Bundle bundle = new Bundle();
-                                bundle.putStringArrayList("JSON_RESPONE", imagePaths);
-                                bundle.putString("JSON_RESPONEI", response);
-                                msg.setData(bundle);
-                                msg.sendToTarget();
+                        if (jsonArray != null) {
+                            reversedJSONArray = new JSONArray();
+                            int size = jsonArray.length();
+                            for (int i = 0; i < size; i++) {
+                                if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                                    imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                            }
+
+
+                            Message msg = mHandler.obtainMessage(200);
+                            Bundle bundle = new Bundle();
+                            bundle.putStringArrayList("JSON_RESPONE", imagePaths);
+                            bundle.putString("JSON_RESPONEI", response);
+
+                            msg.setData(bundle);
+                            msg.sendToTarget();
                             /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
                             recyclerView.setAdapter(adapter);*/
-                            } else {
-                                Message msg = mHandler.obtainMessage(404);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("404", getResources().getString(R.string.server_offline));
-                                msg.setData(bundle);
-                                msg.sendToTarget();
-                            }
+                        } else {
+                            Message msg = mHandler.obtainMessage(404);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("404", getResources().getString(R.string.server_offline));
+                            msg.setData(bundle);
+                            msg.sendToTarget();
                         }
-                        //Thread.sleep(5000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.i(TAG, "Error!!");
                     }
-
-                    progressDialog.dismiss();
-
+                    //Thread.sleep(5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "Error!!");
                 }
-            }).start();
+
+                progressDialog.dismiss();
+
+            }
+        }).start();
 
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
 
         super.onResume();
         //progressDialog.show();
@@ -296,30 +316,30 @@ public Handler mHandler = new Handler(){
         });*/
 
         ///this code should be in worker thread.
-        String naam=new Utilities(this).getCurrentIdentity();
-        Log.i(TAG,"in on Resume:"+ naam);
-        if(naam.equals("No Email ID")||naam==null){
-            startActivity(new Intent(this,Login.class));
+        String naam = new Utilities(this).getCurrentIdentity();
+        Log.i(TAG, "in on Resume:" + naam);
+        if (naam.equals("No Email ID") || naam == null) {
+            startActivity(new Intent(this, Login.class));
             finish();
 
         }
     }
 
     protected void signOut() {
-       final Context ctx = getApplicationContext();
+        final Context ctx = getApplicationContext();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
                         mGoogleApiClient.disconnect();
-                        mGoogleApiClient=null;
+                        mGoogleApiClient = null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
+                        ActivityUpdater.activeActivity = null;
                         Intent intent = new Intent(DisplayImagesUsingRecyclerView.this, Login.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
-                                Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivity(intent);
-                        Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
+                        Log.i(TAG, "Logging out from DisplayImagesUsingRecyclerView");
                         new Utilities(DisplayImagesUsingRecyclerView.this).setCurrentIdentity("");
                         DisplayImagesUsingRecyclerView.this.finish();
                         DisplayImagesUsingRecyclerView.this.finishAffinity();
