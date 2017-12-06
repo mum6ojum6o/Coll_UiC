@@ -109,6 +109,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     /**
      * Max preview height that is guaranteed by Camera2 API
      */
+    private Toast toast;
     private static final int MAX_PREVIEW_HEIGHT = 1080;
     protected static final int STORAGE_PERMISSION_REQUEST=99;
     private int mSensorOrientation;
@@ -256,6 +257,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 }
                 i.putExtra("Files",mCapturedPics);
                 startActivity(i);
+
                 break;
             case R.id.imageButton:
                 if(SWAP.equals("Front")) {
@@ -710,6 +712,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     Toast.makeText(getApplicationContext(),"In order to contribute to our cause we " +
                             "would encourage you to grant us access in the future!",Toast.LENGTH_LONG);
                     startActivity(new Intent(CameraMainActivity.this,MainActivity.class));
+                   // toast.cancel();
                 }
             break;
         }
@@ -815,8 +818,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         @Override
                         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                             super.onCaptureCompleted(session, request, result);
+                            toast = Toast.makeText(getApplicationContext(),
+                                    "Image Captured!", Toast.LENGTH_SHORT);
 
+                            toast.show();
                             unLockFocus();
+
                         }
                         public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
                             super.onCaptureStarted(session, request, timestamp, frameNumber);
@@ -982,7 +989,9 @@ public Bitmap getUpdatedBitmap(File imageFile){
                         Intent intent = new Intent(CameraMainActivity.this, Login.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                       // toast.cancel();
                         startActivity(intent);
+
                         Log.i("CameraMainActivity","Logging out from DisplayImagesUsingRecyclerView");
                         new Utilities(CameraMainActivity.this).setCurrentIdentity("");
                         CameraMainActivity.this.finish();

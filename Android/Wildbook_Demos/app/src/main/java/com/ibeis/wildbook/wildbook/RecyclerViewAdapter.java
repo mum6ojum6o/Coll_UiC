@@ -100,7 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public ImageView imageView;
+        public ImageView imageView,imageView2;
         public TextView imageNameTextView;
         public Context mContext;
 
@@ -108,6 +108,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
 
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView2 = (ImageView)itemView.findViewById(R.id.imageView2);
+            imageView2.setVisibility(View.INVISIBLE);
             mContext = context;
             imageView.setOnClickListener(this);
            // imageNameTextView = (TextView) itemView.findViewById(R.id.ImageNameTextView);

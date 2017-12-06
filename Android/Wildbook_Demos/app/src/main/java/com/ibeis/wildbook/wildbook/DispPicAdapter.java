@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,13 +31,17 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
     Context context;
     List<Uri> MainImageUploadInfoList;
     List<String> mImagePaths;
+    List<Integer> mSelectedImages;//holds positions of the images selected.
+    boolean longClicked;
 
     public DispPicAdapter(Context context, List<Uri> TempList,List<String>imagePaths) {
 
         this.MainImageUploadInfoList = TempList;
         this.mImagePaths = imagePaths;
         this.context = context;
+        longClicked = false;
         Log.i("RecyclerViewAdapter","constructor!!!"+"TempList.size()="+TempList.size());
+        this.mSelectedImages = new ArrayList<Integer>();
     }
 
     @Override
@@ -64,8 +70,8 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .crossFade()
-
                 .into(holder.imageView);
+
         }
         else {
             Glide.with(context).load(UploadInfo)
@@ -73,7 +79,13 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
                     .fitCenter()
                     .crossFade()
                     .into(holder.imageView);
+
         }
+        Glide.with(context).load(R.drawable.notification_sync_complete)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .fitCenter()
+                .crossFade()
+                .into(holder.imageView2);
         /*File imageFile = new File(path);
         Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(),mBitOptions);
         holder.getImageView().setImageBitmap(imageBitmap);*/
@@ -85,37 +97,79 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         return MainImageUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public ArrayList<Integer> getSelectedImages(){
+        return (ArrayList)mSelectedImages;
+    }
 
-        public ImageView imageView;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
+
+        public ImageView imageView,imageView2;
         public TextView imageNameTextView;
-
+        public boolean imageViewisSelected;
         public ViewHolder(View itemView) {
             super(itemView);
 
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView2 = (ImageView) itemView.findViewById(R.id.imageView2);
+            imageView2.setVisibility(View.VISIBLE);
+            imageView2.setBackgroundColor(itemView.getResources().getColor(R.color.red, null));
             imageView.setOnClickListener(this);
-
+            imageView.setOnLongClickListener(this);
+            imageViewisSelected=true;
             // imageNameTextView = (TextView) itemView.findViewById(R.id.ImageNameTextView);
         }
         @Override
         public void onClick(View view){
-            Intent intent = new Intent(context,ImageViewActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Uri uri =MainImageUploadInfoList.get(getAdapterPosition());
-            //Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
-            String filePath=null;
-            if(mImagePaths.get(getAdapterPosition())!=null)
-                filePath = new File(mImagePaths.get(getAdapterPosition())).getPath();
-            if("content".equalsIgnoreCase(uri.getScheme()))
-                intent.putExtra("POS",uri.toString());
-            else
-                intent.putExtra("filePath",filePath);
-            intent.putExtra("Adapter","DispPic");
-            context.startActivity(intent);
+            if(imageViewisSelected==false) {
+                Intent intent = new Intent(context, ImageViewActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Uri uri = MainImageUploadInfoList.get(getAdapterPosition());
+                //imageView2.setVisibility(View.VISIBLE);
+
+                //Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
+                String filePath = null;
+                if (mImagePaths.get(getAdapterPosition()) != null)
+                    filePath = new File(mImagePaths.get(getAdapterPosition())).getPath();
+                if ("content".equalsIgnoreCase(uri.getScheme()))
+                    intent.putExtra("POS", uri.toString());
+                else
+                    intent.putExtra("filePath", filePath);
+                intent.putExtra("Adapter", "DispPic");
+                context.startActivity(intent);
+            }
+            else{
+                imageView2.setVisibility(View.VISIBLE);
+                imageViewisSelected=false;
+            }
         }
         public ImageView getImageView() {
             return imageView;
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if(imageViewisSelected==false ) {
+                imageView2.setVisibility(View.VISIBLE);
+                imageViewisSelected=true;
+                /*mSelectedImages.add(getAdapterPosition());
+                Log.i("DispPicAdapter","Selecting "+mImagePaths.get(getAdapterPosition()));
+                imageViewisSelected = false;*/
+
+
+
+            }
+            else if(imageViewisSelected==true ){
+                imageViewisSelected=false;
+                Log.i("DispPicAdapter","unselecting "+mImagePaths.get(getAdapterPosition()));
+               // mSelectedImages.remove(mSelectedImages.indexOf(getAdapterPosition()));
+                //imageView2.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.INVISIBLE);
+                Log.i("DispPicAdapter", "You selected image " + getAdapterPosition());
+            }
+            return true;
+        }
+
+
     }
+
 }

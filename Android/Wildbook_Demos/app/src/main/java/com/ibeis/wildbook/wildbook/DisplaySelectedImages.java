@@ -1,5 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,8 +16,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -40,6 +45,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
     protected Button UploadBtn,DiscardBtn;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
+    private ArrayList<String> mSelectedImages=new ArrayList<String>(); //represents the images selected after long press.
     //protected StorageReference mStorage;
     //protected FirebaseAuth mAuth;
     //protected DatabaseReference databaseReference;
@@ -90,11 +96,20 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
         }
     }
-
+    public void getSelectedImages(){
+        for (int i=0;i<selectedImages.size();i++){
+            if(recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility()==View.VISIBLE){
+                mSelectedImages.add(selectedImages.get(i));
+            }
+        }
+    }
     public void onClick(View view){
+        getSelectedImages();
         switch(view.getId()){
             case R.id.UploadBtn2:
-                if (new Utilities(this).isNetworkAvailable()) { //check for network availability
+                if(mSelectedImages.size()>0) {
+                    if (new Utilities(this).isNetworkAvailable()) {
+                        //check for network availability
                    /* Utilities util = new Utilities(getApplicationContext(),selectedImages,new ImageRecorderDatabase(this));
                     util.uploadPictures(selectedImages);
 
@@ -131,7 +146,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
 
                     selectedImages.clear();
                     selectedImages.add(encodedImage);*/
-                    if(areValidPaths(selectedImages)) {
+                        if (areValidPaths(mSelectedImages)) {
                         /*ImageUploaderTask task = new ImageUploaderTask(this, selectedImages);
                         Log.i(TAG, "Starting fileupload request using worker thread!!");
                         new Thread(task).start();
@@ -139,17 +154,15 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                         //redirect(selectedImages.size(), selectedImages.size());
                         startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
                         finish();*/
-                        startUpload();
-                    }
-                    else{//download image from uri and then upload it....
-                        selectedImages.clear();
-                        selectedImages = returnDownloadedFilePath(imageUri);
-                        if(selectedImages==null){ //error while downloading file from other sources....
-                            Toast.makeText(getApplicationContext(),
-                                    "Something went wrong while Downloading the image!!",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        else{//start download....
+                            startUpload();
+                        } else {//download image from uri and then upload it....
+                            mSelectedImages.clear();
+                            mSelectedImages = returnDownloadedFilePath(imageUri);
+                            if (mSelectedImages == null) { //error while downloading file from other sources....
+                                Toast.makeText(getApplicationContext(),
+                                        "Something went wrong while Downloading the image!!",
+                                        Toast.LENGTH_LONG).show();
+                            } else {//start download....
                            /* ImageUploaderTask task = new ImageUploaderTask(this, selectedImages);
                             Log.i(TAG, "Starting fileupload request using worker thread!!");
                             new Thread(task).start();
@@ -157,25 +170,23 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                             //redirect(selectedImages.size(), selectedImages.size());
                             startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
                             finish();*/
-                           startUpload();
+                                startUpload();
+                            }
                         }
-                    }
 
 
-                }
-                else{//no connectivity
-                    if(areValidPaths(selectedImages)){
-                        saveToDb();
-                    }
-                    else{
-                        selectedImages = returnDownloadedFilePath(imageUri); //download the files
-                        if(selectedImages!=null)
+                    } else {//no connectivity
+                        if (areValidPaths(mSelectedImages)) {
                             saveToDb();
-                        else {
-                            Toast.makeText(getApplicationContext(),"Something went wrong! Please try again!",Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
+                        } else {
+                            mSelectedImages = returnDownloadedFilePath(imageUri); //download the files
+                            if (mSelectedImages != null)
+                                saveToDb();
+                            else {
+                                Toast.makeText(getApplicationContext(), "Something went wrong! Please try again!", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
+                            }
                         }
-                    }
                     /*ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                     Utilities utility = new Utilities(this,selectedImages,dbHelper);
                     utility.prepareBatchForInsertToDB(false);
@@ -192,8 +203,27 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                         finish();
                        // redirect(0, 0);
                     }*/
+                    }
                 }
+                else{
+                    /*final AlertDialog.Builder builder = new AlertDialog.Builder(DisplaySelectedImages.this);
+                    builder.setTitle(getResources().getString(R.string.noimageselected));
+                    builder.setMessage(getResources().getString(R.string.requestimageselection));
 
+                    AlertDialog dialog = builder.create();
+                    dialog.setInverseBackgroundForced(true);
+                    */
+                    Dialog dialog = new Dialog(DisplaySelectedImages.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_layout);
+                    dialog.setTitle(getResources().getString(R.string.noimageselected));
+                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+                    tv.setText(getResources().getString(R.string.noimageselected));
+                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+                    tv1.setText(getResources().getString(R.string.requestimageselection));
+                    dialog.show();
+
+                }
                 break;
             case R.id.DiscardBtn2:
                 startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));
@@ -203,7 +233,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
 
     public void saveToDb(){
         ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
-        Utilities utility = new Utilities(this,selectedImages,dbHelper);
+        Utilities utility = new Utilities(this,mSelectedImages,dbHelper);
         utility.prepareBatchForInsertToDB(false);
         Log.i(TAG,"prepared");
         if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getCurrentIdentity()))) {
@@ -226,7 +256,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
     }
 
     public void startUpload(){
-        ImageUploaderTask task = new ImageUploaderTask(this, selectedImages,new Utilities(this).getCurrentIdentity());
+        ImageUploaderTask task = new ImageUploaderTask(this, mSelectedImages,new Utilities(this).getCurrentIdentity());
         Log.i(TAG, "Starting fileupload request using worker thread!!");
         new Thread(task).start();
         Log.i(TAG, "redirecting....to mainActivity");

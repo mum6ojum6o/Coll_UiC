@@ -1,6 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -13,7 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -64,6 +67,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
 
     private ArrayList<Uri> imagesList=new ArrayList<Uri>();
     private ArrayList<String> imagesNames = new ArrayList<String>();
+    private ArrayList<String>mSelectedImages = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -92,104 +96,127 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
 
     }
+
+    public void getSelectedImages(){
+        for (int i=0;i<imagesNames.size();i++){
+            if(recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility()==View.VISIBLE){
+                mSelectedImages.add(imagesNames.get(i));
+            }
+        }
+    }
+
     @Override
     public void onClick(View view){
+
         switch (view.getId()){
             case R.id.UploadBtn2:
-                if (new Utilities(this).isNetworkAvailable()) {
+                getSelectedImages();
+                if(mSelectedImages.size()>0) {
+                    if (new Utilities(this).isNetworkAvailable()) {
 
-                    int uploadCount=0;
-                    ImageUploaderTask task = new ImageUploaderTask(this,imagesNames, new Utilities(this).getCurrentIdentity());
-                    new Thread(task).start();
-                    Log.i(TAG,"redirecting....");
-                    //redirect(imagesNames.size(), imagesNames.size());
+                        int uploadCount = 0;
+                        //adapter.getSelectedImages();
+                        ImageUploaderTask task = new ImageUploaderTask(this, mSelectedImages, new Utilities(this).getCurrentIdentity());
+                        new Thread(task).start();
+                        Log.i(TAG, "redirecting....");
+                        //redirect(imagesNames.size(), imagesNames.size());
 
-                    startActivity(new Intent(UploadCamPics.this , MainActivity.class));
-                    finish();
+                        startActivity(new Intent(UploadCamPics.this, MainActivity.class));
+                        finish();
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());*/
 
-                    /*************************************
-                     *
-                     * this commented block runs just fine!
-                     * ***************************************
-                    for (String filename:imagesNames){
-                        if(new Utilities(this).uploadPictures(filename)){
-                            uploadCount++;
+                        /*************************************
+                         *
+                         * this commented block runs just fine!
+                         * ***************************************
+                         for (String filename:imagesNames){
+                         if(new Utilities(this).uploadPictures(filename)){
+                         uploadCount++;
+                         }
+                         }
+                         finish();
+                         Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
+                         startActivity(new Intent(UploadCamPics.this,MainActivity.class));*/
+
+                        /****************************
+                         Requestor request = new Requestor(url,"UTF-8","POST");
+                         request.addFormField("jsonResponse","true");
+                         try {
+
+
+                         ExifInterface exif = new ExifInterface(imagesNames.get(0));
+                         String datepicker = exif.getAttribute(ExifInterface.TAG_DATETIME);
+                         DateFormat dfrom = new  SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+                         DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
+
+                         try{
+                         Date date = dfrom.parse(datepicker);
+                         datepicker = dTo.format(date);
+                         }catch(ParseException pe){pe.printStackTrace();Log.i(TAG,"Parsing Issue");}
+                         request.addFormField("datepicker",datepicker);
+                         float[] latLong = new float[2];
+                         String lat=null,Long=null;
+                         if(exif.getLatLong(latLong)){
+                         lat=Float.toString(latLong[0]);
+                         Long=Float.toString(latLong[1]);
+                         Log.i(TAG,"lat:"+lat+"long: "+Long);
+                         request.addFormField("lat",lat);
+                         request.addFormField("longitude",Long);
+                         }
+                         }catch(IOException e){
+                         e.printStackTrace();
+                         Log.i(TAG,"Coordinates could not be extracted!!");
+                         }
+                         for(String file:imagesNames){
+                         try {
+                         request.addFile("theFiles", file);
+                         }catch(Exception e){
+                         e.printStackTrace();
+                         Log.i(TAG,"case UploadBtn2: exception occured while building request");
+                         break;
+                         }
+                         }
+                         try{
+                         request.finishRequesting();
+                         Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
+                         //startActivity(new Intent(UploadCamPics.this,MainActivity.class));
+                         redirect(imagesNames.size(),imagesNames.size());
+                         }catch(Exception e){
+                         Log.i(TAG,"Server response error!!");
+                         Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
+                         } **************************************/
+                    } else {
+                        //this is running on the main thread!!!!!!!!
+                        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
+                        Utilities utility = new Utilities(this, mSelectedImages, dbHelper);
+                        utility.prepareBatchForInsertToDB(false);
+                        Log.i(TAG, "Loggedin as: " + utility.getCurrentIdentity());
+                        if (!(utility.checkSharedPreference(utility.getCurrentIdentity()))) {
+                            utility.connectivityAlert().show();
+                        } else {
+                            utility.insertRecords();
+                            Log.i(TAG, "Results saved to SQLite3");
+                            Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
+                            // redirect(0, 0);
+                            startActivity(new Intent(UploadCamPics.this, MainActivity.class));
+                            finish();
                         }
+
+
                     }
-                    finish();
-                    Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(UploadCamPics.this,MainActivity.class));*/
-
-                    /****************************
-                Requestor request = new Requestor(url,"UTF-8","POST");
-                request.addFormField("jsonResponse","true");
-                try {
-
-
-                    ExifInterface exif = new ExifInterface(imagesNames.get(0));
-                    String datepicker = exif.getAttribute(ExifInterface.TAG_DATETIME);
-                    DateFormat dfrom = new  SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-                    DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
-
-                    try{
-                        Date date = dfrom.parse(datepicker);
-                        datepicker = dTo.format(date);
-                    }catch(ParseException pe){pe.printStackTrace();Log.i(TAG,"Parsing Issue");}
-                    request.addFormField("datepicker",datepicker);
-                    float[] latLong = new float[2];
-                    String lat=null,Long=null;
-                    if(exif.getLatLong(latLong)){
-                        lat=Float.toString(latLong[0]);
-                        Long=Float.toString(latLong[1]);
-                        Log.i(TAG,"lat:"+lat+"long: "+Long);
-                        request.addFormField("lat",lat);
-                        request.addFormField("longitude",Long);
-                    }
-                }catch(IOException e){
-                    e.printStackTrace();
-                    Log.i(TAG,"Coordinates could not be extracted!!");
-                }
-                for(String file:imagesNames){
-                    try {
-                        request.addFile("theFiles", file);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        Log.i(TAG,"case UploadBtn2: exception occured while building request");
-                        break;
-                    }
-                }
-                try{
-                    request.finishRequesting();
-                    Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                    //startActivity(new Intent(UploadCamPics.this,MainActivity.class));
-                    redirect(imagesNames.size(),imagesNames.size());
-                }catch(Exception e){
-                    Log.i(TAG,"Server response error!!");
-                    Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
-                } **************************************/
                 }
                 else{
-                    //this is running on the main thread!!!!!!!!
-                    ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
-                    Utilities utility = new Utilities(this,imagesNames,dbHelper);
-                    utility.prepareBatchForInsertToDB(false);
-                    Log.i(TAG,"Loggedin as: "+utility.getCurrentIdentity());
-                    if(!(utility.checkSharedPreference(utility.getCurrentIdentity()))) {
-                       utility.connectivityAlert().show();
-                    }
-                    else {
-                        utility.insertRecords();
-                        Log.i(TAG,"Results saved to SQLite3");
-                        Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
-                       // redirect(0, 0);
-                        startActivity(new Intent(UploadCamPics.this , MainActivity.class));
-                        finish();
-                    }
-
-
+                    Dialog dialog = new Dialog(UploadCamPics.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_layout);
+                    dialog.setTitle(getResources().getString(R.string.noimageselected));
+                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+                    tv.setText(getResources().getString(R.string.noimageselected));
+                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+                    tv1.setText(getResources().getString(R.string.requestimageselection));
+                    dialog.show();
                 }
 
                 break;
@@ -200,6 +227,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
         }
 
     }
+
 
     protected void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(

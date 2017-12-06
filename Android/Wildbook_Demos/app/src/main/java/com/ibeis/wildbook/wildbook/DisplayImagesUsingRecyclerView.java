@@ -164,8 +164,8 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
 
         // Setting up message in Progress dialog.
-        progressDialog.setMessage(getResources().getString(R.string.imageloading));
-        progressDialog.show();
+        /*progressDialog.setMessage(getResources().getString(R.string.imageloading));
+        progressDialog.show();*/
         //creating a worker thread to get images from the network.
 
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="250dp"
+    android:layout_height="250dp"
+    android:id="@+id/dialog_ll"
+    android:background="#0f28e7"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:id="@+id/dialog_txt"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="Placeholder"
+        android:gravity="center_vertical"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:id="@+id/dialog_txt1"
+        android:textColor="#ffffff"
+        android:textSize="15dp"
+        android:text="Placeholder"
+        />
+</LinearLayout>

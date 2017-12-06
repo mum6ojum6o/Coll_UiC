@@ -47,4 +47,6 @@
     <string name="sync">Sync</string>
     <string name="logout">Logout</string>
     <string name="syncpreferences">Sync Preferences</string>
+    <string name="noimageselected">No Image(s) selected</string>
+    <string name="requestimageselection">Please select atleast ONE image to upload</string>
 </resources>
