@@ -62,24 +62,25 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
     final static public String TAG= "DisplaySelectedImages";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
-    private Button mUploadBtn,mDiscardBtn;
+    private Button mUploadBtn,mDiscardBtn,mSelectAll,mUnselectAll;
     //private FirebaseAuth mAuth;
 
-    private ArrayList<Uri> imagesList=new ArrayList<Uri>();
+    private ArrayList<Uri> imagesUris=new ArrayList<Uri>();
     private ArrayList<String> imagesNames = new ArrayList<String>();
     private ArrayList<String>mSelectedImages = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_camera_upload_preview);
-
+        mSelectAll = (Button) findViewById(R.id.SelectAllBtn);
         mUploadBtn = (Button) findViewById(R.id.UploadBtn2);
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
+        mUnselectAll = (Button) findViewById(R.id.UnselectAll);
         Intent intent = getIntent();
 
         imagesNames =intent.getStringArrayListExtra("Files");
         for(String file: imagesNames){
-            imagesList.add(Uri.parse(new File(file).toString()));
+            imagesUris.add(Uri.parse(new File(file).toString()));
         }
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -88,11 +89,13 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
 
         // Setting RecyclerView layout as LinearLayout.
         recyclerView.setLayoutManager(new  GridLayoutManager(UploadCamPics.this,3));
-        adapter = new DispPicAdapter(this, imagesList,imagesNames);
+        adapter = new DispPicAdapter(this, imagesUris,imagesNames);
         //adapter = new RecyclerViewAdapter(getApplicationContext(),imagesList);
         recyclerView.setAdapter(adapter);
         mUploadBtn.setOnClickListener(this);
         mDiscardBtn.setOnClickListener(this);
+        mSelectAll.setOnClickListener(this);
+        mUnselectAll.setOnClickListener(this);
         super.onCreate(savedInstanceState);
 
     }
@@ -224,10 +227,38 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(UploadCamPics.this , CameraMainActivity.class));
                 finish();
                 break;
+            case R.id.SelectAllBtn:
+                    selectAll();
+                    break;
+            case R.id.UnselectAll:
+                unselectAll();
+                break;
         }
 
     }
+    //method to select all images
+protected void selectAll(){
+    for (int i=0;i<imagesNames.size();i++) {
+        if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() != View.VISIBLE) {
+            recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.VISIBLE);
+            int pos=recyclerView.getChildAdapterPosition(recyclerView.getChildAt(i));
+            //recyclerView.getAdapter().;
+            //mSelectedImages.add(imagesNames.get(i));
+        }
+    }
 
+
+}
+    //method to unselcet all images
+protected void unselectAll(){
+    for (int i=0;i<imagesNames.size();i++) {
+        if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() == View.VISIBLE) {
+            recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
+            //mSelectedImages.add(imagesNames.get(i));
+        }
+    }
+    mSelectedImages.clear();
+}
 
     protected void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(

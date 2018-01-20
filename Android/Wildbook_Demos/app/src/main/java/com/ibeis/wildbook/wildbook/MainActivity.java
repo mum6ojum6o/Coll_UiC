@@ -1,17 +1,20 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -22,6 +25,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -47,10 +52,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -65,9 +83,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     protected View LAYOUT;
     protected static int WARNING,POS_FEEDBACK;
     protected static final int ONLINE=1;
+    // request code  for identifying the results obtained from location settings client
+    protected static final int  REQUEST_CHECK_SETTINGS=562;
     protected static final int OFFLINE=0;
+    //request code for identifying the results obtained from images gallery
     protected static final int IMAGE_GALLERY_REQUEST = 20;
+    //request code for identifying the results for camera permission
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
+    //request code for identifying the results for Internal_Storage permission
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
     protected  static final int INTERNET_NOT_CONNECTED =11;
     public static final String TAG ="MainActivity";
@@ -83,7 +106,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public static boolean MAIN_ACTIVITY_IS_RUNNING;
     //private GoogleSignInAccount googleSignInAccount;
     //private ImageView mCricleImageView;
-
+    private LocationRequest mLocationRequest;
+    private LocationSettingsRequest mLocationSettingsRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,6 +279,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
+
+    /****************
+     *
+     * Button click Callback
+     * @param v
+     */
     @Override
     public void onClick(View v){
         switch (v.getId()){
@@ -267,7 +297,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                        == PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION")
                         == PackageManager.PERMISSION_GRANTED){
-                    startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
+                   //createLocationRequest();
+                   checkLocationSettings();
+                    //startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
                 }
                 else{
                    ActivityCompat.requestPermissions(this,new String[]{"android.permission.CAMERA",
@@ -314,9 +346,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
 
 
-    /***********************************************************
-    *fetch the pictures from Firebase.
-     ***********************************************************/
+
 
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
@@ -327,7 +357,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1]== PackageManager.PERMISSION_GRANTED &&
                     grantResults[2]== PackageManager.PERMISSION_GRANTED) {
-                startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
+                    createLocationRequest();
+                    checkLocationSettings();
+                //startActivity(new Intent(getApplicationContext(), CameraMainActivity.class));
             } else {
                 displayToasts(PackageManager.PERMISSION_DENIED);
                 //Toast.makeText(getApplicationContext(), "In order to contribute to cause we would encourage you to grant us access in the future! ", Toast.LENGTH_LONG).show();
@@ -438,13 +470,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 }
             }
         }
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CHECK_SETTINGS){
+           LocationSettingsStates locationSettingsStates = LocationSettingsStates.fromIntent(data);
+            switch (requestCode) {
+                case REQUEST_CHECK_SETTINGS:
+                    switch (resultCode) {
+                        case Activity.RESULT_OK:
+                            // All required changes were successfully made
+                            Toast.makeText(getApplicationContext(), "Location Settings were selected", Toast.LENGTH_SHORT).show();
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            // The user was asked to change settings, but chose not to
+                            Toast.makeText(getApplicationContext(), "Location Settings were not selected", Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+
+                            break;
+                    }
+                    startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
+                    break;
+
+            }
+        }
     }
 
     @SuppressLint("NewApi")
     public  String getFilePath(Context context, Uri uri) throws URISyntaxException {
         String selection = null;
         String[] selectionArgs = null;
-        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        // Uri is different in versions after KITKAT (Android 4.4),
         if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -490,20 +544,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         }
         return null;
     }
-
+    //method to indentify if the Uri is an External Storage document
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
-
+    //method to indentify if the Uri is an downloads document
     public static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
-
+    //method to indentify if the Uri is a media document
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    //metho
+    //method that redirects user to preview the list of images selected
     public void showGallPicturesPreview(ArrayList<String> images,ArrayList<Uri> uris,Uri uriData){
         Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
         if(uriData!=null)
@@ -512,7 +566,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         ArrayList<String> uriToString = new ArrayList<String>();
         if(uris!=null) {
             for (Uri uri : uris) {
-
                 uriToString.add(uri.toString());
             }
         }
@@ -560,7 +613,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         startActivity(new Intent(MainActivity.this,Login.class));
     }
 
-
+    /*******************
+     * Method that displays a snackbar
+     * @param message to be displayed in the snackbar
+     * @param bgcolor background color of the snackbar
+     */
     public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;
@@ -572,6 +629,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     /********************************************
      * Setup the LAYOUT
+     * Configures the layout for the snackbar depending on the device orientation.
      ********************************************/
     public void setLAYOUT(){
         if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
@@ -581,6 +639,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             LAYOUT=findViewById(R.id.myCoordinatorLayout);
         }
     }
+
+    /********
+     * performs User Logout operations
+     */
     protected void signOut() {
        final Context ctx = getApplicationContext();
         //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
@@ -600,12 +662,77 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
                             new Utilities(MainActivity.this).setCurrentIdentity("");
                             MainActivity.this.finish();
-
                         }
-                    });
+                    }
+            );
         }
-
-
     }
 
+    /***********************
+     * Method to initialize loaction request
+     *********************/
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    /******************
+     * Method to check if Location settings are satisfied
+     *****************/
+    protected void checkLocationSettings(){
+    createLocationRequest();
+    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                                                .addLocationRequest(mLocationRequest);
+
+    //SettingsClient client =
+    //check whether current location services are satisfied.
+    Task<LocationSettingsResponse> task =LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+    task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+        @Override
+        public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+            try{
+                LocationSettingsResponse response = task.getResult(ApiException.class);
+                if(!response.getLocationSettingsStates().isLocationUsable()){
+                    throw new ResolvableApiException(new Status(LocationSettingsStatusCodes.RESOLUTION_REQUIRED));
+                }
+                else{
+                    startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
+                }
+                }
+            catch (ApiException exception) {
+                switch (exception.getStatusCode()) {
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+                        try {
+                            // Cast to a resolvable exception.
+                            ResolvableApiException resolvable = (ResolvableApiException) exception;
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            resolvable.startResolutionForResult(
+                                    MainActivity.this,
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        } catch (ClassCastException e) {
+                            // Ignore, should be an impossible error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        }
+    });
+
+    }
+    private void buildLocationSettingsRequest() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        mLocationSettingsRequest = builder.build();
+    }
 }

@@ -90,8 +90,4 @@ public class ImageRecorderDatabase extends SQLiteOpenHelper {
         // N/A
     }
 
-    void deleteDatabase() {
-        mContext.deleteDatabase(DATABASE_NAME);
-    }
-
 }

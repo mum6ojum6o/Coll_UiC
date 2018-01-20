@@ -19,7 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
+/**************
+ * A class that is responsible for uploading the images to the Wildbook database
  * Created by Arjan on 11/18/2017.
  */
 
@@ -172,6 +173,12 @@ public class ImageUploaderTask implements Runnable {
             utilities.sendNotification(mContext.getResources().getString(R.string.sync_error),null);
         }
     }
+
+    /*****************************
+     * Method that adds placeholders to construct an SQLite update query
+     * @param length
+     * @return
+     ***************************/
     public String placeholders(int length){
         StringBuilder sb = new StringBuilder();
         sb.append("(");

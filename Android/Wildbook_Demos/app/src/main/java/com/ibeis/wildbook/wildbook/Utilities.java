@@ -207,9 +207,7 @@ public String getSyncSharedPreference(){
         return mSharedPreference.getString(zzxxyz,"Sync_Preference");
     }
     /****************************************************************
-    This method writes to the sharedpreferences file.
-     the latest encounter number that will be used to identify an encounter locally in the absence of network.
-     only maximum of 10 encounter numbers will be inserted in the SQLite table.
+    Method writes to the sharedPreferences file
      ****************************************************************/
     public void writeSyncPreferences(String string){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
@@ -244,13 +242,22 @@ public long getEncounterNumPreferences(){
     writeEncounterNumPreferences(enctrNum+1);
     return enctrNum;
 }
-public String getCurrentIdentity(){
+
+    /*******
+     * Gets the details of the user that is currently logged in
+     * @return
+     */
+    public String getCurrentIdentity(){
     mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
     if(mSharedPreference.contains("zzxxyz"))
         return mSharedPreference.getString("zzxxyz","");
     else
         return "";
 }
+    /*******
+     * Sets the details of the user that is currently logged in
+     * @return
+     */
 public void setCurrentIdentity(String zzxxyz){
     mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
     SharedPreferences.Editor editor=mSharedPreference.edit();
@@ -277,11 +284,13 @@ public void setCurrentIdentity(String zzxxyz){
 
     }
 
-
+    /****
+     * Method to insert record in to the SQLite database
+     */
     public void insertRecords(){
         InsertToDB insertRecords= new InsertToDB(mDbhelper,mRecord);
         Log.i(TAG, "starting insertion on a new Thread!!");
-        new Thread(insertRecords).start(); // this is not creating a new Thread..... :-@ embarrased!!
+        new Thread(insertRecords).start();
 
     }
     //insert encounterId.....
@@ -496,13 +505,7 @@ public void setCurrentIdentity(String zzxxyz){
 
     }
 
-
-    public void setmRecord(List<ImageRecordDBRecord> records){
-        this.mRecord = records;
-    }
-
-
-    //Volley!!! not used as of now....
+ /*//Volley!!! not used as of now....
     public void createPostRequest(String image){
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String API_URL="http://tobedecided.com/wildbook/";
@@ -533,9 +536,9 @@ public void setCurrentIdentity(String zzxxyz){
 
         queue.add(request);
     }
-    /* Vvvvv important method.
+    *//* Vvvvv important method.
     Method uploads images to the wildbook db using the Goog Old httpurlconnection.
-     */
+     *//*
     public boolean uploadPictures(String imagesNames){
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -597,7 +600,7 @@ public void setCurrentIdentity(String zzxxyz){
             return false;
         }
         return false;
-    }
+    }*/
 
     // Method used for sending Syncing Notifications....
     public void sendNotification(String msg,  String naam) {
@@ -644,35 +647,6 @@ public void setCurrentIdentity(String zzxxyz){
 
 
 
-    public String getUserEmail(){
-        String email=null;
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(mContext.getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        GoogleApiClient googleApiClient= new GoogleApiClient.Builder(mContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build();
-        googleApiClient.connect();
-        //email=\
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-
-            GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
-            Log.i(TAG,"getting Email Id:"+googleSignInAccount.getEmail());
-            return googleSignInAccount.getEmail();
-
-        } else {
-            Log.i(TAG,"No Email ID");
-        }
-
-        return "";
-        //return email;
-    }
 
 
 }

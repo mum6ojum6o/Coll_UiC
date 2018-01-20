@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -49,11 +50,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     protected ActionBar action;
     private MenuItem menuItem;
     private RadioGroup mRadioGroup ;
+    private static final String TAG="BaseActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                //.requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -74,7 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 @Override
 public void onStart(){
         super.onStart();
-    Log.i("BASE","in BASE OnStart");
+    Log.i(TAG,"in BASE OnStart");
 
 
 }
@@ -84,71 +86,92 @@ public void onStart(){
 public void onResume() {
     super.onResume();
 
+    googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+    if(googleSignInAccount!=null){
+        Log.i(TAG,"LastSignedInAccount");
+        Uri uri = googleSignInAccount.getPhotoUrl();
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-            if (opr.isDone()) {
-                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-                // and the GoogleSignInResult will be available instantly.
-                Log.d("BASEACTIVITY", "Got cached sign-in");
-                GoogleSignInResult result = opr.get();
-
-                googleSignInAccount = result.getSignInAccount();
-                Log.i("SilentLogin", googleSignInAccount.getEmail());
-
-                Uri uri = googleSignInAccount.getPhotoUrl();
-
-                Glide.with(getApplicationContext())
-                        .load(uri)
-                        .asBitmap()
-                        .fitCenter()
-                        .into(new BitmapImageViewTarget(mCircleImageView) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                                circularBitmapDrawable.setCircular(true);
-                                mCircleImageView.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
-                if (menuItem != null)
-                    menuItem.setTitle(googleSignInAccount.getDisplayName());
-
-
-
-            } else {
-
-                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+        Glide.with(getApplicationContext())
+                .load(uri)
+                .asBitmap()
+                .fitCenter()
+                .into(new BitmapImageViewTarget(mCircleImageView) {
                     @Override
-                    public void onResult(GoogleSignInResult googleSignInResult) {
-                        //hideProgressDialog();
-                        if (googleSignInResult.getStatus().isSuccess()) {
-                            googleSignInAccount = googleSignInResult.getSignInAccount();
-                            Log.i("SilentLogin", "SUCCESSSS!!!"+googleSignInAccount.getEmail());
-                            Glide.with(getApplicationContext())
-                                    .load(googleSignInAccount.getPhotoUrl())
-                                    .asBitmap()
-                                    .fitCenter()
-                                    .into(new BitmapImageViewTarget(mCircleImageView) {
-                                        @Override
-                                        protected void setResource(Bitmap resource) {
-                                            RoundedBitmapDrawable circularBitmapDrawable =
-                                                    RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
 
-                                            circularBitmapDrawable.setCircular(true);
-                                            mCircleImageView.setImageDrawable(circularBitmapDrawable);
-                                        }
-                                    });
-                            if (menuItem != null)
-                                menuItem.setTitle(googleSignInAccount.getDisplayName());
-
-                        } else {
-
-                        }//else closes
+                        circularBitmapDrawable.setCircular(true);
+                        mCircleImageView.setImageDrawable(circularBitmapDrawable);
                     }
                 });
-            }
-            Log.i("BASE","in BASE OnResume");
+    }
+    else {
+        Log.i(TAG,"LastSignedInAccount no present");
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+
+            googleSignInAccount = result.getSignInAccount();
+            Log.i(TAG, "SilentLogin"+googleSignInAccount.getEmail());
+
+            Uri uri = googleSignInAccount.getPhotoUrl();
+
+            Glide.with(getApplicationContext())
+                    .load(uri)
+                    .asBitmap()
+                    .fitCenter()
+                    .into(new BitmapImageViewTarget(mCircleImageView) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+
+                            circularBitmapDrawable.setCircular(true);
+                            mCircleImageView.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+            if (menuItem != null)
+                menuItem.setTitle(googleSignInAccount.getDisplayName());
+
+
+        } else {
+
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    //hideProgressDialog();
+                    if (googleSignInResult.getStatus().isSuccess()) {
+                        googleSignInAccount = googleSignInResult.getSignInAccount();
+                        Log.i(TAG, "SilentLogin"+" SUCCESSSS!!!" + googleSignInAccount.getEmail());
+                        Glide.with(getApplicationContext())
+                                .load(googleSignInAccount.getPhotoUrl())
+                                .asBitmap()
+                                .fitCenter()
+                                .into(new BitmapImageViewTarget(mCircleImageView) {
+                                    @Override
+                                    protected void setResource(Bitmap resource) {
+                                        RoundedBitmapDrawable circularBitmapDrawable =
+                                                RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+
+                                        circularBitmapDrawable.setCircular(true);
+                                        mCircleImageView.setImageDrawable(circularBitmapDrawable);
+                                    }
+                                });
+                        if (menuItem != null)
+                            menuItem.setTitle(googleSignInAccount.getDisplayName());
+
+                    } else {
+                        Log.i(TAG, "Login unsuccessful");
+                    }//else closes
+                }
+            });
+        }
+    }
+            Log.i(TAG,"in BASE OnResume");
 
         }
 
@@ -156,7 +179,7 @@ public void onResume() {
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d("BASEACTIVITY", "onConnectionFailed:" + connectionResult);
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
         startActivity(new Intent(getApplicationContext(),Login.class));
     }
     protected void signOut() {
@@ -173,7 +196,6 @@ public void onResume() {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         BaseActivity.this.finish();
                         startActivity(intent);
-
                         finishAffinity();
                     }
                 });
@@ -181,11 +203,15 @@ public void onResume() {
 
     }
 
+    /**********
+     * Inflates the menu options to be displayed in the ActionBar
+     * @param menu
+     * @return
+     */
      public boolean onCreateOptionsMenu(Menu menu){
-        //String name=googleSignInAccount.getDisplayName();
         getMenuInflater().inflate(R.menu.actionbar_options,menu);
         if(menuItem ==null){
-            Log.i("BASE","menuItem is null");
+            Log.i(TAG,"menuItem is null");
         }
         menuItem = menu.findItem(R.id.menu_name);
 
@@ -194,8 +220,14 @@ public void onResume() {
         //item_name.setTitle("Arjan");
         return super.onCreateOptionsMenu(menu);
     }
+
+    /***********************************
+     * performs action on the basis of the option selected in the actionbar
+     * @param item
+     * @return
+     ************************************/
     public boolean onOptionsItemSelected(MenuItem item){
-        Log.i("VideoPlaylist:","In onOptionsItemsSelected");
+        Log.i(TAG,"In onOptionsItemsSelected");
         switch(item.getItemId()){
             case R.id.menu_name:
                 return true;
@@ -214,12 +246,14 @@ public void onResume() {
         }
         return false;
     }
+
+    /*************************
+     * Inflates the dialog to enable user select their Syncing preferences
+     * ******************************/
     public void showPreferencesDialog(){
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.preferences_radio);
-
-
         dialog.setTitle(R.string.syncpreferences);
        final Utilities util = new Utilities(this);
         ArrayList<String> preferences = new ArrayList<>();
@@ -227,7 +261,7 @@ public void onResume() {
         preferences.add(getResources().getString(R.string.mobiledataString));
         preferences.add(getResources().getString(R.string.anyString));
         String getPref = util.getSyncSharedPreference(util.getCurrentIdentity());
-        Log.i("BASE", "selected pref="+getPref);
+        Log.i(TAG, "selected pref="+getPref);
         mRadioGroup = (RadioGroup) dialog.findViewById(R.id.radio_group);
         RadioButton rb = new RadioButton(this);
         rb.setText(getResources().getString(R.string.wifiString));
@@ -254,12 +288,12 @@ public void onResume() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int childCount = radioGroup.getChildCount();
-                Log.i("BASE","radioGroup="+childCount);
+                Log.i(TAG,"radioGroup="+childCount);
                 for (int x = 0; x < childCount; x++) {
                     RadioButton btn = (RadioButton) radioGroup.getChildAt(x);
                     if (btn.getId() == i) {
 
-                        Log.e("selected RadioButton->",btn.getText().toString());
+                        Log.e(TAG,"selected RadioButton->"+btn.getText().toString());
                         btn.setChecked(true);
                         new Utilities(getApplicationContext()).writeSyncPreferences(btn.getText().toString());
                         dialog.hide();
@@ -271,9 +305,9 @@ public void onResume() {
     @Override
     public void onStop(){
         super.onStop();
-        Log.i("BASE", "in BASE onSTOP");
+        Log.i(TAG, "in BASE onSTOP");
         //Log.i("BASE","googleApiClient is connected?"+(mGoogleApiClient.isConnected()));
-        Log.i("BASE", "bye bye!! "+ new Utilities(this).getCurrentIdentity());
+        Log.i(TAG, "bye bye!! "+ new Utilities(this).getCurrentIdentity());
 
     }
 

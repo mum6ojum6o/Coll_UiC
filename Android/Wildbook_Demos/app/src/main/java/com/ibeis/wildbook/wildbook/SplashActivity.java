@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**********
+ * Activity to display the splash screen of the mobile application.
+ ***********/
 public class SplashActivity extends AppCompatActivity {
 
     @Override

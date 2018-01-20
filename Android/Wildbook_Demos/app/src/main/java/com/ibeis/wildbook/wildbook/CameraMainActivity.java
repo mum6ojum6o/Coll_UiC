@@ -75,14 +75,14 @@ import java.util.List;
 
 import static java.lang.System.load;
 
-/********************
+/*****************************************************************
  * DISCLAIMER:-
  * The code in the class file was referenced from multiple sources.
  * References:-
  * https://www.youtube.com/watch?v=69J2ycNCtpE - Nigel App Tuts
  * https://github.com/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic -- Google AndroidCamera2 basic repository
  * https://stackoverflow.com/questions/29971319/image-orientation-android/32747566#32747566 -- to help with the image display orientations...
- */
+ *********************************************************************/
 
 
 public class CameraMainActivity extends BaseActivity implements  View.OnClickListener{
@@ -131,6 +131,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     break;
             }
         }};
+
     /**
      * Gets the Amount of Degress of rotation using the exif integer to determine how much
      * we should rotate the image.
@@ -145,7 +146,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         return 0;
     }
     private CameraCharacteristics mCameraCharacteristics;
-    private ArrayList<String> mCapturedPics = new ArrayList<String>();
+    private ArrayList<String> mCapturedPics = new ArrayList<String>();  //holds the list of images clicked
     private static File mImageFile;
     private File mImageFolder;
     private static String mImageFileName;
@@ -190,6 +191,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState!=null && savedInstanceState.containsKey("CapturedImages")){
+            Log.i("CameraMainActivity","Capturing previous Activity State");
+            mCapturedPics = savedInstanceState.getStringArrayList("CapturedImages");
+        }
         setContentView(R.layout.activity_camera_main);
         /*getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -224,11 +229,22 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
 
     }
 
+    /****
+     * Method to retrieve the previous saved state of the activity
+     * @param savedState
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedState){
+        Log.i("CameraMainActivity","in OnRestoreInstanceState");
+        if(savedState!=null && savedState.containsKey("CapturedImages")){
+            mCapturedPics = savedState.getStringArrayList("CapturedImages");
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
         openBackgroundThread();
-        mCapturedPics.clear();
+        //mCapturedPics.clear();
         if(sortFilesToLatest(mImageFolder).length>0) {
             mLatestFile = sortFilesToLatest(mImageFolder)[0];
             mPicPreview.setImageBitmap(getUpdatedBitmap(mLatestFile));
@@ -288,7 +304,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private Size mPreviewSize;
     private String mCameraId;
 
-
+    /***************************************
+     * Sets up Camera configurations
+     * @param width
+     * @param height
+     **************************************/
     private void setupCamera(int width, int height) {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         mCameraManager =cameraManager;
@@ -485,6 +505,14 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             }
         }
     }
+
+    /******************
+     * Returns the maximun resolutionsize that can be supported by the device
+     * @param mapSizes
+     * @param width
+     * @param height
+     * @return
+     */
     private Size getPreferredPreviewSize(Size[] mapSizes, int width, int height) {
         List<Size> collectorSizes = new ArrayList<>();
         for(Size option : mapSizes) {
@@ -531,6 +559,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     };
 
+    /***********
+     * Method that opens connection to Camera based on Camera Id
+     **********************/
     private void openCamera() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
@@ -544,6 +575,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             e.printStackTrace();
         }
     }
+    /*****************************************************
+     * Method to close connection to Camera
+     *****************************************************/
     private void closeCamera() {
         if(mCameraCaptureSession != null) {
             mCameraCaptureSession.close();
@@ -604,6 +638,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             }
         }
     };
+
+    /******************************
+     *  Method to create previews captured by the open Camera
+     **********************************/
     private void createCameraPreviewSession() {
         try {
             SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
@@ -645,11 +683,18 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     }
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
+
+    /****************
+     * Initialzes a HandlerThread and Handler
+     */
     private void openBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera2 background thread");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
+    /****************
+     * deinitialzes a HandlerThread and Handler
+     */
     private void closeBackgoundThread() {
         mBackgroundThread.quitSafely();
         try {
@@ -661,6 +706,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
+    /******************
+     * Method to request Camera Auto Focus and capture after the Auto Focus request has been processed
+     */
     private void lockFocus() {
         try {
             mState = STATE_WAIT_AF_LOCK;
@@ -672,6 +720,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             e.printStackTrace();
         }
     }
+    /******************
+     * Method to release Camera Auto Focus and capture after the Auto Focus request has been processed
+     ************************/
     private void unLockFocus() {
         try {
             mState = STATE_PREVIEW;
@@ -684,6 +735,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
+    /***************************
+     * Method to create a Folder in the internal storage with the name Wildbook, subject to user permissions
+     * and request for user permission if they are not provided.
+     ************************/
     private void createImageFolder() {
         //Log.i(TAG,"createImageFolder");
         if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")== PackageManager.PERMISSION_GRANTED) {
@@ -701,6 +756,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
+    /**************
+     * Method to handle permission results.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
         switch(requestCode) {
@@ -718,6 +779,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
+    /****************
+     * Creates a file with the timestamp for an Image
+     * @return
+     * @throws IOException
+     *******************/
     private File createImageFileName() throws IOException {
         // Log.i(TAG,"createImageFileName");
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -728,6 +794,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         return imageFile;
     }
 
+    /***************
+     * Requests to Capturing of an Image to the connected Camera
+     */
     public void takePhoto() {
         if(SWAP.equals("Rear")) {
             lockFocus();
@@ -737,7 +806,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
-
+    /**************
+     * Callback interface for being notified that a new image is available.
+     **/
     private final ImageReader.OnImageAvailableListener mOnImageAvailableListener =
             new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -746,6 +817,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 }
             };
 
+    /*************
+     * Inner Class that helps save a captured Image
+     */
     private static class ImageSaver implements Runnable {
         private final Image mImage;
         private final Handler mHandler;
@@ -789,6 +863,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
+    /**********
+     * Method that captures a still Image
+     */
     private void captureStillImage() {
         try {
             CaptureRequest.Builder captureStillBuilder =
@@ -843,6 +920,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             e.printStackTrace();
         }
     }
+
+    /******
+     * Method that sets the image preview for the best suitable dimensions
+     * @param width
+     * @param height
+     */
     private void transformImage(int width,int height){
         Matrix matrix = new Matrix();
 
@@ -866,6 +949,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         mTextureView.setTransform(matrix);
     }
 
+    /************
+     *
+     * Method used to retreive the latest captured image to be displayed in the preview imageview
+     * @param fileImagesDir
+     * @return
+     */
     private File[] sortFilesToLatest(File fileImagesDir) {
         File[] files = fileImagesDir.listFiles();
         Arrays.sort(files, new Comparator<File>() {
@@ -876,6 +965,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         });
         return files;
     }
+
+    /************
+     * Method that geotag a captured image
+     * @param imagePath
+     */
     private void getGeoTagData(final String imagePath){
         try {
             mFusedLocationClient.getLastLocation()
@@ -900,6 +994,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }catch(SecurityException e){e.printStackTrace();}
 
     }
+
+    /*************
+     * Inner Class to convert the longitude and latitude into DMS
+     **********************************/
     private static class GPS {
         private static StringBuilder sb = new StringBuilder(20);
         /**
@@ -913,7 +1011,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
 
         /**
-         * returns ref for latitude which is S or N.
+         * returns ref for latitude which is W or E.
          *
          * @param latitude
          * @return S or N
@@ -960,7 +1058,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
     }
 
-public Bitmap getUpdatedBitmap(File imageFile){
+    /*********
+     * Method to inflate an image on the preview imageview based on the imageview's dimensions
+     * @param imageFile
+     * @return
+     */
+    public Bitmap getUpdatedBitmap(File imageFile){
     Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
     Bitmap rotatedBitmap=null;
     try{
@@ -975,6 +1078,17 @@ public Bitmap getUpdatedBitmap(File imageFile){
         e.printStackTrace();
     }
     return rotatedBitmap;
+    }
+
+    /****************
+     * Method to save the current state of the activity
+     * @param outstate
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outstate){
+        super.onSaveInstanceState(outstate);
+        Log.i("CameraMainActivity","Saving Instance State");
+        outstate.putStringArrayList("CapturedImages",mCapturedPics);
     }
     protected void signOut() {
         final Context ctx = getApplicationContext();

@@ -22,27 +22,24 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import static android.R.attr.start;
-import static android.R.attr.tag;
-
+/************************************************
+ * Activity to preview the images selected from the Image Gallery of the device.
+ ************************************************/
 public class DisplaySelectedImages extends BaseActivity implements View.OnClickListener{
     final static public String TAG= "DisplaySelectedImages";
     protected ArrayList<String> selectedImages = new ArrayList<String>();
     protected  ArrayList<Uri> imageUri = new ArrayList<Uri>();
-    protected Button UploadBtn,DiscardBtn;
+    protected Button UploadBtn,DiscardBtn,SelectAllBtn,UnSelectAllBtn;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter ;
     private ArrayList<String> mSelectedImages=new ArrayList<String>(); //represents the images selected after long press.
@@ -79,8 +76,11 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         }
 
         if(isImage(imageUri)) {
+            Log.i(TAG,"Buttons to be activated");
             UploadBtn = (Button) findViewById(R.id.UploadBtn2);
             DiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
+            SelectAllBtn = (Button) findViewById(R.id.SelectAllBtn);
+            UnSelectAllBtn =(Button)findViewById(R.id.UnselectAll);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(DisplaySelectedImages.this, 3));
@@ -90,6 +90,8 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             //gv.setAdapter(new ImageAdapter(this,selectedImages));
             UploadBtn.setOnClickListener(this);
             DiscardBtn.setOnClickListener(this);
+            SelectAllBtn.setOnClickListener(this);
+            UnSelectAllBtn.setOnClickListener(this);
         }
         else{
             Toast.makeText(getApplicationContext(),"Unable to Load Image",Toast.LENGTH_LONG).show();
@@ -228,9 +230,39 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             case R.id.DiscardBtn2:
                 startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));
                 finish();
+                break;
+            case R.id.SelectAllBtn:
+                    selectAll();
+                break;
+            case R.id.UnselectAll:
+                    unSelectAll();
+                break;
         }
     }
 
+    /*************************
+     * Method that selects all images
+     **************************/
+    public void selectAll(){
+        for(int i=0;i<selectedImages.size();i++) {
+            if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() != View.VISIBLE) {
+                recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.VISIBLE);
+            }
+        }
+}
+
+    //method to unselcet all images
+    protected void unSelectAll(){
+        for (int i=0;i<selectedImages.size();i++) {
+            if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() == View.VISIBLE) {
+                recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
+                //mSelectedImages.add(imagesNames.get(i));
+            }
+        }
+        mSelectedImages.clear();
+    }
+
+    //Method that captures details of images in the device sqlite database instance.
     public void saveToDb(){
         ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
         Utilities utility = new Utilities(this,mSelectedImages,dbHelper);
@@ -254,7 +286,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         super.onResume();
 
     }
-
+    //Method that starts the upload process
     public void startUpload(){
         ImageUploaderTask task = new ImageUploaderTask(this, mSelectedImages,new Utilities(this).getCurrentIdentity());
         Log.i(TAG, "Starting fileupload request using worker thread!!");
@@ -267,7 +299,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
 
     /***************************************
      *
-     * Checks if the paths of the file are valid.
+     * Method to check if all filesPaths that are to be previewed/uploaded are valied and exist in the device.
      * @param selectedImages
      * @return
      *************************************/
@@ -332,6 +364,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         return downloadedImagePaths;
 
     }
+    // Method that determines if the mentioned Uri is an Image
     public boolean isImage(ArrayList<Uri> uris){
         for (Uri aUri:uris){
             if(getContentResolver().getType(aUri).contains("Image")|| getContentResolver().getType(aUri).contains("image")) {

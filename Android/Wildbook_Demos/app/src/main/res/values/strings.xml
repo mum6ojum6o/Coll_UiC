@@ -49,4 +49,6 @@
     <string name="syncpreferences">Sync Preferences</string>
     <string name="noimageselected">No Image(s) selected</string>
     <string name="requestimageselection">Please select atleast ONE image to upload</string>
+    <string name="selectallString">Select All</string>
+    <string name="unselectallString">Unselect All</string>
 </resources>

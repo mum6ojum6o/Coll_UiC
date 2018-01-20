@@ -9,22 +9,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_weight="0.3"
         android:id="@+id/dialog_txt"
         android:textColor="#ffffff"
         android:textStyle="bold"
         android:textSize="20dp"
         android:text="Placeholder"
         android:gravity="center_vertical"
-        />
+        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.7"
         android:id="@+id/dialog_txt1"
         android:textColor="#ffffff"
         android:textSize="15dp"
         android:text="Placeholder"
+        android:layout_marginLeft="10dp"
         />
 </LinearLayout>

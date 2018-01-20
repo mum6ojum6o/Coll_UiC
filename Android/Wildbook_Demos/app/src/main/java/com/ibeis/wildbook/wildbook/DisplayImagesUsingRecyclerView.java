@@ -48,11 +48,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/*********
+ * Activity to preview the images uploaded by the user
+ */
 public class DisplayImagesUsingRecyclerView extends BaseActivity {
     private static final int DOWNLOADING = 77;
     private static final int COMPLETE = 200;
     private static final int PROG_UPDATE = 853;
-    public static String TAG = "DisplayImagesUsingRecyclerView ";
+    public static final String TAG = "DisplayImagesUsingRecyclerView ";
 
     public Handler mHandler = new Handler() {
         @Override
@@ -81,7 +84,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                         Toast.makeText(getApplicationContext(), "Error receiving response from Server", Toast.LENGTH_SHORT).show();
                         je.printStackTrace();
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), reversedJSONArray);
+                    adapter = new RecyclerViewAdapter(getApplicationContext(), reversedJSONArray);
                     recyclerView.setAdapter(adapter);
                     break;
                 case 404:
@@ -107,8 +110,8 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     ProgressDialog progressDialog;
     // StorageReference storageReference;
 
-    // Creating List of ImageUploadInfo class.
-    List<ImageUploadInfo> list = new ArrayList<>();
+
+
     List<Uri> imagesList = new ArrayList<Uri>();
 
 

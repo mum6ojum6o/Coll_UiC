@@ -14,7 +14,7 @@ import static android.net.ConnectivityManager.EXTRA_NO_CONNECTIVITY;
 
 /******************************************************************************
  * Created by Arjan on 11/10/2017.
- * This class/ Broadcast should be activated once Wifi Connection is available.
+ * This class/Broadcast should be activated once Wifi Connection is available.
  * Once signal is available, it should call the SyncerService class.
  ***************************************************************/
 
@@ -81,7 +81,7 @@ public class NetworkScanner extends BroadcastReceiver {
         }*/
     }
     public void takeAction(Context context){
-        //if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
+
             Intent broadcastIntent = new Intent();//intent used to send broadcast to ActivityUpdater Broadcast receiver.
             broadcastIntent.setAction("com.ibeis.Wildbook.Wildbook_demos");
             int message = com.ibeis.wildbook.wildbook.R.string.online;

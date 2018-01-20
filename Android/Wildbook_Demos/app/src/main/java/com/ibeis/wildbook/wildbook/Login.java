@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -26,10 +27,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import static com.google.android.gms.auth.api.signin.GoogleSignIn.getLastSignedInAccount;
+
 public class Login extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+/*
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    public Button GoogleSignIn,EmailSignIn;
+*/
+    //public Button GoogleSignIn,EmailSignIn;
     public static final String TAG ="WildbookDemo";
     final static  private  int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
@@ -41,15 +46,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         Log.i(TAG,"in OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        GoogleSignIn = (Button)findViewById(R.id.sign_in_button);
-        EmailSignIn = (Button) findViewById(R.id.email_Button);
+//      GoogleSignIn = (Button)findViewById(R.id.sign_in_button);
+        //EmailSignIn = (Button) findViewById(R.id.email_Button);
         //GoogleSignIn.setOnClickListener(this);
-        EmailSignIn.setOnClickListener(this);
+//      EmailSignIn.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+               // .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // [END config_signin]
@@ -72,28 +77,37 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     public void onStart(){
         super.onStart();
         // more understanding on OptionalPendingResult required....
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            Log.i(TAG,"Result is Done!!");
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            //mAuth = FirebaseAuth.getInstance();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            //showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    //hideProgressDialog();
-                    Log.i(TAG,"Result Callback in else!!");
-                    handleSignInResult(googleSignInResult);
-                }
-            });
+        GoogleSignInAccount lastSignedInAccount =  getLastSignedInAccount(this);
+        if(lastSignedInAccount!=null){
+            firebaseAuthWithGoogle(lastSignedInAccount);
+        }
+        else {
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+
+
+            if (opr.isDone()) {
+                Log.i(TAG, "Result is Done!!");
+                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+                // and the GoogleSignInResult will be available instantly.
+                Log.d(TAG, "Got cached sign-in");
+                GoogleSignInResult result = opr.get();
+                //mAuth = FirebaseAuth.getInstance();
+                handleSignInResult(result);
+            } else {
+                // If the user has not previously signed in on this device or the sign-in has expired,
+                // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+                // single sign-on will occur in this branch.
+                //showProgressDialog();
+                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                    @Override
+                    public void onResult(GoogleSignInResult googleSignInResult) {
+                        //hideProgressDialog();
+
+                        Log.i(TAG, "Result Callback in else!!");
+                        handleSignInResult(googleSignInResult);
+                    }
+                });
+            }
         }
     }
 
@@ -101,13 +115,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            Log.i(TAG,"Result is Success!!");
+            Log.i(TAG,"Successful Authentication!!");
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.i(TAG,"LOGGED IN AS:"+acct.getEmail());
            /* if(acct!=null)
                 updateUI(true);*/  //UNCOMMENT in PRODUCTIONS
-           firebaseAuthWithGoogle(acct);
+           //firebaseAuthWithGoogle(acct);
+            redirect(acct.getEmail());
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
         } else {
             Log.i(TAG,"Result is NOT Success!!");
@@ -127,19 +142,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 Log.i(TAG,"in onActivityResult:"+ result.getSignInAccount().getEmail());
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                //updateUI(true);
-                firebaseAuthWithGoogle(account); //Comment in Production....
+                redirect(account.getEmail());
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 if(result==null)
-                    Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
-                    //updateUI(null);
-                // [END_EXCLUDE]
+                    Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure your username and password are correct!",Toast.LENGTH_LONG).show();
             }
         }
     }
-    public void signIn(){
+
+    /*************************************
+     *method to prompt user to select one of google accounts added on the device
+     ************************************/
+
+    private void signIn(){
         Log.i(TAG,"Signing In!!");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent,RC_SIGN_IN);
@@ -153,7 +170,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 // [END_EXCLUDE]
 
                 //AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-                updateUI(acct.getEmail());
+                redirect(acct.getEmail());
 
                 //Below Commented Code will help authentication user in Firebase...
                /* mAuth.signInWithCredential(credential)
@@ -187,10 +204,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         }
 
     /***********************
-     *
+     *Reidrects the user to the MainActivity
      * @param user
-     */
-    private void updateUI(String user) {
+     ***************************************/
+    private void redirect(String user) {
         progressDialog.dismiss();
         if (user != null) {
 
@@ -206,18 +223,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
-    private void updateUI(boolean isLoggedIn){
-        if (isLoggedIn){
-            Intent i = new Intent(this,MainActivity.class);
 
-            startActivity(i);
-            //finishAndRemoveTask();
-            finish();
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Something went wrong!",Toast.LENGTH_LONG);
-        }
-    }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
@@ -225,13 +231,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
+
+    /***************
+     * Button click Callback method
+     * @param view
+     */
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_in_button:
                 signIn();
                 break;
-            case R.id.email_Button:
-                break;
+            /*case R.id.email_Button:
+                break;*/
         }
     }
 

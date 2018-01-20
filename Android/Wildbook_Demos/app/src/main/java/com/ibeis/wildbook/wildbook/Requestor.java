@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
 /*************************************************************************************************
  * Created by Arjan on 11/16/2017.
  *
- * This application creates the http request and uploads the mutlipart/form-data to the database API!!
+ * This class creates the http request and uploads the mutlipart/form-data to the database API!!
  *************************************************************************************************/
 
 public class Requestor {
@@ -70,10 +70,22 @@ public class Requestor {
             throw e;
         }*/
     }
+
+    /****
+     *  Method to add form headers
+     * @param name
+     * @param value
+     *************/
     public void addHeaderField(String name, String value) {
         mWriter.append(name + ": " + value).append("\r\n");
         mWriter.flush();
     }
+
+    /******
+     * Method to add form field and its value to the http form
+     * @param key
+     * @param value
+     */
     public void addFormField(String key,String value){
         mWriter.append("--"+mBoundary).append("\r\n");
         mWriter.append("Content-Disposition: form-data;name=\""+ key+"\"").append("\r\n");
@@ -82,6 +94,14 @@ public class Requestor {
         mWriter.append(value).append("\r\n");
         mWriter.flush();
     }
+
+    /********
+     * Method to add filename to the HTTP form
+     * @param fieldname
+     * @param filename
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public void addFile(String fieldname,String filename) throws FileNotFoundException,IOException{
         File file =new File(filename);
         if(!file.exists()){
@@ -115,6 +135,12 @@ public class Requestor {
             throw ioexception;
         }
     }
+
+    /********
+     * Creates the end of the HTTP request and retreives the response sent by the server.
+     * @throws IOException
+     * @throws JSONException
+     */
     public void finishRequesting() throws IOException,JSONException {
         mWriter.append("\r\n").flush();
         mWriter.append("--" + mBoundary + "--").append("\r\n");

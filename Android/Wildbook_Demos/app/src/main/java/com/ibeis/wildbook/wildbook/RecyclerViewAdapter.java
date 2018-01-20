@@ -35,10 +35,10 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     Context mContext;
-    List<Uri> mMainImageUploadInfoList;
+    ArrayList<Uri> mMainImageUploadInfoList;
     JSONArray mJsonArray;
 
-    public RecyclerViewAdapter(Context context, List<Uri> TempList) {
+    public RecyclerViewAdapter(Context context, ArrayList<Uri> TempList) {
 
         this.mMainImageUploadInfoList = TempList;
 
@@ -120,8 +120,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if(mJsonArray==null) {
                 Uri uri = mMainImageUploadInfoList.get(getAdapterPosition());
-                intent.putExtra("POS", uri.toString());
-                intent.putExtra("Adapter", "RecyclerView");
+                intent.putExtra("POS", uri.toString()); // uri of the selected image.
+                intent.putExtra("Adapter", "RecyclerView"); //identifier to distinguish the request for preview is related to User Contribution.
+                ArrayList<String> uriToString = new ArrayList<>();
+                for(Uri aUri:mMainImageUploadInfoList)
+                    uriToString.add(aUri.toString());
+                intent.putExtra("SelectedFilePosition",getAdapterPosition());
+                intent.putStringArrayListExtra("OtherImageUris",uriToString);
                 mContext.startActivity(intent);
             }
             else{
