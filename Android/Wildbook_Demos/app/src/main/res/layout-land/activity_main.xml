@@ -16,7 +16,7 @@
 
     >
 
-    <TextView
+    <!--<TextView
         android:id="@+id/textView2"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         android:textColor="@android:color/white"
         android:textSize="19dp"
         app:layout_constraintBottom_toTopOf="@+id/username"
-       />
+       />-->
 
     <Button
         android:id="@+id/RepEnc"

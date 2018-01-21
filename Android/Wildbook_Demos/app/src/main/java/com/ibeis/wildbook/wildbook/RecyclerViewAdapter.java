@@ -37,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     Context mContext;
     ArrayList<Uri> mMainImageUploadInfoList;
     JSONArray mJsonArray;
-
+    private static final String  TAG="RecyclerViewAdapter";
     public RecyclerViewAdapter(Context context, ArrayList<Uri> TempList) {
 
         this.mMainImageUploadInfoList = TempList;
@@ -57,12 +57,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_items, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view,mContext);
+        viewHolder.imageView3_identified.setVisibility(View.INVISIBLE);
         Log.i("RecyclerViewAdapter","ON_create_VIEW_HOLDER!!!");
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.imageView3_identified.setVisibility(View.INVISIBLE);
         if(mMainImageUploadInfoList!=null) {
             Uri UploadInfo = mMainImageUploadInfoList.get(position);
             // holder.imageNameTextView.setText(UploadInfo.getImageName());
@@ -70,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             //Loading image from Glide library.
             Glide.with(mContext)
                     .load(UploadInfo)
+                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageView);
         }
@@ -77,8 +80,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             try {
                 Uri uploadInfo = Uri.parse(mJsonArray.getJSONObject(position).getString("thumbnailUrl"));
+                if(mJsonArray.getJSONObject(position).has("individualId")) {
+                    Log.i(TAG,"identified:"+mJsonArray.getJSONObject(position).getString("individualId"));
+                    holder.imageView3_identified.setVisibility(View.VISIBLE);
+                    //holder.imageView3_identified.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_tag,null));
+                    Glide.with(mContext)
+                            .load(R.mipmap.ic_launcher_foreground)
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.imageView3_identified);
+                }
                 Glide.with(mContext)
                         .load(uploadInfo)
+                        .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.imageView);
             } catch (JSONException e) {
@@ -100,7 +114,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public ImageView imageView,imageView2;
+        public ImageView imageView,imageView2,imageView3_identified;
         public TextView imageNameTextView;
         public Context mContext;
 
@@ -109,7 +123,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             imageView2 = (ImageView)itemView.findViewById(R.id.imageView2);
+            imageView3_identified = (ImageView)itemView.findViewById(R.id.imageView3_positive_ID);
             imageView2.setVisibility(View.INVISIBLE);
+            imageView3_identified.setVisibility(View.INVISIBLE);
             mContext = context;
             imageView.setOnClickListener(this);
            // imageNameTextView = (TextView) itemView.findViewById(R.id.ImageNameTextView);
@@ -141,7 +157,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         imageUris.add(aUri);
                     }
                     intent.putStringArrayListExtra("assets",imageUris);
-                    String date=null,longitude=null,lat=null,encounterId = null;
+                    String date=null,longitude=null,lat=null,encounterId = null,individualId=null;
 
                     if (jsonObject.has("date"))
                         date = jsonObject.get("date").toString();
@@ -151,6 +167,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         lat=jsonObject.get("decimalLatitude").toString();
                     if (jsonObject.has("catalogNumber"))
                         encounterId=jsonObject.get("catalogNumber").toString();
+                    if(jsonObject.has("individualId")) {
+                        individualId = jsonObject.get("individualId").toString();
+                        intent.putExtra("individualId",individualId);
+                    }
                     intent.putExtra("encounter_date",date);
                     intent.putExtra("longitude",longitude);
                     intent.putExtra("latitude",lat);

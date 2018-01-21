@@ -634,6 +634,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void setLAYOUT(){
         if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
             LAYOUT=findViewById(R.id.mainLinearLayout);//setupLayout;
+
         }
         else{
             LAYOUT=findViewById(R.id.myCoordinatorLayout);

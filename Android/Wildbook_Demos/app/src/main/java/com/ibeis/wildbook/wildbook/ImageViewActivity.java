@@ -122,16 +122,23 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
             setContentView(R.layout.activity_display_images_using_recycler_view);
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             findViewById(R.id.encounter_details).setVisibility(View.VISIBLE);
-            TextView longitude,latitude,date,encounterId;
+            TextView longitude,latitude,date,encounterId,individualId,individualName;
             longitude=(TextView)findViewById(R.id.encounter_long);
             latitude=(TextView)findViewById(R.id.encounter_lat);
             date=(TextView)findViewById(R.id.encounter_date);
             encounterId=(TextView)findViewById(R.id.encounter_id);
+            individualId=(TextView)findViewById(R.id.individual_name);
+            individualId.setVisibility(View.INVISIBLE);
+            individualName=(TextView)findViewById(R.id.individual_name_string);
 
             date.setText(getIntent().getStringExtra("encounter_date"));
             longitude.setText(getIntent().getStringExtra("longitude"));
             latitude.setText(getIntent().getStringExtra("latitude"));
             encounterId.setText(getIntent().getStringExtra("encounterId"));
+            if(getIntent().hasExtra("individualId")){
+                individualId.setVisibility(View.VISIBLE);
+                individualName.setText(getIntent().getStringExtra("individualId"));
+            }
 
 
             recyclerView.setHasFixedSize(true);
