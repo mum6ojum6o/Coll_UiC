@@ -10,6 +10,7 @@ import android.graphics.Camera;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +36,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -44,6 +46,8 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -85,7 +89,7 @@ import static java.lang.System.load;
  *********************************************************************/
 
 
-public class CameraMainActivity extends BaseActivity implements  View.OnClickListener{
+public class CameraMainActivity extends BaseActivity implements  View.OnClickListener,View.OnTouchListener{
     public static String SWAP="Rear";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -195,6 +199,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             Log.i("CameraMainActivity","Capturing previous Activity State");
             mCapturedPics = savedInstanceState.getStringArrayList("CapturedImages");
         }
+
         setContentView(R.layout.activity_camera_main);
         /*getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -204,6 +209,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
         createImageFolder();
         mTextureView = (TextureView) findViewById(R.id.textureView);
+        mTextureView.setOnTouchListener(this);
         mCaptureButton = (Button) findViewById(R.id.photoButton);
         mPicPreview = (ImageView)findViewById(R.id.picPreview);
         mCaptureButton.setOnClickListener(this);
@@ -253,6 +259,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         if(mTextureView.isAvailable()) {
             setupCamera(mTextureView.getWidth(), mTextureView.getHeight());
             transformImage(mTextureView.getWidth(), mTextureView.getHeight());
+            mTextureView.setOnTouchListener(this);
             openCamera();
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
@@ -317,6 +324,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 for (String cameraId : cameraManager.getCameraIdList()) {
                     CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
                     mCameraCharacteristics = cameraCharacteristics;
+                    mMaximumZoomLevel = cameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
                     if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) !=
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
@@ -425,6 +433,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
 
                 for (String cameraId : cameraManager.getCameraIdList()) {
                     CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+                    mCameraCharacteristics=cameraCharacteristics;
+                    mMaximumZoomLevel = cameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
                     if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) ==
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
@@ -618,7 +628,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         @Override
         public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
             super.onCaptureFailed(session, request, failure);
-            Toast.makeText(getApplicationContext(), "Focus Lock Unsuccessful", Toast.LENGTH_SHORT).show();
+            Log.i("CamMain", "Failure reason:"+failure.toString()+" "+ failure.getReason());
+            //Toast.makeText(getApplicationContext(), "Focus Lock Unsuccessful", Toast.LENGTH_SHORT).show();
         }
         private void process(CaptureResult result) {
             switch(mState) {
@@ -708,7 +719,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
 
     /******************
      * Method to request Camera Auto Focus and capture after the Auto Focus request has been processed
-     */
+     *********************/
     private void lockFocus() {
         try {
             mState = STATE_WAIT_AF_LOCK;
@@ -817,6 +828,55 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 }
             };
 
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        Log.i("CameraMain","onTouch!!!!!!!!");
+        try {
+            Rect rect = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+            if (rect == null) return false;
+            float currentFingerSpacing;
+
+            if (event.getPointerCount() == 2) { //Multi touch.
+                Log.i("CameraMain","MULTI TOUCH!!!!");
+                currentFingerSpacing = getFingerSpacing(event);
+                float delta = 0.05f; //Control this value to control the zooming sensibility
+                if (mFingerSpacing != 0) {
+                    if (currentFingerSpacing > mFingerSpacing) { //Don't over zoom-in
+                        if ((mMaximumZoomLevel - mZoomLevel) <= delta) {
+                            delta = mMaximumZoomLevel - mZoomLevel;
+                        }
+                        mZoomLevel = mZoomLevel + delta;
+                    } else if (currentFingerSpacing < mFingerSpacing){ //Don't over zoom-out
+                        if ((mZoomLevel - delta) < 1f) {
+                            delta = mZoomLevel - 1f;
+                        }
+                        mZoomLevel = mZoomLevel - delta;
+                    }
+                    float ratio = (float) 1 / mZoomLevel; //This ratio is the ratio of cropped Rect to Camera's original(Maximum) Rect
+                    //croppedWidth and croppedHeight are the pixels cropped away, not pixels after cropped
+                    int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+                    int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+                    //Finally, zoom represents the zoomed visible area
+                    mZoom = new Rect(croppedWidth/2, croppedHeight/2,
+                            rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+                    mPreviewCaptureRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                }
+                mFingerSpacing = currentFingerSpacing;
+            } else { //Single touch point, needs to return true in order to detect one more touch point
+                return true;
+            }
+            Log.i("CameraMain", "Setting up ZOOMED camera repeating request");
+
+            mCameraCaptureSession.setRepeatingRequest(mPreviewCaptureRequestBuilder.build(), mSessionCaptureCallback, mBackgroundHandler);
+            return true;
+        } catch (final Exception e) {
+            //Error handling up to you
+            e.printStackTrace();
+            return true;
+        }
+
+    }
+
     /*************
      * Inner Class that helps save a captured Image
      */
@@ -887,6 +947,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
                         ORIENTATIONS.get(rotation));*/
                // captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
+               /* if (mZoom != null) {
+                    captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                }*/
                 captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONS.get(rotation));
                 Log.i("CamAct","getOrientation("+rotation+")="+getOrientation(rotation));
             }
@@ -1113,7 +1176,19 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
 
                     }
                 });
-
-
     }
+    // for zooming purposes
+    //references :- https://stackoverflow.com/questions/32711975/zoom-camera2-preview-using-textureview
+    protected float mFingerSpacing = 0;
+    protected float mZoomLevel = 1f;
+    protected float mMaximumZoomLevel;
+    protected Rect mZoom;
+
+
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+    private GestureDetectorCompat mDetector;
 }
