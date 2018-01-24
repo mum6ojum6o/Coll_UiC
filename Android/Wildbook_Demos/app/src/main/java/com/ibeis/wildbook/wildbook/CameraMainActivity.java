@@ -135,6 +135,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     break;
             }
         }};
+    private boolean swappedDimensions;
 
     /**
      * Gets the Amount of Degress of rotation using the exif integer to determine how much
@@ -213,11 +214,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         mCaptureButton = (Button) findViewById(R.id.photoButton);
         mPicPreview = (ImageView)findViewById(R.id.picPreview);
         mCaptureButton.setOnClickListener(this);
-        mRecycleView = (RecyclerView) findViewById(R.id.galleryRecyclerView);
+        //mRecycleView = (RecyclerView) findViewById(R.id.galleryRecyclerView);
         mImageButton =(ImageButton) findViewById(R.id.imageButton);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecycleView.setLayoutManager(gridLayoutManager);
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+       // gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+       // mRecycleView.setLayoutManager(gridLayoutManager);
         //RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
         //List<File> files = Arrays.asList(Uri.fromFile(mImageFolder.listFiles()));
         mFileUris = new ArrayList<Uri>();
@@ -325,10 +326,13 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
                     mCameraCharacteristics = cameraCharacteristics;
                     mMaximumZoomLevel = cameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+                     mZoomLevel=1f;
+                   // mZoom=null;
                     if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) !=
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
                     }
+
                     //Get the largest supported imageSize....
                     StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     Size largestImageSize = Collections.max(
@@ -439,6 +443,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
                     }
+                    mZoomLevel=1f;
                     StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     Size largestImageSize = Collections.max(
                             Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
@@ -459,7 +464,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
 
                     //noinspection ConstantConditions
-                    // Source :-https://github.com/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic
+                    // Source :-https://github.co/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic
                     //this is being done to streamline the Sensor Orientation along with the camera Orientation...
                     mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
                     Log.i("CamAct","display Rotation:"+displayRotation);
@@ -839,7 +844,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             if (event.getPointerCount() == 2) { //Multi touch.
                 Log.i("CameraMain","MULTI TOUCH!!!!");
                 currentFingerSpacing = getFingerSpacing(event);
+                Log.i("fingerSpacing","Current FingerSpacing:"+currentFingerSpacing);
                 float delta = 0.05f; //Control this value to control the zooming sensibility
+                Log.i("fingerSpacing","mFingerSpacing:"+mFingerSpacing);
                 if (mFingerSpacing != 0) {
                     if (currentFingerSpacing > mFingerSpacing) { //Don't over zoom-in
                         if ((mMaximumZoomLevel - mZoomLevel) <= delta) {
