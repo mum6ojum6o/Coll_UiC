@@ -114,7 +114,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
         switch (view.getId()){
             case R.id.UploadBtn2:
                 getSelectedImages();
-                if(mSelectedImages.size()>0) {
+                if(mSelectedImages.size()>0 && mSelectedImages.size()<=10) {
                     if (new Utilities(this).isNetworkAvailable()) {
 
                         int uploadCount = 0;
@@ -209,6 +209,17 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
 
 
                     }
+                }
+                else if(mSelectedImages.size()>10){
+                    Dialog dialog = new Dialog(UploadCamPics.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_layout);
+                    dialog.setTitle(getResources().getString(R.string.maxuploadHeaderString));
+                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+                    tv.setText(getResources().getString(R.string.maxuploadString));
+                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+                    tv1.setText(" ");
+                    dialog.show();
                 }
                 else{
                     Dialog dialog = new Dialog(UploadCamPics.this);

@@ -395,7 +395,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     ClipData mClipData = data.getClipData();
                     if (mClipData.getItemCount() > 10) {
                         Log.i(TAG, "More than 10 images selected");
-                        Toast.makeText(getApplicationContext(), "Please select upto 10 images only", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.maxuploadString, Toast.LENGTH_LONG).show();
                     } else {
                         ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -470,8 +470,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 }
             }
         }
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CHECK_SETTINGS){
-           LocationSettingsStates locationSettingsStates = LocationSettingsStates.fromIntent(data);
+        if(requestCode == REQUEST_CHECK_SETTINGS){
+            Log.i(TAG,"REQUEST_CHECK_SETTTINGS");
+           /*LocationSettingsStates locationSettingsStates = LocationSettingsStates.fromIntent(data);
             switch (requestCode) {
                 case REQUEST_CHECK_SETTINGS:
                     switch (resultCode) {
@@ -486,12 +487,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                         default:
 
                             break;
-                    }
+                    }*/
                     startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
-                    break;
 
-            }
+
+
         }
+
     }
 
     @SuppressLint("NewApi")
@@ -705,6 +707,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             catch (ApiException exception) {
                 switch (exception.getStatusCode()) {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG,"LOCATION_RESOLUTION_REQUIRED");
                         // Location settings are not satisfied. But could be fixed by showing the
                         // user a dialog.
                         try {

@@ -137,7 +137,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if(mJsonArray==null) {
                 Uri uri = mMainImageUploadInfoList.get(getAdapterPosition());
                 intent.putExtra("POS", uri.toString()); // uri of the selected image.
-                intent.putExtra("Adapter", "RecyclerView"); //identifier to distinguish the request for preview is related to User Contribution.
+                //identifier to distinguish the request for preview is related to User Contribution.
+                intent.putExtra("Adapter", "RecyclerView");
                 ArrayList<String> uriToString = new ArrayList<>();
                 for(Uri aUri:mMainImageUploadInfoList)
                     uriToString.add(aUri.toString());

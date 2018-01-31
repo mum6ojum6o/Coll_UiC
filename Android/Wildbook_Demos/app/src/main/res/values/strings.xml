@@ -51,4 +51,7 @@
     <string name="requestimageselection">Please select atleast ONE image to upload</string>
     <string name="selectallString">Select All</string>
     <string name="unselectallString">Unselect All</string>
+    <string name="maxuploadString">Please select upto 10 images only</string>
+    <string name="maxuploadHeaderString">Maximum Upload Limit</string>
+    <string name="encounterDetailsLabel"><u>Encounter Details</u></string>
 </resources>

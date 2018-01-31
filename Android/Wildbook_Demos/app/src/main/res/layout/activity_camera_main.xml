@@ -11,14 +11,23 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true" />
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Click!"
         android:id="@+id/photoButton"
         android:onClick="takePhoto"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" />-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/photoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_camera"
+        android:layout_margin="16dp"/>
 
     <ImageView
         android:id="@+id/picPreview"
@@ -42,12 +51,12 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="8dp" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/galleryRecyclerView"
         android:layout_marginTop="14dp"
-        app:srcCompat="@mipmap/cam_swap" />
+        app:srcCompat="@drawable/ic_rotate" />
 </RelativeLayout>

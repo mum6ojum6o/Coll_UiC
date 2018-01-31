@@ -25,15 +25,17 @@
             android:name=".MainActivity"
             android:launchMode="singleInstance"
             />
+
         <activity
             android:name=".DisplaySelectedImages"
             android:noHistory="false"/>
         <activity android:name=".DisplayImagesUsingRecyclerView"/>
+        <!-- android:screenOrientation="portrait"-->
         <activity
             android:name=".CameraMainActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity android:name=".UploadCamPics" />
-
         <service android:name=".SyncerService" />
 
         <activity android:name=".ImageViewActivity" />

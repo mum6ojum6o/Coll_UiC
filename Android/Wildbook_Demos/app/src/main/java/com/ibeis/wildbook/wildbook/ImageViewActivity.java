@@ -2,6 +2,8 @@ package com.ibeis.wildbook.wildbook;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
  *********************************************************************/
 
 //This class is a code management Nightmare....
-public class ImageViewActivity extends BaseActivity implements GestureDetector.OnGestureListener{
+public class ImageViewActivity extends BaseActivity implements GestureDetector.OnGestureListener,View.OnClickListener{
     private static final String TAG="ImageViewActivity";
     private GestureDetectorCompat mDetector;
     double mPrimaryXCoord= 0.0,mSecondaryXCoord= 0.0;
@@ -45,7 +47,10 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
     int mCurrentPicPreviewIndex=-1;
     ArrayList<String> mAllImagePaths;
     ArrayList<Uri>mAllImageUris;
+    String mFilePath;
     Uri mUri;
+    String mEncounterUrl,mIndividualName;
+    boolean mIsReportEncRequest;
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 }
             }
             if(getIntent().hasExtra("filePath")) {
-                filePath = getIntent().getStringExtra("filePath");
+                mFilePath = getIntent().getStringExtra("filePath");
                 mAllImagePaths=getIntent().getStringArrayListExtra("AllFiles");
                 Log.i(TAG,"Images in this file:"+mAllImagePaths.size());
             }
@@ -95,11 +100,11 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 //Note:- Loading an image through uri with Glide can sometimes lead an issue.
                 //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
                 //
-                if(filePath!=null) { //determines if the preview is from UploadCamPics
+                if(mFilePath!=null) { //determines if the preview is from UploadCamPics
                     Log.i(TAG,"ImagePath position in mAllImagesPath:"+mAllImagePaths.indexOf(filePath));
                     Glide
                             .with(ImageViewActivity.this)
-                            .load(new File(filePath).getPath())
+                            .load(new File(mFilePath).getPath())
                             .placeholder(R.mipmap.wildbook2)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .fitCenter()
@@ -118,6 +123,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 }
             }
         }
+        // to Display the image(s) captured in an Encounter
         else if(getIntent().getStringArrayListExtra("assets") !=null){
             setContentView(R.layout.activity_display_images_using_recycler_view);
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
@@ -130,19 +136,30 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
             individualId=(TextView)findViewById(R.id.individual_name);
             individualId.setVisibility(View.INVISIBLE);
             individualName=(TextView)findViewById(R.id.individual_name_string);
-
+            individualName.setVisibility(View.INVISIBLE);
             date.setText(getIntent().getStringExtra("encounter_date"));
-            longitude.setText(getIntent().getStringExtra("longitude"));
-            latitude.setText(getIntent().getStringExtra("latitude"));
-            encounterId.setText(getIntent().getStringExtra("encounterId"));
+            longitude.setText(getIntent().getStringExtra("longitude")!=null? getIntent().getStringExtra("longitude").substring(0,10):"");
+            latitude.setText(getIntent().getStringExtra("latitude")!=null?getIntent().getStringExtra("latitude").substring(0,10):"");
+            mEncounterUrl = getIntent().getStringExtra("encounterId");
+            encounterId.setText(mEncounterUrl);
+            encounterId.setPaintFlags(encounterId.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+            encounterId.setOnClickListener(this);
             if(getIntent().hasExtra("individualId")){
                 individualId.setVisibility(View.VISIBLE);
-                individualName.setText(getIntent().getStringExtra("individualId"));
+                mIndividualName=getIntent().getStringExtra("individualId");
+                individualName.setText(mIndividualName);
+                individualName.setVisibility(View.VISIBLE);
+                individualName.setOnClickListener(this);
+                individualName.setPaintFlags(individualName.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+
             }
 
 
             recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,3));
+            if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)
+                recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,2));
+            else
+                recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,3));
             //JSONArray jsonObject = new JSONObject(getIntent().getStringArrayListExtra("assets"));
             ArrayList<String> imagePaths = getIntent().getStringArrayListExtra("assets");
             //ArrayList<Uri> imageUris = new ArrayList<Uri>();
@@ -254,9 +271,30 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        this.mDetector.onTouchEvent(event);
+        if(mUri!=null || mFilePath!=null)
+            this.mDetector.onTouchEvent(event);
         // Be sure to call the superclass implementation
         // Toast.makeText(this,"in onTouchEvent!",Toast.LENGTH_SHORT).show();
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.individual_name_string:
+                if(mIndividualName!=null){
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("http://uidev.scribble.com/v2/individuals.jsp?number="+mIndividualName));
+                    startActivity(intent);
+                }
+                break;
+            case R.id.encounter_id:
+                if(mEncounterUrl!=null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("http://uidev.scribble.com/v2/encounters/encounter.jsp?number="+mEncounterUrl));
+                    startActivity(intent);
+                }
+                break;
+        }
     }
 }

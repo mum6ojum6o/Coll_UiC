@@ -1,83 +1,83 @@
-package com.ibeis.wildbook.wildbook;
+        package com.ibeis.wildbook.wildbook;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Camera;
-import android.graphics.ImageFormat;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.SurfaceTexture;
-import android.graphics.drawable.ColorDrawable;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CaptureFailure;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.CaptureResult;
-import android.hardware.camera2.TotalCaptureResult;
-import android.hardware.camera2.params.StreamConfigurationMap;
-import android.location.Location;
-import android.media.ExifInterface;
-import android.media.Image;
-import android.media.ImageReader;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.Size;
-import android.util.SparseIntArray;
-import android.view.Display;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.TextureView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.pm.PackageManager;
+        import android.graphics.Bitmap;
+        import android.graphics.BitmapFactory;
+        import android.graphics.ImageFormat;
+        import android.graphics.Matrix;
+        import android.graphics.Point;
+        import android.graphics.Rect;
+        import android.graphics.RectF;
+        import android.graphics.SurfaceTexture;
+        import android.hardware.Sensor;
+        import android.hardware.SensorEvent;
+        import android.hardware.SensorEventListener;
+        import android.hardware.SensorManager;
+        import android.hardware.camera2.CameraAccessException;
+        import android.hardware.camera2.CameraCaptureSession;
+        import android.hardware.camera2.CameraCharacteristics;
+        import android.hardware.camera2.CameraDevice;
+        import android.hardware.camera2.CameraManager;
+        import android.hardware.camera2.CaptureFailure;
+        import android.hardware.camera2.CaptureRequest;
+        import android.hardware.camera2.CaptureResult;
+        import android.hardware.camera2.TotalCaptureResult;
+        import android.hardware.camera2.params.StreamConfigurationMap;
+        import android.location.Location;
+        import android.media.ExifInterface;
+        import android.media.Image;
+        import android.media.ImageReader;
+        import android.net.Uri;
+        import android.os.Environment;
+        import android.os.Handler;
+        import android.os.HandlerThread;
+        import android.os.Message;
+        import android.support.annotation.NonNull;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.v4.app.ActivityCompat;
+        import android.support.v4.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+        import android.os.Bundle;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+        import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
+        import android.util.Size;
+        import android.util.SparseIntArray;
+        import android.view.Display;
 
-import static java.lang.System.load;
+        import android.view.MotionEvent;
+        import android.view.Surface;
+        import android.view.TextureView;
+        import android.view.View;
+
+        import android.widget.ImageButton;
+        import android.widget.ImageView;
+        import android.widget.Toast;
+
+        import com.bumptech.glide.Glide;
+        import com.google.android.gms.auth.api.Auth;
+        import com.google.android.gms.common.api.ResultCallback;
+        import com.google.android.gms.common.api.Status;
+        import com.google.android.gms.location.FusedLocationProviderClient;
+        import com.google.android.gms.location.LocationServices;
+        import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.android.gms.tasks.Task;
+
+        import java.io.File;
+        import java.io.FileOutputStream;
+        import java.io.IOException;
+        import java.nio.ByteBuffer;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.Collections;
+        import java.util.Comparator;
+        import java.util.Date;
+        import java.util.List;
+
+        import static java.lang.System.load;
 
 /*****************************************************************
  * DISCLAIMER:-
@@ -89,8 +89,9 @@ import static java.lang.System.load;
  *********************************************************************/
 
 
-public class CameraMainActivity extends BaseActivity implements  View.OnClickListener,View.OnTouchListener{
+public class CameraMainActivity extends BaseActivity implements  View.OnClickListener,View.OnTouchListener,SensorEventListener {
     public static String SWAP="Rear";
+    public static final int ROTATE_RIGHT=180,ROTATE_LEFT=0,DEF_ORIENTATION=270,UPSIDE_DOWN=90;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         //ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -136,7 +137,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             }
         }};
     private boolean swappedDimensions;
-
+    SensorManager mSensorManager;//Manages the sensors on the device...
+    Sensor mSensor;
     /**
      * Gets the Amount of Degress of rotation using the exif integer to determine how much
      * we should rotate the image.
@@ -159,7 +161,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private TextureView mTextureView;
     private RecyclerView mRecycleView;
     private String currentPreview;
-    private ImageButton mImageButton;
+    private ImageView mImageButton;
     private CameraManager mCameraManager;
     private List<Uri> mFileUris;
     private TextureView.SurfaceTextureListener mSurfaceTextureListener =
@@ -190,7 +192,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
       We apologize for any inconvenience this may have caused.
       Source:- developer.android.com */
     private FusedLocationProviderClient mFusedLocationClient;
-    private Button mCaptureButton;
+    private FloatingActionButton mCaptureButton;
     private static File mLatestFile;
     private static ImageView mPicPreview;
     @Override
@@ -200,7 +202,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             Log.i("CameraMainActivity","Capturing previous Activity State");
             mCapturedPics = savedInstanceState.getStringArrayList("CapturedImages");
         }
-
+        mSensorManager =(SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if(mSensor == null)
+            Toast.makeText(this,"No Accelerometer!1",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_camera_main);
         /*getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -211,14 +216,14 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         createImageFolder();
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mTextureView.setOnTouchListener(this);
-        mCaptureButton = (Button) findViewById(R.id.photoButton);
+        mCaptureButton = (FloatingActionButton) findViewById(R.id.photoButton);
         mPicPreview = (ImageView)findViewById(R.id.picPreview);
         mCaptureButton.setOnClickListener(this);
         //mRecycleView = (RecyclerView) findViewById(R.id.galleryRecyclerView);
-        mImageButton =(ImageButton) findViewById(R.id.imageButton);
+        mImageButton =(ImageView) findViewById(R.id.imageButton);
         //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-       // gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-       // mRecycleView.setLayoutManager(gridLayoutManager);
+        // gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // mRecycleView.setLayoutManager(gridLayoutManager);
         //RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
         //List<File> files = Arrays.asList(Uri.fromFile(mImageFolder.listFiles()));
         mFileUris = new ArrayList<Uri>();
@@ -265,6 +270,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+        mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
     @Override
     public void onClick(View view){
@@ -308,6 +314,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         closeCamera();
         closeBackgoundThread();
         super.onPause();
+        if(mSensor!=null){
+            mSensorManager.unregisterListener(this);
+        }
     }
     private Size mPreviewSize;
     private String mCameraId;
@@ -326,8 +335,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
                     mCameraCharacteristics = cameraCharacteristics;
                     mMaximumZoomLevel = cameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
-                     mZoomLevel=1f;
-                   // mZoom=null;
+                    mZoomLevel=1f;
+                    // mZoom=null;
                     if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) !=
                             CameraCharacteristics.LENS_FACING_FRONT) {
                         continue;
@@ -376,7 +385,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                             break;
                         case Surface.ROTATION_270:
                             if (mSensorOrientation == 0 || mSensorOrientation == 180) {
-                           // if (mSensorOrientation == 90 || mSensorOrientation == 270) {
+                                // if (mSensorOrientation == 90 || mSensorOrientation == 270) {
                                 swappedDimensions = true;
                             }
                             break;
@@ -408,7 +417,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         maxPreviewHeight = MAX_PREVIEW_HEIGHT;
                     }
                     //Updating the previewSize depending on the orientation of the screen....
-                   // mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
+                    // mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), width, height);
                     mPreviewSize = getPreferredPreviewSize(map.getOutputSizes(SurfaceTexture.class), rotatedPreviewWidth, rotatedPreviewHeight);
 
                     int orientation = getResources().getConfiguration().orientation;
@@ -766,9 +775,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
         else{
             ActivityCompat.requestPermissions(this,
-                            new String[]{"android.permission.READ_EXTERNAL_STORAGE",
+                    new String[]{"android.permission.READ_EXTERNAL_STORAGE",
                             "android.permission.WRITE_EXTERNAL_STORAGE"},
-                            STORAGE_PERMISSION_REQUEST);
+                    STORAGE_PERMISSION_REQUEST);
         }
     }
 
@@ -789,9 +798,9 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     Toast.makeText(getApplicationContext(),"In order to contribute to our cause we " +
                             "would encourage you to grant us access in the future!",Toast.LENGTH_LONG);
                     startActivity(new Intent(CameraMainActivity.this,MainActivity.class));
-                   // toast.cancel();
+                    // toast.cancel();
                 }
-            break;
+                break;
         }
     }
 
@@ -864,8 +873,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
                     int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
                     //Finally, zoom represents the zoomed visible area
+                    Log.i("CamAct","mZoom:"+mZoom);
                     mZoom = new Rect(croppedWidth/2, croppedHeight/2,
                             rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+                    Log.i("CamAct","mZoom:"+mZoom);
                     mPreviewCaptureRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
                 }
                 mFingerSpacing = currentFingerSpacing;
@@ -944,20 +955,30 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT){
                 /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
                         ORIENTATIONSFRONT.get(rotation));
-
                 *///captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONSFRONT.get(rotation));
-
+                Log.i("CamAct:","rotation:"+rotation);
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONSFRONT.get(rotation));
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,180); //rotate right
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,0); //rotate left
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,270); //default orientation
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,90); //portrait mode reciprocated.
+                Log.i("CamAct","mOrientation="+mOrientation);
+                captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);
                 Log.i("CamAct","LENS_FACING_FRONT ORIENTATIONSFRONT.get("+rotation+")="+ORIENTATIONSFRONT.get(rotation));
             }
             else {
                 /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
                         ORIENTATIONS.get(rotation));*/
-               // captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
+                // captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
                /* if (mZoom != null) {
                     captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
                 }*/
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONS.get(rotation));
+                Log.i("CamAct:","rotation:"+rotation);
+                Log.i("CamAct","mOrientation="+mOrientation);
+                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONS.get(rotation));
+                captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);
                 Log.i("CamAct","getOrientation("+rotation+")="+getOrientation(rotation));
             }
             CameraCaptureSession.CaptureCallback captureCallback =
@@ -1134,20 +1155,20 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
      * @return
      */
     public Bitmap getUpdatedBitmap(File imageFile){
-    Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
-    Bitmap rotatedBitmap=null;
-    try{
-        ExifInterface exif = new ExifInterface(imageFile.getPath());
-        int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
-        int rotationInDegrees = exifToDegrees(rotation);
-        Matrix matrix = new Matrix();
-        if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
-        rotatedBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
+        Bitmap rotatedBitmap=null;
+        try{
+            ExifInterface exif = new ExifInterface(imageFile.getPath());
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+            int rotationInDegrees = exifToDegrees(rotation);
+            Matrix matrix = new Matrix();
+            if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
+            rotatedBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
-    }catch(Exception e){
-        e.printStackTrace();
-    }
-    return rotatedBitmap;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return rotatedBitmap;
     }
 
     /****************
@@ -1173,7 +1194,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         Intent intent = new Intent(CameraMainActivity.this, Login.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                       // toast.cancel();
+                        // toast.cancel();
                         startActivity(intent);
 
                         Log.i("CameraMainActivity","Logging out from DisplayImagesUsingRecyclerView");
@@ -1190,12 +1211,39 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     protected float mZoomLevel = 1f;
     protected float mMaximumZoomLevel;
     protected Rect mZoom;
-
+    protected int mOrientation=-1;
 
     private float getFingerSpacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float) Math.sqrt(x * x + y * y);
     }
-    private GestureDetectorCompat mDetector;
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        Log.i("SensorAccuracyChanged", "values="+sensor.getName());
+    }
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        //Log.i("SensorEventChanged","values: X Axis"+sensorEvent.values[0]+" Y-axis="+sensorEvent.values[1]+" Z-axis="+sensorEvent.values[2]);
+        if((sensorEvent.values[0]>=-8.0 && sensorEvent.values[0]<=8.0)&&(sensorEvent.values[1]>= 2.0 && sensorEvent.values[1]<=10.0)){
+            //def orientation
+            mOrientation=DEF_ORIENTATION;
+
+            if(mCameraCharacteristics!=null && mCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) != CameraCharacteristics.LENS_FACING_FRONT){
+                mOrientation-=180;
+            }
+        }
+        else if((sensorEvent.values[0]>=-10.0 && sensorEvent.values[0]<=1.0)&&(sensorEvent.values[1]>= -7.5 && sensorEvent.values[1]<=5.0)) {
+            // rotated right
+            mOrientation=ROTATE_RIGHT;
+
+        }
+        else if((sensorEvent.values[0]>=5.0 && sensorEvent.values[0]<=10.5)&&(sensorEvent.values[1]>= -5.0 && sensorEvent.values[1]<=8.05)){
+            //Rotated Left
+            mOrientation=ROTATE_LEFT;
+        }
+        /*else{
+            mOrientation=UPSIDE_DOWN;
+        }*/
+    }
 }

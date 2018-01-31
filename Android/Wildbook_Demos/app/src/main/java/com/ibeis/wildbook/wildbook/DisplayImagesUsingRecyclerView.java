@@ -153,9 +153,74 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
 
             // Setting RecyclerView layout as LinearLayout.
             recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 4));
-            findViewById(R.id.encounter_details).setVisibility(View.GONE);
+            findViewById(R.id.cardview_EncDetails_encompassing).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setVisibility(View.GONE);
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                            StrictMode.setThreadPolicy(policy);
+                        }
+                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
+                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                        JSONArray jsonArray = null,reversedJSONArray=null;
+                        JSONObject jsonObject = null;
+                        int statusCode = httpURLConnection.getResponseCode();
+                        if (statusCode == HttpURLConnection.HTTP_OK) {
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                    httpURLConnection.getInputStream()));
+                            String line = null;
+                            StringBuilder sb = new StringBuilder();
+                            while ((line = reader.readLine()) != null) {
+                                Log.i(TAG, line);
+                                sb.append(line);
+                            }
+                            String response = sb.toString();
+                            jsonArray = new JSONArray(response);
+                            reader.close();
+                            httpURLConnection.disconnect();
+                            ArrayList<String> imagePaths = new ArrayList<String>();
+
+                            if (jsonArray != null) {
+                                reversedJSONArray = new JSONArray();
+                                int size = jsonArray.length();
+                                for (int i = 0; i < size; i++) {
+                                    if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                                        imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                                }
+
+
+                                Message msg = mHandler.obtainMessage(200);
+                                Bundle bundle = new Bundle();
+                                bundle.putStringArrayList("JSON_RESPONE", imagePaths);
+                                bundle.putString("JSON_RESPONEI", response);
+
+                                msg.setData(bundle);
+                                msg.sendToTarget();
+                            /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
+                            recyclerView.setAdapter(adapter);*/
+                            } else {
+                                Message msg = mHandler.obtainMessage(404);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("404", getResources().getString(R.string.server_offline));
+                                msg.setData(bundle);
+                                msg.sendToTarget();
+                            }
+                        }
+                        //Thread.sleep(5000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i(TAG, "Error!!");
+                    }
+
+                    progressDialog.dismiss();
+
+                }
+            }).start();
         }
 
     }
@@ -172,71 +237,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         //creating a worker thread to get images from the network.
 
 
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    if (android.os.Build.VERSION.SDK_INT > 9) {
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
-                    }
-                    URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    JSONArray jsonArray = null,reversedJSONArray=null;
-                    JSONObject jsonObject = null;
-                    int statusCode = httpURLConnection.getResponseCode();
-                    if (statusCode == HttpURLConnection.HTTP_OK) {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                httpURLConnection.getInputStream()));
-                        String line = null;
-                        StringBuilder sb = new StringBuilder();
-                        while ((line = reader.readLine()) != null) {
-                            Log.i(TAG, line);
-                            sb.append(line);
-                        }
-                        String response = sb.toString();
-                        jsonArray = new JSONArray(response);
-                        reader.close();
-                        httpURLConnection.disconnect();
-                        ArrayList<String> imagePaths = new ArrayList<String>();
-
-                        if (jsonArray != null) {
-                            reversedJSONArray = new JSONArray();
-                            int size = jsonArray.length();
-                            for (int i = 0; i < size; i++) {
-                                if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
-                                    imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
-                            }
-
-
-                            Message msg = mHandler.obtainMessage(200);
-                            Bundle bundle = new Bundle();
-                            bundle.putStringArrayList("JSON_RESPONE", imagePaths);
-                            bundle.putString("JSON_RESPONEI", response);
-
-                            msg.setData(bundle);
-                            msg.sendToTarget();
-                            /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
-                            recyclerView.setAdapter(adapter);*/
-                        } else {
-                            Message msg = mHandler.obtainMessage(404);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("404", getResources().getString(R.string.server_offline));
-                            msg.setData(bundle);
-                            msg.sendToTarget();
-                        }
-                    }
-                    //Thread.sleep(5000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i(TAG, "Error!!");
-                }
-
-                progressDialog.dismiss();
-
-            }
-        }).start();
 
     }
 

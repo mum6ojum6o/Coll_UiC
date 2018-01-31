@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bg_land_contributions">
 <TextView
@@ -16,170 +17,234 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-        <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-            android:layout_weight=".6"
+                android:orientation="horizontal">
+                <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:padding="1dp"
                 android:id="@+id/recycler_layout"
-
                 tools:context=".DisplayImagesUsingRecyclerView">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"></android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true">
 
-        </RelativeLayout>
+                    </android.support.v7.widget.RecyclerView>
 
-                <LinearLayout
-                    android:id="@+id/encounter_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="20dp"
+                </RelativeLayout>
 
-                    android:layout_weight=".4"
-                    android:alpha="0.85"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardview_EncDetails_encompassing"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".5"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="5dp"
+                    card_view:cardElevation="1dp"
+                    card_view:cardMaxElevation="5dp"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:contentPadding="5dp">
 
                     <LinearLayout
+                        android:id="@+id/encounter_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_gravity="center"
 
-                        <TextView
-                            android:id="@+id/encounter_date_label"
-                            android:layout_width="96dp"
-                            android:layout_height="match_parent"
-                            android:layout_below="@+id/recyclerView"
-                            android:layout_weight="0.29"
-                            android:text="Date:"
-                            android:textColor="@color/font" />
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/encounter_date"
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardview_EncDetails"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_above="@+id/encounter_long"
-                            android:layout_alignEnd="@+id/encounter_id"
-                            android:layout_alignLeft="@+id/encounter_long"
-                            android:layout_toRightOf="@id/encounter_date_label"
-                            android:layout_weight="0.71"
-                            android:paddingLeft="0dp"
-                            android:text="Placeholder"
-                            android:textColor="@color/font" />
-                    </LinearLayout>
+                            android:layout_gravity="center"
+                            card_view:cardBackgroundColor="#75a4ef"
+                            card_view:cardCornerRadius="5dp"
+                            card_view:cardElevation="1dp"
+                            card_view:cardMaxElevation="5dp"
+                            card_view:cardUseCompatPadding="true"
+                            card_view:contentPadding="5dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/encounter_long_label"
-                            android:layout_width="96dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/encounter_date_label"
-                            android:layout_weight="0.2"
-                            android:text="Longitude:"
-                            android:textColor="@color/font" />
+                                <TextView
+                                    android:id="@+id/encounter_details_heading"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@+id/recyclerView"
+                                    android:text="@string/encounterDetailsLabel"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
 
-                        <TextView
-                            android:id="@+id/encounter_long"
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardview2_the_enc_details"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignBottom="@id/encounter_long_label"
-                            android:layout_alignStart="@+id/encounter_lat"
-                            android:layout_weight="0.8"
-                            android:paddingLeft="0dp"
-                            android:text="Placeholder"
-                            android:textColor="@color/font" />
+                            android:layout_gravity="center"
+                            card_view:cardBackgroundColor="#75a4ef"
+                            card_view:cardCornerRadius="5dp"
+                            card_view:cardElevation="1dp"
+                            card_view:cardMaxElevation="5dp"
+                            card_view:cardUseCompatPadding="true"
+                            card_view:contentPadding="5dp">
+
+                            <LinearLayout
+                                android:id="@+id/encounter_details1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:background="#75a4ef"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/individual_name"
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/encounter_date_label"
+                                        android:layout_weight="0.4"
+                                        android:text="Individual Name:"
+                                        android:textColor="@color/colorPrimaryDark" />
+
+                                    <TextView
+                                        android:id="@+id/individual_name_string"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignBottom="@id/encounter_date_label"
+                                        android:layout_alignStart="@+id/encounter_lat"
+                                        android:layout_weight="0.6"
+                                        android:paddingLeft="0dp"
+                                        android:text="Placeholder"
+                                        android:textColor="@color/colorPrimaryDark" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/encounter_date_label"
+                                        android:layout_width="110dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_below="@+id/recyclerView"
+                                        android:layout_weight="0.29"
+                                        android:text="Date:"
+                                        android:textColor="@color/colorPrimaryDark" />
+
+                                    <TextView
+                                        android:id="@+id/encounter_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_above="@+id/encounter_long"
+                                        android:layout_alignEnd="@+id/encounter_id"
+                                        android:layout_alignLeft="@+id/encounter_long"
+                                        android:layout_toRightOf="@id/encounter_date_label"
+                                        android:layout_weight="0.71"
+                                        android:paddingLeft="0dp"
+                                        android:text="Placeholder"
+                                        android:textColor="@color/colorPrimaryDark" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/encounter_long_label"
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/encounter_date_label"
+                                        android:layout_weight="0.4"
+                                        android:text="Longitude:"
+                                        android:textColor="@color/colorPrimaryDark" />
+
+                                    <TextView
+                                        android:id="@+id/encounter_long"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignBottom="@id/encounter_long_label"
+                                        android:layout_alignStart="@+id/encounter_lat"
+                                        android:layout_weight="0.6"
+                                        android:paddingLeft="0dp"
+                                        android:text="Placeholder"
+                                        android:textColor="@color/colorPrimaryDark" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/encounter_lat_label"
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/encounter_long_label"
+                                        android:layout_weight="0.4"
+                                        android:text="Latitude:"
+                                        android:textColor="@color/colorPrimaryDark" />
+
+                                    <TextView
+                                        android:id="@+id/encounter_lat"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/encounter_long"
+                                        android:layout_toEndOf="@+id/encounter_id_label"
+                                        android:layout_weight="0.6"
+
+                                        android:text="Placeholder"
+                                        android:textColor="@color/colorPrimaryDark" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/encounter_id_label"
+                                        android:layout_width="110dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/encounter_lat_label"
+                                        android:layout_weight="0.4"
+                                        android:text="Encounter ID:"
+                                        android:textColor="@color/colorPrimaryDark" />
+
+                                    <TextView
+                                        android:id="@+id/encounter_id"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_weight="0.6"
+
+                                        android:text="Placeholder"
+
+                                        android:textColor="@color/colorPrimaryDark" />
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/encounter_lat_label"
-                            android:layout_width="96dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/encounter_long_label"
-                            android:layout_weight="0.5"
-                            android:text="Latitude:"
-                            android:textColor="@color/font" />
-
-                        <TextView
-                            android:id="@+id/encounter_lat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/encounter_long"
-                            android:layout_toEndOf="@+id/encounter_id_label"
-                            android:layout_weight="0.5"
-
-                            android:text="Placeholder"
-                            android:textColor="@color/font" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/encounter_id_label"
-                            android:layout_width="96dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/encounter_lat_label"
-                            android:layout_weight="0.5"
-                            android:text="Encounter ID:"
-                            android:textColor="@color/font" />
-
-                        <TextView
-                            android:id="@+id/encounter_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_below="@+id/encounter_lat"
-                            android:layout_toRightOf="@+id/encounter_id_label"
-                            android:layout_weight="0.6"
-
-                            android:text="Placeholder"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/font" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/individual_name"
-                            android:layout_width="120dp"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/encounter_date_label"
-                            android:layout_weight="0.4"
-                            android:text="Individual Name:"
-                            android:textColor="@color/font" />
-
-                        <TextView
-                            android:id="@+id/individual_name_string"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@id/encounter_long_label"
-                            android:layout_alignStart="@+id/encounter_lat"
-                            android:layout_weight="0.6"
-                            android:paddingLeft="0dp"
-                            android:text="Placeholder"
-                            android:textColor="@color/font" />
-                    </LinearLayout>
-                </LinearLayout>
+                </android.support.v7.widget.CardView>
             </LinearLayout>
 
 
