@@ -94,7 +94,8 @@ public class SyncerService extends IntentService {
                 Log.i(TAG,"filename Uploading..."+filename);
                 String userNetworkPref = utilities.getSyncSharedPreference(name);
 
-                if(!userNetworkPref.equals(this.getResources().getString(R.string.anyString)) && !utilities.getNetworkType().equals(utilities.getSyncSharedPreference(name))){
+                if(utilities.getNetworkType().equals(getResources().getString(R.string.wifiString))){}
+                else if(!utilities.getNetworkType().equals(utilities.getSyncSharedPreference())){
                     Log.i(TAG,"Network preferences donot match");
                     c.moveToNext();
                     continue;

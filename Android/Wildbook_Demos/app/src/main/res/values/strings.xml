@@ -23,7 +23,7 @@
     <string name="imageUploadedString">Image(s) Uploaded!</string>
     <string name="anotherIncidentString">Report another Incident?</string>
     <string name="historyString">Your Contribution</string>
-    <string name="wifiString">Wifi</string>
+    <string name="wifiString">Wifi Only</string>
     <string name="mobiledataString">Mobile Data</string>
     <string name="anyString">Any</string>
     <string name="online">You are online!</string>
@@ -50,8 +50,12 @@
     <string name="noimageselected">No Image(s) selected</string>
     <string name="requestimageselection">Please select atleast ONE image to upload</string>
     <string name="selectallString">Select All</string>
-    <string name="unselectallString">Unselect All</string>
+    <string name="unselectallString">Deselect All</string>
     <string name="maxuploadString">Please select upto 10 images only</string>
     <string name="maxuploadHeaderString">Maximum Upload Limit</string>
     <string name="encounterDetailsLabel"><u>Encounter Details</u></string>
+    <string name="mobiledatacost">Data charges may apply. Agree?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="userdetails">User Details</string>
 </resources>

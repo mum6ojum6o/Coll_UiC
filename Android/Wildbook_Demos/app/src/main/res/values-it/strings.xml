@@ -47,4 +47,11 @@
     <string name="sync">Sincronizzare</string>
     <string name="logout">Disconnettersi</string>
     <string name="syncpreferences">Preferenze di sincronizzazione</string>
+    <string name="noimageselected">Nessuna immagine selezionata</string>
+    <string name="requestimageselection">Si prega di selezionare almeno una immagine da caricare</string>
+    <string name="selectallString">Seleziona tutto</string>
+    <string name="unselectallString">Deselezionare tutto</string>
+    <string name="maxuploadString">Seleziona solo fino a 10 immagini</string>
+    <string name="maxuploadHeaderString">Limite di caricamento massimo</string>
+    <string name="encounterDetailsLabel"><u>Dettagli dell\'incontro</u></string>
 </resources>

@@ -255,6 +255,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+       // ActivityUpdater.activeActivity=this;
         openBackgroundThread();
         //mCapturedPics.clear();
         if(sortFilesToLatest(mImageFolder).length>0) {
@@ -317,6 +318,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         if(mSensor!=null){
             mSensorManager.unregisterListener(this);
         }
+        ActivityUpdater.activeActivity=null;
     }
     private Size mPreviewSize;
     private String mCameraId;
@@ -1063,25 +1065,31 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
      */
     private void getGeoTagData(final String imagePath){
         try {
-            mFusedLocationClient.getLastLocation()
-                    .addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                mLocation = task.getResult();
-                                try{
-                                    ExifInterface exif = new ExifInterface(imagePath);
-                                    exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE,GPS.convert(mLocation.getLatitude()));
-                                    exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,GPS.latitudeRef(mLocation.getLatitude()));
-                                    exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE,GPS.convert(mLocation.getLongitude()));
-                                    exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(mLocation.getLongitude()) );
-                                    SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-                                    exif.setAttribute(ExifInterface.TAG_DATETIME,fmt_Exif.format(new Date(mLocation.getTime())));
-                                    exif.saveAttributes();
-                                }catch(IOException e){e.printStackTrace();}
+            if(ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION")
+                    == PackageManager.PERMISSION_GRANTED){
+                mFusedLocationClient.getLastLocation()
+                        .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Location> task) {
+                                if (task.isSuccessful() && task.getResult() != null) {
+                                    mLocation = task.getResult();
+                                    try {
+                                        ExifInterface exif = new ExifInterface(imagePath);
+                                        exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, GPS.convert(mLocation.getLatitude()));
+                                        exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, GPS.latitudeRef(mLocation.getLatitude()));
+                                        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, GPS.convert(mLocation.getLongitude()));
+                                        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, GPS.longitudeRef(mLocation.getLongitude()));
+                                        SimpleDateFormat fmt_Exif = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                                        exif.setAttribute(ExifInterface.TAG_DATETIME, fmt_Exif.format(new Date(mLocation.getTime())));
+                                        exif.saveAttributes();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                        }
-                    });
+                        });
+            }
+
         }catch(SecurityException e){e.printStackTrace();}
 
     }
@@ -1246,4 +1254,5 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             mOrientation=UPSIDE_DOWN;
         }*/
     }
+
 }

@@ -148,10 +148,12 @@ public class Utilities {
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG,"+ve Button");
                        // Toast.makeText(mContext,"positive Button",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,R.string.uploadRequestOnNoNetwork,Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.wifiString));
                         //TODO - call a function that enters records to the SQLite database
                         //Challenge- how to get the values from the UploadCamPics class?
                        insertRecords();
+
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
                         ((Activity)mContext).finish();
                     }
@@ -160,16 +162,18 @@ public class Utilities {
                     @Override
                     public void onClick(DialogInterface dialog, int id){
                       //  Log.i(TAG," -ve Button");
-                        Toast.makeText(mContext,"negative Button",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext,"negative Button",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,R.string.uploadRequestOnNoNetwork,Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.mobiledataString));
                         //TODO - call a function that enters records to the SQLite database
                         insertRecords();
+
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
                         ((Activity)mContext).finish();
 
                     }
-                })
-                .setNeutralButton(R.string.anyString,new DialogInterface.OnClickListener(){
+                });
+                /*.setNeutralButton(R.string.anyString,new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int id){
                         Log.i(TAG," = Button");
@@ -180,7 +184,7 @@ public class Utilities {
                         insertRecords();
                         ((Activity)mContext).finish();
                     }
-                });
+                });*/
         return mAlertDialogBuilder;
     }
     /*****************************************************************
@@ -608,8 +612,7 @@ public void setCurrentIdentity(String zzxxyz){
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder;
         PendingIntent contentIntent=null;
-        mBuilder =
-                new NotificationCompat.Builder(mContext)
+        mBuilder = new NotificationCompat.Builder(mContext)
                         .setContentTitle("Wildbook")
                         .setAutoCancel(true)
                         .setStyle(new NotificationCompat.BigTextStyle()

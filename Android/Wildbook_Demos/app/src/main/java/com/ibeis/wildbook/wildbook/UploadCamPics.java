@@ -123,7 +123,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                         new Thread(task).start();
                         Log.i(TAG, "redirecting....");
                         //redirect(imagesNames.size(), imagesNames.size());
-
+                        Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(UploadCamPics.this, MainActivity.class));
                         finish();
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
@@ -191,17 +191,18 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                          Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
                          } **************************************/
                     } else {
-                        //this is running on the main thread!!!!!!!!
+
                         ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
                         Utilities utility = new Utilities(this, mSelectedImages, dbHelper);
                         utility.prepareBatchForInsertToDB(false);
                         Log.i(TAG, "Loggedin as: " + utility.getCurrentIdentity());
                         if (!(utility.checkSharedPreference(utility.getCurrentIdentity()))) {
-                            utility.connectivityAlert().show();
+                            utility.connectivityAlert().show(); //show preferences dialog.
                         } else {
+                            Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
                             utility.insertRecords();
                             Log.i(TAG, "Results saved to SQLite3");
-                            Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
+
                             // redirect(0, 0);
                             startActivity(new Intent(UploadCamPics.this, MainActivity.class));
                             finish();
@@ -221,7 +222,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                     tv1.setText(" ");
                     dialog.show();
                 }
-                else{
+                else{//no images selected...
                     Dialog dialog = new Dialog(UploadCamPics.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);

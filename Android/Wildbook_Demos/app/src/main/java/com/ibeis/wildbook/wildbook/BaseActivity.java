@@ -1,8 +1,11 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -25,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -44,6 +48,7 @@ import java.util.ArrayList;
 
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    protected View LAYOUT;
     protected GoogleApiClient mGoogleApiClient;
     protected GoogleSignInAccount googleSignInAccount;
     private ImageView mCircleImageView;
@@ -51,7 +56,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     private MenuItem menuItem;
     private RadioGroup mRadioGroup ;
     private static final String TAG="BaseActivity";
-    @Override
+    protected AlertDialog.Builder mAlertDialogBuilder;
+    protected String mFirstName=null,mLastName=null,mEmail=null;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -90,7 +96,9 @@ public void onResume() {
     if(googleSignInAccount!=null){
         Log.i(TAG,"LastSignedInAccount");
         Uri uri = googleSignInAccount.getPhotoUrl();
-
+        mFirstName = googleSignInAccount.getGivenName();
+        mLastName = googleSignInAccount.getFamilyName();
+        mEmail = googleSignInAccount.getEmail();
         Glide.with(getApplicationContext())
                 .load(uri)
                 .asBitmap()
@@ -230,6 +238,7 @@ public void onResume() {
         Log.i(TAG,"In onOptionsItemsSelected");
         switch(item.getItemId()){
             case R.id.menu_name:
+                showUserInfoDialog();
                 return true;
 
             case R.id.menu_sync:
@@ -246,7 +255,36 @@ public void onResume() {
         }
         return false;
     }
+    /*************************
+     * Inflates the dialog to view user information
+     * ******************************/
 
+   public void  showUserInfoDialog(){
+    final Dialog dialog = new Dialog(this);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.setContentView(R.layout.user_profile);
+    dialog.setTitle(R.string.userdetails);
+    final ImageView userDisplayPic = (ImageView)dialog.findViewById(R.id.user_disp_pic);
+    TextView userNameDetails= (TextView)dialog.findViewById(R.id.user_name_details);
+    TextView userEmailDetails=(TextView)dialog.findViewById(R.id.user_email_details);
+       Glide.with(getApplicationContext())
+               .load(googleSignInAccount.getPhotoUrl())
+               .asBitmap()
+               .fitCenter()
+               .into(new BitmapImageViewTarget(userDisplayPic) {
+                   @Override
+                   protected void setResource(Bitmap resource) {
+                       RoundedBitmapDrawable circularBitmapDrawable =
+                               RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+
+                       circularBitmapDrawable.setCircular(true);
+                       userDisplayPic.setImageDrawable(circularBitmapDrawable);
+                   }
+               });
+       userNameDetails.setText(mFirstName+" "+mLastName);
+       userEmailDetails.setText(mEmail);
+       dialog.show();
+    }
     /*************************
      * Inflates the dialog to enable user select their Syncing preferences
      * ******************************/
@@ -259,16 +297,16 @@ public void onResume() {
         ArrayList<String> preferences = new ArrayList<>();
         preferences.add(getResources().getString(R.string.wifiString));
         preferences.add(getResources().getString(R.string.mobiledataString));
-        preferences.add(getResources().getString(R.string.anyString));
-        String getPref = util.getSyncSharedPreference(util.getCurrentIdentity());
+        //preferences.add(getResources().getString(R.string.anyString));
+        final String getPref = util.getSyncSharedPreference(util.getCurrentIdentity());
         Log.i(TAG, "selected pref="+getPref);
         mRadioGroup = (RadioGroup) dialog.findViewById(R.id.radio_group);
         RadioButton rb = new RadioButton(this);
         rb.setText(getResources().getString(R.string.wifiString));
         RadioButton rb2 = new RadioButton(this);
         rb2.setText(getResources().getString(R.string.mobiledataString));
-        RadioButton rb3 = new RadioButton(this);
-        rb3.setText(getResources().getString(R.string.anyString));
+        //RadioButton rb3 = new RadioButton(this);
+        //rb3.setText(getResources().getString(R.string.anyString));
         switch(preferences.indexOf(getPref)){
             case 0:
                 rb.setChecked(true);
@@ -276,12 +314,12 @@ public void onResume() {
             case 1:
                 rb2.setChecked(true);
                 break;
-            case 2:rb3.setChecked(true);
-                break;
+          /*  case 2:rb3.setChecked(true);
+                break;*/
         }
         mRadioGroup.addView(rb2);
         mRadioGroup.addView(rb);
-        mRadioGroup.addView(rb3);
+        //mRadioGroup.addView(rb3);
         dialog.show();
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -290,12 +328,33 @@ public void onResume() {
                 int childCount = radioGroup.getChildCount();
                 Log.i(TAG,"radioGroup="+childCount);
                 for (int x = 0; x < childCount; x++) {
-                    RadioButton btn = (RadioButton) radioGroup.getChildAt(x);
+                    final RadioButton btn = (RadioButton) radioGroup.getChildAt(x);
                     if (btn.getId() == i) {
-
+                        Log.i(TAG, "buttonn clicked"+i);
                         Log.e(TAG,"selected RadioButton->"+btn.getText().toString());
-                        btn.setChecked(true);
-                        new Utilities(getApplicationContext()).writeSyncPreferences(btn.getText().toString());
+                        if(btn.getText().toString().equals(getString(R.string.mobiledataString))){
+                            Log.i(TAG,"mobile data selected!!");
+                            mAlertDialogBuilder = new AlertDialog.Builder(BaseActivity.this);
+                            mAlertDialogBuilder.setMessage(R.string.mobiledatacost);
+                            mAlertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    btn.setChecked(true);
+                                    new Utilities(getApplicationContext()).writeSyncPreferences(btn.getText().toString());
+                                }
+                            });
+                            mAlertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //Do Nothing
+                                }
+                            });
+                            mAlertDialogBuilder.show();
+                        }
+                        else {
+                            btn.setChecked(true);
+                            new Utilities(getApplicationContext()).writeSyncPreferences(btn.getText().toString());
+                        }
                         dialog.hide();
                     }
                 }
@@ -310,6 +369,22 @@ public void onResume() {
         Log.i(TAG, "bye bye!! "+ new Utilities(this).getCurrentIdentity());
 
     }
-
+    public void  displaySnackBar(int message,int bgcolor){
+        Snackbar snack=null;
+        //setLAYOUT();
+        View snackView;
+        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);
+        else
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
+        snackView = snack.getView();
+        snackView.bringToFront();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
+    }
+    public void setLAYOUT(){
+        //LAYOUT=findViewById(R.id.display_history_layout);//setupLayout;
+        Log.i(TAG,"BaseActivity setLAYOUT!!");
+    }
 
 }

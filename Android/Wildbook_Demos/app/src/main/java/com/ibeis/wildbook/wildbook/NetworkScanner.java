@@ -38,13 +38,7 @@ public class NetworkScanner extends BroadcastReceiver {
 
             newNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if ((new Utilities(context).isNetworkAvailable() || (newNetworkInfo != null && newNetworkInfo.isConnected()))
-                    && networkInfo.getType() == ConnectivityManager.TYPE_WIFI
-                    && (new Utilities(mContext).getSyncSharedPreference()
-                            .equals(mContext.getResources()
-                            .getString(com.ibeis.wildbook.wildbook.R.string.wifiString)) ||
-                    new Utilities(mContext).getSyncSharedPreference()
-                            .equals(mContext.getResources()
-                                    .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) {
+                    && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 Log.i(TAG,"Wifi is connected");
                // Log.i(TAG, "Startring Service MainActivity is Running?" + MainActivity.MAIN_ACTIVITY_IS_RUNNING);
                 takeAction(context);
@@ -53,10 +47,7 @@ public class NetworkScanner extends BroadcastReceiver {
                     && networkInfo.isConnected()
                     && (new Utilities(mContext).getSyncSharedPreference()
                     .equals(mContext.getResources()
-                            .getString(com.ibeis.wildbook.wildbook.R.string.mobiledataString)) ||
-                    new Utilities(mContext).getSyncSharedPreference()
-                            .equals(mContext.getResources()
-                                    .getString(com.ibeis.wildbook.wildbook.R.string.anyString)))) { //if mobile data is connected.
+                            .getString(com.ibeis.wildbook.wildbook.R.string.mobiledataString)))) { //if mobile data is connected.
                 Log.i(TAG,"Mobiledata is connected");
                 /*Log.i("NetScanner", "Startring Service MainActivity is Running?"
                         + MainActivity.MAIN_ACTIVITY_IS_RUNNING);*/

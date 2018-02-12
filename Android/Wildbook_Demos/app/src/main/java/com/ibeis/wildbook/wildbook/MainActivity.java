@@ -80,7 +80,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
-    protected View LAYOUT;
+   // protected View LAYOUT;
     protected static int WARNING,POS_FEEDBACK;
     protected static final int ONLINE=1;
     // request code  for identifying the results obtained from location settings client
@@ -113,6 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
 
         //MAIN_ACTIVITY_IS_RUNNING=true;
+
         super.onCreate(savedInstanceState);
         NetworkScanner scanner = new NetworkScanner();
        /* getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -121,7 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         getSupportActionBar().setTitle(R.string.welcomeString);
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
-
+        //test
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -134,6 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
             setContentView(R.layout.activity_main);
             setLAYOUT();
+
        /* mAuth=FirebaseAuth.getInstance();
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar_main);
 
@@ -249,7 +251,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onResume(){
         super.onResume();
-
+        /*if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
+            super.displaySnackBar(R.string.offline, getColor(R.color.red));
+        }*/
         ActivityUpdater.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
         /*if(SyncerService.IsRunning){
@@ -603,7 +607,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         Log.i(TAG,"OnResume");
         selectedImages=null;
         MAIN_ACTIVITY_IS_RUNNING=false;
-        ActivityUpdater.activeActivity = this;
+        ActivityUpdater.activeActivity = null;
     }
 
 
@@ -623,7 +627,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;
-        snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
+        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);
+        else
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
         snackView = snack.getView();
         snackView.setBackgroundColor(bgcolor);
         snack.show();

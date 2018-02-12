@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
  ****************************************************/
 
 public class ActivityUpdater extends BroadcastReceiver {
-    public static Activity activeActivity;
+    public static BaseActivity activeActivity;
     public String TAG = "ActivityUpdater";
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,6 +32,17 @@ public class ActivityUpdater extends BroadcastReceiver {
                 else if(textToDisplay!=0){
                     Log.i(TAG,"Displaying Online Message");
                     ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
+                }
+            }
+            else {
+                if(textToDisplay== (R.string.offline) && textToDisplay!=0){
+                    Log.i(TAG,"Displaying Ofline Message to other Activities");
+                    activeActivity.setLAYOUT();
+                    activeActivity.displaySnackBar(textToDisplay, MainActivity.WARNING);
+                }
+                else if(textToDisplay!=0){
+                    Log.i(TAG,"Displaying Online Message to other Activities");
+                    activeActivity.displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
                 }
             }
             /*else if(){

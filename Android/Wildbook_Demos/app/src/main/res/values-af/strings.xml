@@ -49,5 +49,11 @@
     <string name="sync">Oplaai</string>
     <string name="logout">Teken uit</string>
     <string name="syncpreferences">Oplaai Voorkeure</string>
-
+    <string name="noimageselected">Geen prente gekies nie</string>
+    <string name="requestimageselection">Kies asseblief ten minste EEN prent om op te laai</string>
+    <string name="selectallString">Kies Alles</string>
+    <string name="unselectallString">Deselecteer alles</string>
+    <string name="maxuploadString">Kies asseblief slegs 10 foto\'s</string>
+    <string name="maxuploadHeaderString">Maksimum uploadlimiet</string>
+    <string name="encounterDetailsLabel"><u>Ontmoeting besonderhede</u></string>
 </resources>

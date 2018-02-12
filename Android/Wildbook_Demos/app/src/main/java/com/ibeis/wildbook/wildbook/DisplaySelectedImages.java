@@ -62,7 +62,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
        // mStorage= FirebaseStorage.getInstance().getReference();
        // databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
 
-        ArrayList<String> stringToUri = new ArrayList<String>();
+        ArrayList<String> stringToUri;
         selectedImages = getIntent().getStringArrayListExtra("selectedImages");
         stringToUri = getIntent().getStringArrayListExtra("ImageUris");
         if (stringToUri != null && selectedImages.get(0) != null) {
@@ -293,6 +293,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         new Thread(task).start();
         Log.i(TAG, "redirecting....to mainActivity");
         //redirect(selectedImages.size(), selectedImages.size());
+        Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
         startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
         finish();
     }

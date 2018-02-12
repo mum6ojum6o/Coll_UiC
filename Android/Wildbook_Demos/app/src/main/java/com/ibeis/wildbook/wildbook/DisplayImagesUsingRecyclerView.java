@@ -1,5 +1,6 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -88,6 +90,16 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                     recyclerView.setAdapter(adapter);
                     break;
                 case 404:
+                    Dialog dialog = new Dialog(DisplayImagesUsingRecyclerView.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_layout);
+                    dialog.setTitle(getResources().getString(R.string.file_not_found_error));
+                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+                    tv.setText(getResources().getString(R.string.sync_error));
+                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+                    tv1.setText("Your contributions could not retrieved. Either the server is down or you are not connected to the Internet");
+                    dialog.show();
+
                     errorMessage.setText(getResources().getString(R.string.server_offline));
                     errorMessage.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
@@ -156,71 +168,82 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
             findViewById(R.id.cardview_EncDetails_encompassing).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setVisibility(View.GONE);
-            new Thread(new Runnable() {
+            if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
+                setLAYOUT();
+                displaySnackBar(R.string.offline, getColor(R.color.red));
+            }
+            else {
+                new Thread(new Runnable() {
 
-                @Override
-                public void run() {
-                    try {
-                        if (android.os.Build.VERSION.SDK_INT > 9) {
-                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                            StrictMode.setThreadPolicy(policy);
-                        }
-                        URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        JSONArray jsonArray = null,reversedJSONArray=null;
-                        JSONObject jsonObject = null;
-                        int statusCode = httpURLConnection.getResponseCode();
-                        if (statusCode == HttpURLConnection.HTTP_OK) {
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                    httpURLConnection.getInputStream()));
-                            String line = null;
-                            StringBuilder sb = new StringBuilder();
-                            while ((line = reader.readLine()) != null) {
-                                Log.i(TAG, line);
-                                sb.append(line);
+                    @Override
+                    public void run() {
+                        try {
+                            if (android.os.Build.VERSION.SDK_INT > 9) {
+                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                StrictMode.setThreadPolicy(policy);
                             }
-                            String response = sb.toString();
-                            jsonArray = new JSONArray(response);
-                            reader.close();
-                            httpURLConnection.disconnect();
-                            ArrayList<String> imagePaths = new ArrayList<String>();
-
-                            if (jsonArray != null) {
-                                reversedJSONArray = new JSONArray();
-                                int size = jsonArray.length();
-                                for (int i = 0; i < size; i++) {
-                                    if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
-                                        imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                            URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
+                            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                            JSONArray jsonArray = null, reversedJSONArray = null;
+                            JSONObject jsonObject = null;
+                            int statusCode = httpURLConnection.getResponseCode();
+                            if (statusCode == HttpURLConnection.HTTP_OK) {
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                        httpURLConnection.getInputStream()));
+                                String line = null;
+                                StringBuilder sb = new StringBuilder();
+                                while ((line = reader.readLine()) != null) {
+                                    Log.i(TAG, line);
+                                    sb.append(line);
                                 }
+                                String response = sb.toString();
+                                jsonArray = new JSONArray(response);
+                                reader.close();
+                                httpURLConnection.disconnect();
+                                ArrayList<String> imagePaths = new ArrayList<String>();
+
+                                if (jsonArray != null) {
+                                    reversedJSONArray = new JSONArray();
+                                    int size = jsonArray.length();
+                                    for (int i = 0; i < size; i++) {
+                                        if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
+                                            imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
+                                    }
 
 
-                                Message msg = mHandler.obtainMessage(200);
-                                Bundle bundle = new Bundle();
-                                bundle.putStringArrayList("JSON_RESPONE", imagePaths);
-                                bundle.putString("JSON_RESPONEI", response);
+                                    Message msg = mHandler.obtainMessage(200);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putStringArrayList("JSON_RESPONE", imagePaths);
+                                    bundle.putString("JSON_RESPONEI", response);
 
-                                msg.setData(bundle);
-                                msg.sendToTarget();
+                                    msg.setData(bundle);
+                                    msg.sendToTarget();
                             /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
                             recyclerView.setAdapter(adapter);*/
-                            } else {
-                                Message msg = mHandler.obtainMessage(404);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("404", getResources().getString(R.string.server_offline));
-                                msg.setData(bundle);
-                                msg.sendToTarget();
+                                } else {
+                                    Message msg = mHandler.obtainMessage(404);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("404", getResources().getString(R.string.server_offline));
+                                    msg.setData(bundle);
+                                    msg.sendToTarget();
+                                }
                             }
+                            //Thread.sleep(5000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.i(TAG, "Error!!");
+                            Message msg = mHandler.obtainMessage(404);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("404", getResources().getString(R.string.server_offline));
+                            msg.setData(bundle);
+                            msg.sendToTarget();
                         }
-                        //Thread.sleep(5000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.i(TAG, "Error!!");
+
+                        progressDialog.dismiss();
+
                     }
-
-                    progressDialog.dismiss();
-
-                }
-            }).start();
+                }).start();
+            }
         }
 
     }
@@ -245,6 +268,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     public void onResume() {
 
         super.onResume();
+        ActivityUpdater.activeActivity = this;
         //progressDialog.show();
         /*databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -306,6 +330,17 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         });*/
 
         ///this code should be in worker thread.
+        if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
+            setLAYOUT();
+            displaySnackBar(R.string.offline, getColor(R.color.red));
+        }
+        else{
+            if(LAYOUT!=null) {
+                setLAYOUT();
+                displaySnackBar(R.string.online, getColor(R.color.green));
+            }
+
+        }
         String naam = new Utilities(this).getCurrentIdentity();
         Log.i(TAG, "in on Resume:" + naam);
         if (naam.equals("No Email ID") || naam == null) {
@@ -339,5 +374,11 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
 
 
     }
-
+    public void setLAYOUT(){
+        LAYOUT=findViewById(R.id.display_history_layout);//setupLayout;
+    }
+    public void onPause(){
+        super.onPause();
+        ActivityUpdater.activeActivity=null;
+    }
 }
