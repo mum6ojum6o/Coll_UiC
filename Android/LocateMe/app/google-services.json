@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "35467221317",
+    "firebase_url": "https://locateme-885b5.firebaseio.com",
+    "project_id": "locateme-885b5",
+    "storage_bucket": "locateme-885b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35467221317:android:491747f0cd0df78f",
+        "android_client_info": {
+          "package_name": "com.mum6ojumbo.locateme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35467221317-t50urgv400ooimtlqodvc4ke96velvvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9sVqX6ZKxLf9vi_U_hDGknz4bBh0k2Dw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
