@@ -20,19 +20,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,7 +39,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-
 import java.util.ArrayList;
 
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
@@ -83,10 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 public void onStart(){
         super.onStart();
     Log.i(TAG,"in BASE OnStart");
-
-
 }
-
 
 @Override
 public void onResume() {
@@ -99,20 +91,7 @@ public void onResume() {
         mFirstName = googleSignInAccount.getGivenName();
         mLastName = googleSignInAccount.getFamilyName();
         mEmail = googleSignInAccount.getEmail();
-        Glide.with(getApplicationContext())
-                .load(uri)
-                .asBitmap()
-                .fitCenter()
-                .into(new BitmapImageViewTarget(mCircleImageView) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                        circularBitmapDrawable.setCircular(true);
-                        mCircleImageView.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+        displayProfilePic(uri,mCircleImageView);
     }
     else {
         Log.i(TAG,"LastSignedInAccount no present");
@@ -125,50 +104,19 @@ public void onResume() {
 
             googleSignInAccount = result.getSignInAccount();
             Log.i(TAG, "SilentLogin"+googleSignInAccount.getEmail());
-
             Uri uri = googleSignInAccount.getPhotoUrl();
-
-            Glide.with(getApplicationContext())
-                    .load(uri)
-                    .asBitmap()
-                    .fitCenter()
-                    .into(new BitmapImageViewTarget(mCircleImageView) {
-                        @Override
-                        protected void setResource(Bitmap resource) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                            circularBitmapDrawable.setCircular(true);
-                            mCircleImageView.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
+            displayProfilePic(uri,mCircleImageView);
             if (menuItem != null)
                 menuItem.setTitle(googleSignInAccount.getDisplayName());
-
-
-        } else {
-
+        }
+        else {
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
-                    //hideProgressDialog();
-                    if (googleSignInResult.getStatus().isSuccess()) {
-                        googleSignInAccount = googleSignInResult.getSignInAccount();
-                        Log.i(TAG, "SilentLogin"+" SUCCESSSS!!!" + googleSignInAccount.getEmail());
-                        Glide.with(getApplicationContext())
-                                .load(googleSignInAccount.getPhotoUrl())
-                                .asBitmap()
-                                .fitCenter()
-                                .into(new BitmapImageViewTarget(mCircleImageView) {
-                                    @Override
-                                    protected void setResource(Bitmap resource) {
-                                        RoundedBitmapDrawable circularBitmapDrawable =
-                                                RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                                        circularBitmapDrawable.setCircular(true);
-                                        mCircleImageView.setImageDrawable(circularBitmapDrawable);
-                                    }
-                                });
+                if (googleSignInResult.getStatus().isSuccess()) {
+                    googleSignInAccount = googleSignInResult.getSignInAccount();
+                    Log.i(TAG, "SilentLogin"+" SUCCESSSS!!!" + googleSignInAccount.getEmail());
+                    displayProfilePic(googleSignInAccount.getPhotoUrl(),mCircleImageView);
                         if (menuItem != null)
                             menuItem.setTitle(googleSignInAccount.getDisplayName());
 
@@ -181,7 +129,7 @@ public void onResume() {
     }
             Log.i(TAG,"in BASE OnResume");
 
-        }
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -190,6 +138,10 @@ public void onResume() {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         startActivity(new Intent(getApplicationContext(),Login.class));
     }
+
+    /*****************
+     * signs User out of the application
+     ****************/
     protected void signOut() {
         final Context ctx=getApplicationContext();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -200,7 +152,7 @@ public void onResume() {
                         mGoogleApiClient=null;
                         finish();
                         ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(ctx, MainActivity.class);
+                        Intent intent = new Intent(ctx, Login.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         BaseActivity.this.finish();
                         startActivity(intent);
@@ -211,11 +163,11 @@ public void onResume() {
 
     }
 
-    /**********
+    /****************
      * Inflates the menu options to be displayed in the ActionBar
      * @param menu
      * @return
-     */
+     *****************/
      public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.actionbar_options,menu);
         if(menuItem ==null){
@@ -260,30 +212,17 @@ public void onResume() {
      * ******************************/
 
    public void  showUserInfoDialog(){
-    final Dialog dialog = new Dialog(this);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    dialog.setContentView(R.layout.user_profile);
-    dialog.setTitle(R.string.userdetails);
-    final ImageView userDisplayPic = (ImageView)dialog.findViewById(R.id.user_disp_pic);
-    TextView userNameDetails= (TextView)dialog.findViewById(R.id.user_name_details);
-    TextView userEmailDetails=(TextView)dialog.findViewById(R.id.user_email_details);
-       Glide.with(getApplicationContext())
-               .load(googleSignInAccount.getPhotoUrl())
-               .asBitmap()
-               .fitCenter()
-               .into(new BitmapImageViewTarget(userDisplayPic) {
-                   @Override
-                   protected void setResource(Bitmap resource) {
-                       RoundedBitmapDrawable circularBitmapDrawable =
-                               RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                       circularBitmapDrawable.setCircular(true);
-                       userDisplayPic.setImageDrawable(circularBitmapDrawable);
-                   }
-               });
-       userNameDetails.setText(mFirstName+" "+mLastName);
-       userEmailDetails.setText(mEmail);
-       dialog.show();
+       final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.user_profile);
+        dialog.setTitle(R.string.userdetails);
+        final ImageView userDisplayPic = (ImageView)dialog.findViewById(R.id.user_disp_pic);
+        TextView userNameDetails= (TextView)dialog.findViewById(R.id.user_name_details);
+        TextView userEmailDetails=(TextView)dialog.findViewById(R.id.user_email_details);
+        displayProfilePic(googleSignInAccount.getPhotoUrl(),userDisplayPic);
+        userNameDetails.setText(mFirstName+" "+mLastName);
+        userEmailDetails.setText(mEmail);
+        dialog.show();
     }
     /*************************
      * Inflates the dialog to enable user select their Syncing preferences
@@ -314,8 +253,6 @@ public void onResume() {
             case 1:
                 rb2.setChecked(true);
                 break;
-          /*  case 2:rb3.setChecked(true);
-                break;*/
         }
         mRadioGroup.addView(rb2);
         mRadioGroup.addView(rb);
@@ -387,4 +324,24 @@ public void onResume() {
         Log.i(TAG,"BaseActivity setLAYOUT!!");
     }
 
+    /*****************
+     * fucntion to render the profile picture of the user.
+     *  @param uri - Uri of the users' profile picture.
+     ****************/
+    public void displayProfilePic(Uri uri, final ImageView anImageView){
+        Glide.with(getApplicationContext())
+                .load(uri)
+                .asBitmap()
+                .fitCenter()
+                .into(new BitmapImageViewTarget(anImageView) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+
+                        circularBitmapDrawable.setCircular(true);
+                        anImageView.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+    }
 }

@@ -12,7 +12,7 @@
     </string-array>
     <string name="welcomeString">Welcome To Wildbook!</string>
     <string name="reportEncounterString"> Report Encounter </string>
-    <string name="uploadPicsString">Upload Picture(s)</string>
+    <string name="uploadPicsString">Upload Encounter(s)</string>
     <string name="signoutString">Sign Out</string>
     <string name="uploadString">Upload</string>
     <string name="discardString">Discard</string>
@@ -38,7 +38,7 @@
     <string name="sharedpreferencesFileName">com.example.arjan_test.PREFERENCES_FILE</string>
     <string name="imageloading">Loading Images...</string>
     <string name="encounterdetails">Encounter Details</string>
-    <string name="live_encounter">Report Encounter</string>
+    <string name="live_encounter">Capture Encounter</string>
     <string name="uploadRequestOnNoNetwork">The images will be uploaded on the availability of appropriate network!</string>
     <string name="server_offline">Unfortunately, you contribution could not be retrieved.\n Please try again after sometime</string>
     <string name="sync_error">There was an issue during syncing. Please try again after some time</string>
@@ -58,4 +58,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="userdetails">User Details</string>
+    <string name="thankyou">Hurray!</string>
+    <string name="whatnext">We appreciate your contribution to the Wildbook cause.
+        What next? While we process the encounter you posted, you can check out your contributions
+        by clicking on the "Your Contibutions" button.
+    </string>
+    <string name="loadingImages">Loading Images...</string>
 </resources>

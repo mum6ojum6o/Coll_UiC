@@ -294,7 +294,10 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         Log.i(TAG, "redirecting....to mainActivity");
         //redirect(selectedImages.size(), selectedImages.size());
         Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
+        Intent intent = new Intent(DisplaySelectedImages.this,MainActivity.class);
+        intent.putExtra("UploadRequested",true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 

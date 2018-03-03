@@ -54,4 +54,9 @@
     <string name="maxuploadString">Seleziona solo fino a 10 immagini</string>
     <string name="maxuploadHeaderString">Limite di caricamento massimo</string>
     <string name="encounterDetailsLabel"><u>Dettagli dell\'incontro</u></string>
+    <string name="thankyou">Hurray!</string>
+    <string name="whatnext">We appreciate your contribution to the Wildbook cause.
+        What next? While we process the encounter you posted, you can check out your contributions
+        by clicking on the "Your Contibutions" button.
+    </string>
 </resources>

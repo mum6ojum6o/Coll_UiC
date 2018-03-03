@@ -2,6 +2,7 @@ package com.ibeis.wildbook.wildbook;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -37,6 +38,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -182,6 +184,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         LinearLayout ll = (LinearLayout)findViewById(R.id.circular_image_view_layout);
         mCricleImageView = action.getCustomView().findViewById(R.id.circle_imgeview);
         action.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);*/
+       Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
+        if(getIntent().hasExtra("UploadRequested"))
+            DisplayDialogue();
 
     }
 
@@ -280,7 +285,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             finish();
 
         }*/
+        Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
 
+        if(getIntent().hasExtra("UploadRequested"))
+            DisplayDialogue();
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
 
@@ -317,6 +325,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             case R.id.GallUpload:
 
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")==PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), R.string.maxuploadString, Toast.LENGTH_LONG).show();
                     requestPictureGalleryUpload();
                 }
                 else{
@@ -400,6 +409,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     if (mClipData.getItemCount() > 10) {
                         Log.i(TAG, "More than 10 images selected");
                         Toast.makeText(getApplicationContext(), R.string.maxuploadString, Toast.LENGTH_LONG).show();
+                        requestPictureGalleryUpload();
                     } else {
                         ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -653,7 +663,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     /********
      * performs User Logout operations
      */
-    protected void signOut() {
+   /* protected void signOut() {
        final Context ctx = getApplicationContext();
         //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
         if(mGoogleApiClient.isConnected()) {
@@ -676,7 +686,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     }
             );
         }
-    }
+    }*/
 
     /***********************
      * Method to initialize loaction request
@@ -741,9 +751,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     });
 
     }
+    protected void onNewIntent(Intent newIntent){
+        super.onNewIntent(newIntent);
+        setIntent(newIntent);
+    }
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         mLocationSettingsRequest = builder.build();
+    }
+    protected void DisplayDialogue(){
+        getIntent().removeExtra("UploadRequested");
+        onNewIntent(getIntent());
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setTitle(R.string.thankyou);
+        TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+        tv.setText(R.string.thankyou);
+        TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+        tv1.setText(R.string.whatnext);
+        dialog.show();
+
     }
 }

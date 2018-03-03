@@ -56,4 +56,9 @@
     <string name="maxuploadString">Kies asseblief slegs 10 foto\'s</string>
     <string name="maxuploadHeaderString">Maksimum uploadlimiet</string>
     <string name="encounterDetailsLabel"><u>Ontmoeting besonderhede</u></string>
+    <string name="thankyou">Hurray!</string>
+    <string name="whatnext">We appreciate your contribution to the Wildbook cause.
+        What next? While we process the encounter you posted, you can check out your contributions
+        by clicking on the "Your Contibutions" button.
+    </string>
 </resources>

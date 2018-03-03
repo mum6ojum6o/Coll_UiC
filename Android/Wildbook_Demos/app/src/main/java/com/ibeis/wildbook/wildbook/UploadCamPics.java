@@ -68,6 +68,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
     private ArrayList<Uri> imagesUris=new ArrayList<Uri>();
     private ArrayList<String> imagesNames = new ArrayList<String>();
     private ArrayList<String>mSelectedImages = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -124,7 +125,10 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                         Log.i(TAG, "redirecting....");
                         //redirect(imagesNames.size(), imagesNames.size());
                         Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(UploadCamPics.this, MainActivity.class));
+                        Intent intent = new Intent(UploadCamPics.this,MainActivity.class);
+                        intent.putExtra("UploadRequested",true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         finish();
                     /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
                     util.uploadPictures(imagesNames);
@@ -202,9 +206,9 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                             Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
                             utility.insertRecords();
                             Log.i(TAG, "Results saved to SQLite3");
-
-                            // redirect(0, 0);
-                            startActivity(new Intent(UploadCamPics.this, MainActivity.class));
+                            Intent intent = new Intent(UploadCamPics.this,MainActivity.class);
+                            intent.putExtra("UploadRequested",true);
+                            startActivity(intent);
                             finish();
                         }
 

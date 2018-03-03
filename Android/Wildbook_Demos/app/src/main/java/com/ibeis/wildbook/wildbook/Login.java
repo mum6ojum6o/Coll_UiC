@@ -30,11 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import static com.google.android.gms.auth.api.signin.GoogleSignIn.getLastSignedInAccount;
 
 public class Login extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
-/*
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-*/
-    //public Button GoogleSignIn,EmailSignIn;
+
     public static final String TAG ="WildbookDemo";
     final static  private  int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
@@ -46,15 +42,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         Log.i(TAG,"in OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//      GoogleSignIn = (Button)findViewById(R.id.sign_in_button);
-        //EmailSignIn = (Button) findViewById(R.id.email_Button);
-        //GoogleSignIn.setOnClickListener(this);
-//      EmailSignIn.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-               // .requestIdToken(getString(R.string.default_web_client_id))
+               // .requestIdToken(getString(R.string.default_web_client_id))  /*disabled intentionally*/
                 .requestEmail()
                 .build();
         // [END config_signin]
@@ -64,19 +56,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        // [START initialize_auth]
-           //mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
-        /*if(null !=mAuth.getCurrentUser()){
-            updateUI(mAuth.getCurrentUser());
-        }*/
-
 
     }
     @Override
     public void onStart(){
         super.onStart();
-        // more understanding on OptionalPendingResult required....
         GoogleSignInAccount lastSignedInAccount =  getLastSignedInAccount(this);
         if(lastSignedInAccount!=null){
             firebaseAuthWithGoogle(lastSignedInAccount);
@@ -86,8 +70,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
 
 
             if (opr.isDone()) {
-                Log.i(TAG, "Result is Done!!");
-                // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+               // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
                 // and the GoogleSignInResult will be available instantly.
                 Log.d(TAG, "Got cached sign-in");
                 GoogleSignInResult result = opr.get();
@@ -119,14 +102,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.i(TAG,"LOGGED IN AS:"+acct.getEmail());
-           /* if(acct!=null)
-                updateUI(true);*/  //UNCOMMENT in PRODUCTIONS
-           //firebaseAuthWithGoogle(acct);
             redirect(acct.getEmail());
-            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
         } else {
             Log.i(TAG,"Result is NOT Success!!");
-            //Nothing.
         }
     }
 
@@ -168,39 +146,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 // [START_EXCLUDE silent]
                 progressDialog.show();
                 // [END_EXCLUDE]
-
                 //AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
                 redirect(acct.getEmail());
-
-                //Below Commented Code will help authentication user in Firebase...
-               /* mAuth.signInWithCredential(credential)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithCredential:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    Log.i(TAG, "Login Username:" + user.getEmail());
-                                    updateUI(user);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                    Toast.makeText(Login.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
-                                }
-
-                                // [START_EXCLUDE]
-                                progressDialog.dismiss();
-                                // [END_EXCLUDE]
-                            }
-                        });*/
-           /* }
-            else{
-                Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure you are connected to the Internet!",Toast.LENGTH_LONG).show();
-            }*/
-
         }
 
     /***********************
@@ -232,18 +179,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
-    /***************
+    /***********************************************
      * Button click Callback method
      * @param view
-     */
+     *******************************************/
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_in_button:
                 signIn();
                 break;
-            /*case R.id.email_Button:
-                break;*/
         }
     }
 

@@ -13,8 +13,16 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:id="@+id/errormsgtxtvw"
-    android:visibility="gone" />
-
+    android:text="placeholder"
+    android:textSize="25dp"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadingImgView"
+        android:gravity="center"
+        android:visibility="visible"
+        android:drawable="@drawable/ic_ellipsis_1s_200px"
+        />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -89,6 +89,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.imageView3_identified);
+                    holder.imageView.setBackgroundColor(mContext.getResources().getColor(R.color.red,null));
+                    holder.imageView.setPadding(10,10,10,10);
+                }
+                else{
+                    holder.imageView.setPadding(0,0,0,0);
                 }
                 Glide.with(mContext)
                         .load(uploadInfo)
@@ -171,6 +176,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     if(jsonObject.has("individualId")) {
                         individualId = jsonObject.get("individualId").toString();
                         intent.putExtra("individualId",individualId);
+
                     }
                     intent.putExtra("encounter_date",date);
                     intent.putExtra("longitude",longitude);

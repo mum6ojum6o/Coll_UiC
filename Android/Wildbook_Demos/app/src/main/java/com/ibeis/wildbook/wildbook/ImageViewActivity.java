@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.view.GestureDetectorCompat;
@@ -148,6 +149,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 individualId.setVisibility(View.VISIBLE);
                 mIndividualName=getIntent().getStringExtra("individualId");
                 individualName.setText(mIndividualName);
+                individualName.setTypeface(null,Typeface.BOLD);
                 individualName.setVisibility(View.VISIBLE);
                 individualName.setOnClickListener(this);
                 individualName.setPaintFlags(individualName.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);

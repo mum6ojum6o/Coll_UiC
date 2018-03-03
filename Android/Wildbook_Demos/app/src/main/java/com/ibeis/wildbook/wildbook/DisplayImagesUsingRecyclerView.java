@@ -25,6 +25,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -50,9 +53,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/*********
+/******************************************************************
  * Activity to preview the images uploaded by the user
- */
+ * Displays User Contribution.
+ *******************************************************************/
 public class DisplayImagesUsingRecyclerView extends BaseActivity {
     private static final int DOWNLOADING = 77;
     private static final int COMPLETE = 200;
@@ -69,6 +73,12 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                 case PROG_UPDATE:
                     break;
                 case 200:
+                    /* indicates when the user contributions have been downloaded
+                    successfully
+                    */
+                    loadingImageView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    errorMessage.setVisibility(View.GONE);
                     Bundle b = message.getData();
                     JSONArray jsonArray = null,reversedJSONArray=new JSONArray();
                     try {
@@ -90,6 +100,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                     recyclerView.setAdapter(adapter);
                     break;
                 case 404:
+                    loadingImageView.setVisibility(View.INVISIBLE);
                     Dialog dialog = new Dialog(DisplayImagesUsingRecyclerView.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
@@ -121,7 +132,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     // Creating Progress dialog
     ProgressDialog progressDialog;
     // StorageReference storageReference;
-
+    private ImageView loadingImageView;
 
 
     List<Uri> imagesList = new ArrayList<Uri>();
@@ -132,7 +143,6 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         super.onCreate(savedInstanceState);
         Log.i(TAG, getIntent().hasExtra("source") + " From Notification????");
         Log.i(TAG, getIntent().hasExtra("UploadedBy") + "User INFORMATION");
-        // Log.i(TAG, "checking user: "+new Utilities(this).checkUsername());
         String naam = new Utilities(this).getCurrentIdentity();
         String uploadedBy = getIntent().getStringExtra("UploadedBy");
         if (getIntent().hasExtra("source")
@@ -150,29 +160,27 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
             finish();
         } else {
             setContentView(R.layout.activity_display_images_using_recycler_view);
-            /*getSupportActionBar().setDisplayUseLogoEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setIcon(R.mipmap.wildbook2);
-            getSupportActionBar().setTitle(R.string.historyString);*/
-            /*action.setBackgroundDrawable(
-                    new ColorDrawable(getResources().getColor(R.color.action_bar, null)));*/
-
+            loadingImageView = (ImageView)findViewById(R.id.loadingImgView);
+            loadingImageView.setVisibility(View.VISIBLE);
+            int drawable = R.drawable.ic_ellipsis_1s_200px;
+            Glide.with(this).load(drawable).into(loadingImageView);
             // Assign id to RecyclerView.
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
             // Setting RecyclerView size true.
             recyclerView.setHasFixedSize(true);
-
+            recyclerView.setVisibility(View.INVISIBLE);
             // Setting RecyclerView layout as LinearLayout.
             recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 4));
             findViewById(R.id.cardview_EncDetails_encompassing).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
-            errorMessage.setVisibility(View.GONE);
+            errorMessage.setText(R.string.loadingImages);
+
             if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
                 setLAYOUT();
                 displaySnackBar(R.string.offline, getColor(R.color.red));
             }
             else {
+                //initiate the download of user contribution in a worker thread
                 new Thread(new Runnable() {
 
                     @Override
