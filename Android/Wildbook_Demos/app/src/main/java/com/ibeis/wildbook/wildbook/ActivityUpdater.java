@@ -21,10 +21,8 @@ public class ActivityUpdater extends BroadcastReceiver {
         int textToDisplay = intent.getIntExtra("string",0);
 
         if (activeActivity!=null){
-            //do the updating....
-            //this is just a test.
-            if(activeActivity instanceof MainActivity){
 
+            if(activeActivity instanceof MainActivity){
                 if(textToDisplay== (R.string.offline) && textToDisplay!=0) {
                     Log.i(TAG,"Displaying Ofline Message");
                     ((MainActivity) activeActivity).displaySnackBar(textToDisplay, MainActivity.WARNING);
@@ -32,6 +30,16 @@ public class ActivityUpdater extends BroadcastReceiver {
                 else if(textToDisplay!=0){
                     Log.i(TAG,"Displaying Online Message");
                     ((MainActivity)activeActivity).displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
+                }
+            }
+            else if(activeActivity instanceof DisplayImagesUsingRecyclerView){
+                if(textToDisplay== (R.string.offline) && textToDisplay!=0) {
+                    Log.i(TAG,"Displaying Ofline Message");
+                    ((DisplayImagesUsingRecyclerView) activeActivity).displaySnackBar(textToDisplay, MainActivity.WARNING);
+                }
+                else if(textToDisplay!=0){
+                    Log.i(TAG,"Displaying Online Message");
+                    ((DisplayImagesUsingRecyclerView)activeActivity).displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
                 }
             }
             else {
@@ -45,10 +53,6 @@ public class ActivityUpdater extends BroadcastReceiver {
                     activeActivity.displaySnackBar(textToDisplay,MainActivity.POS_FEEDBACK);
                 }
             }
-            /*else if(){
-
-            }*/
-
         }
     }
 }

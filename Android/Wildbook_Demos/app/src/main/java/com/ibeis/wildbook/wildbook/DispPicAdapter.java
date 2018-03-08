@@ -26,44 +26,41 @@ import java.util.List;
  * Adapter to display previews of images that are to be uploaded.
  **********************************/
 
-
 public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHolder> {
-
     Context context;
     List<Uri> MainImageUploadInfoListUris;
     ArrayList<String> mImagePaths;
     List<Integer> mSelectedImages;//holds positions of the images selected.
-    boolean longClicked;
+    List<ViewHolder> viewHoldersList;
+    boolean mLongClicked;
     public static final String TAG="DispPicAdapter";
+    public int mImagesSelectedCount;
     public DispPicAdapter(Context context, List<Uri> TempList,ArrayList<String>imagePaths) {
-
         this.MainImageUploadInfoListUris = TempList;
         this.mImagePaths = imagePaths;
         this.context = context;
-        longClicked = false;
+        mLongClicked = false;
         Log.i("RecyclerViewAdapter","constructor!!!"+"TempList.size()="+TempList.size());
         this.mSelectedImages = new ArrayList<Integer>();
+        this.mImagesSelectedCount=0;
+        viewHoldersList=new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_items, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(view);
         Log.i("RecyclerViewAdapter","ON_create_VIEW_HOLDER!!!");
+        viewHoldersList.add(viewHolder);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Uri UploadInfo = MainImageUploadInfoListUris.get(position);
-
-      //  String path = testImageNames.get(position);
         BitmapFactory.Options mBitOptions = new BitmapFactory.Options();
         mBitOptions.inScaled=true;
         mBitOptions.inSampleSize=2;
-        // holder.imageNameTextView.setText(UploadInfo.getImageName());
         Log.i("RecyclerViewAdapter","ON_BIND_VIEW_HOLDER!!!");
         //Loading image from Glide library.
         if(context instanceof UploadCamPics) {
@@ -97,18 +94,34 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-
         return MainImageUploadInfoListUris.size();
     }
-
+    public void setmLongClicked(boolean val){
+        mLongClicked=val;
+    }
     /*public ArrayList<Integer> getSelectedImages(){
         return (ArrayList)mSelectedImages;
     }*/
 
+    public void updateAllViewHolderVisibilityStatus(boolean val){
+        for(ViewHolder vh:viewHoldersList)
+            vh.setImageViewisSelected(val);
+    }
+
+    /***********
+     * mImagesSelectedCount variable helps in keeping track of the images selcted by the user
+     * However, during the Select All and Deselect All button click event we need to explicitly
+     * set the value of the variable to the total number of ViewHoldersCreated.
+     * This method is used to set the mImagesSelectedCount = size of mViewHoldersList.
+     * @param count
+     */
+    public void setmImagesSelectedCount(int count){
+        mImagesSelectedCount=count;
+    }
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
 
         public ImageView imageView,imageView2;
-        public TextView imageNameTextView;
+        //public TextView imageNameTextView;
         public boolean imageViewisSelected;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -119,75 +132,69 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
             imageView.setOnClickListener(this);
             imageView.setOnLongClickListener(this);
             imageViewisSelected=false;
-            // imageNameTextView = (TextView) itemView.findViewById(R.id.ImageNameTextView);
         }
         public ViewHolder(View itemView, boolean updatedValue){
             super(itemView);
             imageViewisSelected=updatedValue;
-
         }
         @Override
         public void onClick(View view){
-            if( imageViewisSelected==false) {
-                Intent intent = new Intent(context, ImageViewActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Uri uri = MainImageUploadInfoListUris.get(getAdapterPosition());
-                //imageView2.setVisibility(View.VISIBLE);
-                //Uri uri = Uri.parse(new File(testImageNames.get(getAdapterPosition())).getPath());
-                String filePath = null;
-                if (mImagePaths.get(getAdapterPosition()) != null)
-                    filePath = new File(mImagePaths.get(getAdapterPosition())).getPath();
-                Log.i(TAG,"imagePaths count"+mImagePaths.size());
-                if ("content".equalsIgnoreCase(uri.getScheme())) {
-                    intent.putExtra("POS", uri.toString()); // current image..
-                    ArrayList<String> uriToStringPaths = new ArrayList<>();
-                    for(Uri aUri:MainImageUploadInfoListUris)
-                        uriToStringPaths.add(aUri.toString());
-                    intent.putStringArrayListExtra("OtherImageUris",uriToStringPaths);
-                }
-                else {
-                    intent.putExtra("filePath", filePath); //
-                    intent.putStringArrayListExtra("AllFiles", mImagePaths);
+            if(mLongClicked==false) {
+                if (imageViewisSelected == false) {
+                    Intent intent = new Intent(context, ImageViewActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Uri uri = MainImageUploadInfoListUris.get(getAdapterPosition());
+                    String filePath = null;
+                    if (mImagePaths.get(getAdapterPosition()) != null)
+                        filePath = new File(mImagePaths.get(getAdapterPosition())).getPath();
+                    Log.i(TAG, "imagePaths count" + mImagePaths.size());
+                    if ("content".equalsIgnoreCase(uri.getScheme())) {
+                        intent.putExtra("POS", uri.toString()); // current image..
+                        ArrayList<String> uriToStringPaths = new ArrayList<>();
+                        for (Uri aUri : MainImageUploadInfoListUris)
+                            uriToStringPaths.add(aUri.toString());
+                        intent.putStringArrayListExtra("OtherImageUris", uriToStringPaths);
+                    } else {
+                        intent.putExtra("filePath", filePath); //
+                        intent.putStringArrayListExtra("AllFiles", mImagePaths);
 
+                    }
+                    intent.putExtra("SelectedFilePosition", getAdapterPosition());
+                    intent.putExtra("Adapter", "DispPic");
+                    context.startActivity(intent);
+                } else {
+                    imageView2.setVisibility(View.VISIBLE);
+                    imageViewisSelected = true;
+                    mImagesSelectedCount++;
                 }
-                intent.putExtra("SelectedFilePosition",getAdapterPosition());
-                intent.putExtra("Adapter", "DispPic");
-                context.startActivity(intent);
+            }
+            else if(mLongClicked==true && imageViewisSelected == false){
+                imageView2.setVisibility(View.VISIBLE);
+                imageViewisSelected = true;
+                mImagesSelectedCount++;
             }
             else{
-                /*Glide.with(context).load(R.drawable.notification_sync_complete)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .fitCenter()
-                        .crossFade()
-                        .into(imageView2);*/
-                imageView2.setVisibility(View.VISIBLE);
-                imageViewisSelected=true;
+                imageView2.setVisibility(View.INVISIBLE);
+                imageViewisSelected=false;
+                mImagesSelectedCount--;
+
             }
+            if(mImagesSelectedCount==0)
+                mLongClicked=false;
         }
 
 
         @Override
         public boolean onLongClick(View view) {
             if(imageView2.getVisibility()==View.INVISIBLE &&  imageViewisSelected==false ) {
-               /* Glide.with(context).load(R.drawable.notification_sync_complete)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .fitCenter()
-                        .crossFade()
-                        .into(imageView2);*/
                 imageView2.setVisibility(View.VISIBLE);
                 imageViewisSelected=true;
-                /*mSelectedImages.add(getAdapterPosition());
-                Log.i("DispPicAdapter","Selecting "+mImagePaths.get(getAdapterPosition()));
-                imageViewisSelected = false;*/
-
-
-
+                mLongClicked=true;
+                mImagesSelectedCount++;
             }
             else if(imageView2.getVisibility()==View.VISIBLE  && imageViewisSelected==true ){
                 imageViewisSelected=false;
                 Log.i("DispPicAdapter","unselecting "+mImagePaths.get(getAdapterPosition()));
-               // mSelectedImages.remove(mSelectedImages.indexOf(getAdapterPosition()));
-                //imageView2.setVisibility(View.VISIBLE);
                 imageView2.setVisibility(View.INVISIBLE);
                 Log.i("DispPicAdapter", "You selected image " + getAdapterPosition());
             }
@@ -198,6 +205,9 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
                 imageView2.setVisibility(View.VISIBLE);
             }
             return true;
+        }
+        public void setImageViewisSelected(boolean val){
+            imageViewisSelected=val;
         }
 
     }

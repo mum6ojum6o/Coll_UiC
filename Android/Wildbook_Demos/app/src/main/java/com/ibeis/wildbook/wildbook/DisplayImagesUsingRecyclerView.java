@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -261,82 +262,13 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         super.onStart();
         // Assign activity this to progress dialog.
         progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
-
-        // Setting up message in Progress dialog.
-        /*progressDialog.setMessage(getResources().getString(R.string.imageloading));
-        progressDialog.show();*/
-        //creating a worker thread to get images from the network.
-
-
-
-
-    }
+     }
 
     @Override
     public void onResume() {
 
         super.onResume();
         ActivityUpdater.activeActivity = this;
-        //progressDialog.show();
-        /*databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.i(TAG,"DATA CHANGED!!!");
-                long recordsRead=0;
-                final long objeCount=snapshot.getChildrenCount();
-                if(null != snapshot.getValue()) {
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        long recordCount = snapshot.getChildrenCount();
-
-                        String storagePath = MainActivity.storagePath + "/" + postSnapshot.getValue();
-
-                        recordsRead++;
-
-                        Log.i(TAG, "snapshot_ChildCount" + objeCount);
-                        storageReference = FirebaseStorage.getInstance().getReference().child(storagePath);
-
-
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                imagesList.add(uri);
-                                Log.i(TAG, "Successfully Downloaded Uri!!!Size" + imagesList.size());
-                                if ((long) imagesList.size() == objeCount) {
-                                    Log.i(TAG, "ObjeCount=" + objeCount);
-                                    Collections.reverse(imagesList);
-                                    adapter = new RecyclerViewAdapter(getApplicationContext(), imagesList);
-                                    recyclerView.setAdapter(adapter);
-                                    // Hiding the progress dialog.
-                                    progressDialog.dismiss();
-                                }
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle any errors
-                                Log.i(TAG, "Something went wrong!!");
-                            }
-                        });
-                    }
-                }
-                else{
-                    Log.i(TAG,"No Contributions");
-                    Toast.makeText(getApplicationContext(),"No Contributions",Toast.LENGTH_LONG).show();
-                }
-                progressDialog.dismiss();
-
-                //Log.i(TAG,"Download completed!!!imagesList.SIZE()="+imagesList.size());
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Hiding the progress dialog.
-                progressDialog.dismiss();
-            }
-        });*/
-
         ///this code should be in worker thread.
         if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
             setLAYOUT();
@@ -379,14 +311,29 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
 
                     }
                 });
-
-
-    }
+        }
     public void setLAYOUT(){
         LAYOUT=findViewById(R.id.display_history_layout);//setupLayout;
     }
     public void onPause(){
         super.onPause();
         ActivityUpdater.activeActivity=null;
+    }
+    /**********************************************
+     * Method that displays a snackbar
+     * @param message to be displayed in the snackbar
+     * @param bgcolor background color of the snackbar
+     ***********************************************/
+    public void  displaySnackBar(int message,int bgcolor){
+        Snackbar snack=null;
+        View snackView;
+        setLAYOUT();
+        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);
+        else
+            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
+        snackView = snack.getView();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
     }
 }

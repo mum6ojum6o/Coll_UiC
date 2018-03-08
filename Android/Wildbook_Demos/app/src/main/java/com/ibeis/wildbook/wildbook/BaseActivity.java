@@ -1,17 +1,12 @@
 package com.ibeis.wildbook.wildbook;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
@@ -308,7 +303,6 @@ public void onResume() {
     }
     public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
-        //setLAYOUT();
         View snackView;
         if(message == com.ibeis.wildbook.wildbook.R.string.offline)
             snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);

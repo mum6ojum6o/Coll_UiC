@@ -115,17 +115,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
 
         //MAIN_ACTIVITY_IS_RUNNING=true;
-
         super.onCreate(savedInstanceState);
         NetworkScanner scanner = new NetworkScanner();
-       /* getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.welcomeString);
-        getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
         //test
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -137,53 +129,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
             setContentView(R.layout.activity_main);
             setLAYOUT();
-
-       /* mAuth=FirebaseAuth.getInstance();
-        mProgressBar = (ProgressBar)findViewById(R.id.progressBar_main);
-
-        final FirebaseUser firebaseUser = mAuth.getCurrentUser();*/
-        /*if(storagePath.equals("Photos/"))
-            storagePath = storagePath+firebaseUser.getEmail();
-         if(databasePath.equals("Photos/"))
-            databasePath = databasePath+firebaseUser.getUid();*/
-        /*Log.i(TAG,"storagePath"+storagePath);
-
-        Log.i(TAG,"databasePath"+databasePath);*/
-
-        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this *//* FragmentActivity *//*, this *//* OnConnectionFailedListener *//*)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();*/
-       /* if(firebaseUser==null){
-            finish();
-            startActivity(new Intent(this,Login.class));
-        }*/
         WARNING=getColor(R.color.red);
         POS_FEEDBACK=getColor(R.color.green);
         UserName=(TextView)findViewById(R.id.username);
-        //UserName.setText(firebaseUser.getEmail()+"!");
         RepEncounter = (Button) findViewById(R.id.RepEnc);
         UploadFromGallery=(Button)findViewById(R.id.GallUpload);
-        //mSync = (Button)findViewById(R.id.syncBtn);
-       // SignOutBut = (Button)findViewById(R.id.SingOut);
         History = (Button)findViewById(R.id.historyBtn);
 
-       // SignOutBut.setOnClickListener(this);
         RepEncounter.setOnClickListener(this);
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
         //mSync.setOnClickListener(this);
        Log.i("Login",Auth.GOOGLE_SIGN_IN_API.getName());
-       // mGoogleApiClient.connect();
-       /*ActionBar action =getSupportActionBar();
-       action.setCustomView(R.layout.circular_imageview_for_action_bar);
-        LinearLayout ll = (LinearLayout)findViewById(R.id.circular_image_view_layout);
-        mCricleImageView = action.getCustomView().findViewById(R.id.circle_imgeview);
-        action.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);*/
        Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
         if(getIntent().hasExtra("UploadRequested"))
             DisplayDialogue();
@@ -192,62 +149,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onStart() {
-
         super.onStart();
         MAIN_ACTIVITY_IS_RUNNING=true;
-       /* OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            //mAuth = FirebaseAuth.getInstance();
-            googleSignInAccount = result.getSignInAccount();
-            Log.i("SilentLogin",googleSignInAccount.getEmail());
-            UserName.setText(googleSignInAccount.getEmail());
-            Uri uri = googleSignInAccount.getPhotoUrl();
-            *//*Glide.with(this)
-                    .load(uri)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(mCricleImageView);*//*
-            Glide.with(getApplicationContext())
-                    .load(uri)
-                    .asBitmap()
-                    .fitCenter()
-                    .into(new BitmapImageViewTarget(mCricleImageView) {
-                        @Override
-                        protected void setResource(Bitmap resource) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-
-                            circularBitmapDrawable.setCircular(true);
-                            mCricleImageView.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
-
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            //showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    //hideProgressDialog();
-                    if (googleSignInResult.getStatus().isSuccess() ) {
-                        googleSignInAccount = googleSignInResult.getSignInAccount();
-                        Log.i("SilentLogin", googleSignInAccount.getEmail());
-                        UserName.setText(googleSignInAccount.getEmail() + "!");
-                    } else {
-                        Snackbar snack=Snackbar.make(LAYOUT,R.string.offline,Snackbar.LENGTH_LONG);
-                        View snackView = snack.getView();
-                        snackView.setBackgroundColor(WARNING);
-                        snack.show();
-                    }//else closes
-                }
-            });
-        }*/
     }
+
     @Override
     public void onStop(){
         super.onStop();
@@ -256,23 +161,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onResume(){
         super.onResume();
-        /*if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
-            super.displaySnackBar(R.string.offline, getColor(R.color.red));
-        }*/
         ActivityUpdater.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
-        /*if(SyncerService.IsRunning){
-            Log.i(TAG,"Service is running");
-            //mSync.setEnabled(false);
-        }
-        else{
-            Log.i(TAG,"Service is not running");
-            mSync.setEnabled(true);
-        }*/
         String naam=new Utilities(this).getCurrentIdentity();
-        /*String naam=null;
-        if(googleSignInAccount!=null)
-             naam = googleSignInAccount.getEmail();*/
         Log.i(TAG,""+new Utilities(this).getCurrentIdentity());
         if(new Utilities(this).getCurrentIdentity().equals("")){
             Log.i(TAG,"zzxxyz not set!!");
@@ -280,23 +171,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             finish();
         }
         Log.i(TAG,"in on Resume:"+ naam);
-       /* if(naam.equals("No Email ID")||naam==null||(naam.equals("")&& !(mGoogleApiClient.isConnected()))){
-         signOut();
-            finish();
-
-        }*/
-        Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
+        Log.i(TAG,"uploadRequested?:"+getIntent().hasExtra("UploadRequested"));
 
         if(getIntent().hasExtra("UploadRequested"))
             DisplayDialogue();
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
     }
 
-    /****************
+    /*************************
      *
      * Button click Callback
      * @param v
-     */
+     *************************/
     @Override
     public void onClick(View v){
         switch (v.getId()){
@@ -336,30 +222,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 if(new Utilities(this).isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
                 else {
-                    //MainActivity.displayOnlineStatus(MainActivity.OFFLINE);
                     displaySnackBar(R.string.offline,MainActivity.WARNING);
-
                 }
                 break;
-           /* case R.id.SingOut:
-                signOut();
-                break;*/
-           /* case R.id.syncBtn:
-                if(!SyncerService.IsRunning) {
-                    mSync.setEnabled(false);
-                    new Utilities(this).startSyncing();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Service is already Running!!",Toast.LENGTH_SHORT).show();
-                }
-                break;*/
-
         }
     }
-
-
-
-
 
 @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int []grantResults){
@@ -429,11 +296,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             }catch(Exception e){
                                 Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
                             }
-
-                          /*  if(selectedImages.get(0)==null){
-                                File f;
-                                getContentResolver().openInputStream(uri)
-                            }*/
                             cursor.close();
 
                         }
@@ -443,35 +305,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     }
                 } else if (data.getData() != null) {
                     Uri uri = data.getData();
-                         /*final int takeFlags = data.getFlags()
-                                 & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        //
-                         //getContentResolver().takePersistableUriPermission(uri,takeFlags);
-                         Cursor cursor = getContentResolver().query(uri,filePathColumn,null,null, null);
-
-                         Log.i(TAG,"Cursor Size:"+ cursor.getCount());
-                        cursor.moveToFirst();
-                        while(!cursor.isAfterLast()) {
-                            int columnIndex = cursor.getColumnIndexOrThrow(filePathColumn[0]);
-                            String imagePath = cursor.getString(columnIndex);
-                            if (null==imagePath){
-                                File f = new File(uri.getPath());
-                                imagePath=f.getAbsolutePath();
-                            }
-                            selectedImages.add(imagePath);
-                            cursor.moveToNext();
-                        }
-                        cursor.close();
-                }*/
-
-                    /*try {
-                        selectedImages.add(getFilePath(this, uri));
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_LONG).show();
-                    }*/
                     ArrayList<Uri> uris = new ArrayList<Uri>();
                     uris.add(uri);
                     try{
@@ -486,28 +319,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         }
         if(requestCode == REQUEST_CHECK_SETTINGS){
             Log.i(TAG,"REQUEST_CHECK_SETTTINGS");
-           /*LocationSettingsStates locationSettingsStates = LocationSettingsStates.fromIntent(data);
-            switch (requestCode) {
-                case REQUEST_CHECK_SETTINGS:
-                    switch (resultCode) {
-                        case Activity.RESULT_OK:
-                            // All required changes were successfully made
-                            Toast.makeText(getApplicationContext(), "Location Settings were selected", Toast.LENGTH_SHORT).show();
-                            break;
-                        case Activity.RESULT_CANCELED:
-                            // The user was asked to change settings, but chose not to
-                            Toast.makeText(getApplicationContext(), "Location Settings were not selected", Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-
-                            break;
-                    }*/
-                    startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
-
-
-
+            startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
         }
-
     }
 
     @SuppressLint("NewApi")
@@ -663,7 +476,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     /********
      * performs User Logout operations
      */
-   /* protected void signOut() {
+    protected void signOut() {
        final Context ctx = getApplicationContext();
         //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
         if(mGoogleApiClient.isConnected()) {
@@ -679,14 +492,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             Intent intent = new Intent(getApplicationContext(), Login.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                            Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
+                            Log.i(TAG,"Logging out from MainActivity");
                             new Utilities(MainActivity.this).setCurrentIdentity("");
                             MainActivity.this.finish();
                         }
                     }
             );
         }
-    }*/
+    }
 
     /***********************
      * Method to initialize loaction request
@@ -774,4 +587,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         dialog.show();
 
     }
+
 }

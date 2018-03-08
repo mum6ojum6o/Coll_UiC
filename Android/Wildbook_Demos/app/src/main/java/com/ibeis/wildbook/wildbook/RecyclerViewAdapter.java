@@ -38,6 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ArrayList<Uri> mMainImageUploadInfoList;
     JSONArray mJsonArray;
     private static final String  TAG="RecyclerViewAdapter";
+    private boolean mLongClicked =false;
     public RecyclerViewAdapter(Context context, ArrayList<Uri> TempList) {
 
         this.mMainImageUploadInfoList = TempList;
@@ -188,13 +189,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     e.printStackTrace();
                 }
             }
-           /* Glide
-                    .with(mContext)
-                    .load(uri) // the uri you got from Firebase
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .crossFade()
-                    .into(imageView);*/
+
         }
 
     }

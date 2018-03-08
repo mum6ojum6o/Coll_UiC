@@ -363,11 +363,7 @@ public void setCurrentIdentity(String zzxxyz){
        //close the database.
         db.close();
         //Start the Syncing Service.
-      /*  if(!SyncerService.IsRunning && !isNetworkAvailable()) {
-            startSyncing();
-        }*/
-
-    }
+     }
 
     }
 
@@ -381,9 +377,6 @@ public void setCurrentIdentity(String zzxxyz){
         if(!SyncerService.IsRunning) {
             intent.putExtra("SyncStarted", MainActivity.SYNC_STARTED);
             intent.putExtra("SyncComplete", MainActivity.SYNC_COMPLETE);
-           /* Log.i("Utilities", "Mainactivity.handler" + (MainActivity.handler == null) + " MainActivity.SYNC_STARTED=" +
-                    MainActivity.SYNC_STARTED + "MainActivity.SYNC_COMPLETE" + MainActivity.SYNC_COMPLETE);
-            intent.putExtra("Messenger", new Messenger(MainActivity.handler));*/
         }
         if(!SyncerService.IsRunning) {
             mContext.startService(intent);
@@ -395,71 +388,6 @@ public void setCurrentIdentity(String zzxxyz){
 
     }
 
-    /**********************************************************
-     * This method uploads pictures to Firebase.....
-     * and then redirects to the mainactivity....
-     **********************************************************/
-    /*public void uploadPictures(ArrayList<String> _images ){
-        ArrayList<ImageModel> imageModels=new ArrayList<ImageModel>();
-        for(String image:_images){
-            ImageModel anImage=new ImageModel(image);
-            imageModels.add(anImage);
-            //createPostRequest(image);
-        }
-
-        DatabaseReference databaseReference;
-        final Context context = mContext;
-        UploadTask upload = null;
-        StorageReference filePath = null;
-        StorageReference storage = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
-
-        final ArrayList<Uri> successUploads = new ArrayList<Uri>();
-        ArrayList<String> selectedImages=_images;
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        //StorageReference filePath=mStorage.child("Photos").child(mAuth.getCurrentUser().getEmail());
-        for (String s : selectedImages) {
-            Uri uploadImage = Uri.fromFile(new File(s));
-            filePath = storage.child("Photos/" + auth.getCurrentUser().getEmail()).child(uploadImage.getLastPathSegment());
-            String fileName = new File(s).getName();
-
-                upload = filePath.putFile(uploadImage);
-                String ImageUploadId = databaseReference.push().getKey();
-                databaseReference.child(ImageUploadId).setValue(fileName);
-
-
-        }
-        upload.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Log.i(TAG, "Error!");
-                Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                //
-
-                String fileName = downloadUrl.getLastPathSegment().toString();
-                Log.i(TAG,"Uploaded FILE:"+fileName);
-                ImageRecordDBRecord aRecord = new ImageRecordDBRecord();
-                aRecord.setFileName(fileName);
-                aRecord.setIsUploaded(true);
-                aRecord.setDate(new Date());
-                aRecord.setUsername(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                successUploads.add(downloadUrl);
-                ArrayList<ImageRecordDBRecord> aRec = new ArrayList<ImageRecordDBRecord>();
-                aRec.add(aRecord);
-                mRecord=new ArrayList<ImageRecordDBRecord>();
-                mRecord.add(aRecord);
-                insertRecords();
-
-            }
-        });
-        //redirect(successUploads.size(), selectedImages.size(),this,MainActivity.class);
-    }*/
 
     /*********************
      *
@@ -492,7 +420,6 @@ public void setCurrentIdentity(String zzxxyz){
      *
      *******************************************************/
     public void prepareBatchForInsertToDB(Boolean isUploaded) {
-        //FirebaseAuth auth = FirebaseAuth.getInstance();
         long encounterNum = getEncounterNumPreferences();
         mRecord=new ArrayList<ImageRecordDBRecord>();
         for (String filename : mImagePaths) {

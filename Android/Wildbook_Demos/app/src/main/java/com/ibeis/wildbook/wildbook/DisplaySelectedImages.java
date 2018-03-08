@@ -3,6 +3,7 @@ package com.ibeis.wildbook.wildbook;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -41,27 +42,13 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
     protected  ArrayList<Uri> imageUri = new ArrayList<Uri>();
     protected Button UploadBtn,DiscardBtn,SelectAllBtn,UnSelectAllBtn;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter ;
+    private DispPicAdapter adapter ;
     private ArrayList<String> mSelectedImages=new ArrayList<String>(); //represents the images selected after long press.
-    //protected StorageReference mStorage;
-    //protected FirebaseAuth mAuth;
-    //protected DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_grid_view);
         setContentView(R.layout.activity_camera_upload_preview);
-        /*getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.imagePreviewString);*/
-        /*action.setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
-       // mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser user = mAuth.getCurrentUser();
-       // mStorage= FirebaseStorage.getInstance().getReference();
-       // databaseReference = FirebaseDatabase.getInstance().getReference(MainActivity.databasePath);
-
         ArrayList<String> stringToUri;
         selectedImages = getIntent().getStringArrayListExtra("selectedImages");
         stringToUri = getIntent().getStringArrayListExtra("ImageUris");
@@ -86,8 +73,6 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             recyclerView.setLayoutManager(new GridLayoutManager(DisplaySelectedImages.this, 3));
             adapter = new DispPicAdapter(this, imageUri, selectedImages);
             recyclerView.setAdapter(adapter);
-            //  GridView gv = (GridView)findViewById(R.id.gridview);
-            //gv.setAdapter(new ImageAdapter(this,selectedImages));
             UploadBtn.setOnClickListener(this);
             DiscardBtn.setOnClickListener(this);
             SelectAllBtn.setOnClickListener(this);
@@ -97,6 +82,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             Toast.makeText(getApplicationContext(),"Unable to Load Image",Toast.LENGTH_LONG).show();
             startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
         }
+        setLAYOUT();
     }
     public void getSelectedImages(){
         for (int i=0;i<selectedImages.size();i++){
@@ -111,67 +97,18 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             case R.id.UploadBtn2:
                 if(mSelectedImages.size()>0) {
                     if (new Utilities(this).isNetworkAvailable()) {
-                        //check for network availability
-                   /* Utilities util = new Utilities(getApplicationContext(),selectedImages,new ImageRecorderDatabase(this));
-                    util.uploadPictures(selectedImages);
-
-                    redirect(selectedImages.size(),selectedImages.size());*/
-                   /*Requestor request = new Requestor(UploadCamPics.url,"UTF-8","POST");
-                    request.addFormField("jsonResponse","true");
-                    for(String file:selectedImages){
-                        try {
-                            request.addFile("theFiles", file);
-                        }catch(Exception e){
-                            e.printStackTrace();
-                            Log.i(TAG,"case UploadBtn2: exception occured while building request");
-                            break;
-                        }
-                    }
-                    try{
-                        request.finishRequesting();
-                        Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
-                    }catch(Exception e){
-                        Log.i(TAG,"Server response error!!");
-                        Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
-                    }finally{
-                        redirect(selectedImages.size(),selectedImages.size());
-                    }*/
-                   /* Bitmap bitmap=null;
-                    try {
-                        bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.parse(selectedImages.get(0))));
-                    }catch(Exception e){e.printStackTrace();}
-                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,50,bytes);
-                    byte[] imageBytes = bytes.toByteArray();
-                    //String encodedImage= Base64.encodeToString(imageBytes,Base64.DEFAULT);
-
-                    selectedImages.clear();
-                    selectedImages.add(encodedImage);*/
                         if (areValidPaths(mSelectedImages)) {
-                        /*ImageUploaderTask task = new ImageUploaderTask(this, selectedImages);
-                        Log.i(TAG, "Starting fileupload request using worker thread!!");
-                        new Thread(task).start();
-                        Log.i(TAG, "redirecting....to mainActivity");
-                        //redirect(selectedImages.size(), selectedImages.size());
-                        startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
-                        finish();*/
                             startUpload();
-                        } else {//download image from uri and then upload it....
+                        }
+                        else {//download image from uri and then upload it....
                             mSelectedImages.clear();
                             mSelectedImages = returnDownloadedFilePath(imageUri);
                             if (mSelectedImages == null) { //error while downloading file from other sources....
                                 Toast.makeText(getApplicationContext(),
                                         "Something went wrong while Downloading the image!!",
                                         Toast.LENGTH_LONG).show();
-                            } else {//start download....
-                           /* ImageUploaderTask task = new ImageUploaderTask(this, selectedImages);
-                            Log.i(TAG, "Starting fileupload request using worker thread!!");
-                            new Thread(task).start();
-                            Log.i(TAG, "redirecting....to mainActivity");
-                            //redirect(selectedImages.size(), selectedImages.size());
-                            startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
-                            finish();*/
+                            } else {
+                                //start download....
                                 startUpload();
                             }
                         }
@@ -189,32 +126,9 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                                 startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
                             }
                         }
-                    /*ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
-                    Utilities utility = new Utilities(this,selectedImages,dbHelper);
-                    utility.prepareBatchForInsertToDB(false);
-                    Log.i(TAG,"prepared");
-                    if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getUserEmail()))) {
-                        utility.connectivityAlert().show();
-                    }
-                    else {
-
-                        utility.insertRecords();
-                        Log.i(TAG,"Results saved to SQLite3");
-                        Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
-                        finish();
-                       // redirect(0, 0);
-                    }*/
                     }
                 }
                 else{
-                    /*final AlertDialog.Builder builder = new AlertDialog.Builder(DisplaySelectedImages.this);
-                    builder.setTitle(getResources().getString(R.string.noimageselected));
-                    builder.setMessage(getResources().getString(R.string.requestimageselection));
-
-                    AlertDialog dialog = builder.create();
-                    dialog.setInverseBackgroundForced(true);
-                    */
                     Dialog dialog = new Dialog(DisplaySelectedImages.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
@@ -233,9 +147,14 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                 break;
             case R.id.SelectAllBtn:
                     selectAll();
+                    adapter.setmLongClicked(true);
+                    adapter.setmLongClicked(true);
+                    adapter.setmImagesSelectedCount(adapter.getItemCount());
                 break;
             case R.id.UnselectAll:
                     unSelectAll();
+                    adapter.setmLongClicked(false);
+                    adapter.setmLongClicked(false);
                 break;
         }
     }
@@ -249,6 +168,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                 recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.VISIBLE);
             }
         }
+        adapter.updateAllViewHolderVisibilityStatus(true);
 }
 
     //method to unselcet all images
@@ -258,6 +178,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                 recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
                 //mSelectedImages.add(imagesNames.get(i));
             }
+            adapter.updateAllViewHolderVisibilityStatus(false);
         }
         mSelectedImages.clear();
     }
@@ -292,7 +213,6 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         Log.i(TAG, "Starting fileupload request using worker thread!!");
         new Thread(task).start();
         Log.i(TAG, "redirecting....to mainActivity");
-        //redirect(selectedImages.size(), selectedImages.size());
         Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(DisplaySelectedImages.this,MainActivity.class);
         intent.putExtra("UploadRequested",true);
@@ -324,12 +244,12 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         return true;
     }
 
-    /***************
+    /**************************************
      * Downloads a file from the internet if downloading from google drive etc
      * provides the path of the file.
      * @param selectedImages
      * @return
-     */
+     *************************************/
 
     public ArrayList<String> returnDownloadedFilePath(ArrayList<Uri> selectedImages){
         ArrayList<String> downloadedImagePaths = new ArrayList<String>();
@@ -359,7 +279,6 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                         e.printStackTrace();
                         return null;
                     }
-
             }
            else{
                 return null;
@@ -380,6 +299,8 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         }
         return false;
     }
+
+    //The below commented code is redundant
     protected void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -397,7 +318,18 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                         DisplaySelectedImages.this.finish();
                     }
                 });
+    }
 
-
+    /********************************************
+     * Setup the LAYOUT
+     * Configures the layout for the snackbar depending on the device orientation.
+     ********************************************/
+    public void setLAYOUT(){
+        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
+            LAYOUT=findViewById(R.id.dispselimgLayout);//setupLayout;
+        }
+        else{
+            LAYOUT=findViewById(R.id.display_history_layout);
+        }
     }
 }

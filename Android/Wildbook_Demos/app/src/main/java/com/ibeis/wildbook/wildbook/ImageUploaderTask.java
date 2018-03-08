@@ -60,8 +60,6 @@ public class ImageUploaderTask implements Runnable {
             if(request!=null) {
                 new Utilities(mContext).sendNotification("Upload Started", null);
                 request.addFormField("jsonResponse", "true");
-
-
                 try {
                     ExifInterface exif = new ExifInterface(filenames.get(0));
                     String datepicker = exif.getAttribute(ExifInterface.TAG_DATETIME);

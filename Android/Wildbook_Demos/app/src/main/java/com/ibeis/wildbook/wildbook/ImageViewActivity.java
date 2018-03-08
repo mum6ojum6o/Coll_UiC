@@ -38,8 +38,6 @@ import java.util.ArrayList;
 /*************************************************************************
  * Class to view full screen preview of the images
  *********************************************************************/
-
-//This class is a code management Nightmare....
 public class ImageViewActivity extends BaseActivity implements GestureDetector.OnGestureListener,View.OnClickListener{
     private static final String TAG="ImageViewActivity";
     private GestureDetectorCompat mDetector;
@@ -58,15 +56,13 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
         super.onCreate(savedInstanceState);
         mDetector = new GestureDetectorCompat(this,this);
         RecyclerView recyclerView =null;
-      /*  getSupportActionBar().setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
-            if(getIntent().getIntExtra("SelectedFilePosition",-1)!=-1)
-                mCurrentPicPreviewIndex=getIntent().getIntExtra("SelectedFilePosition",-1);
+        if(getIntent().getIntExtra("SelectedFilePosition",-1)!=-1)
+            mCurrentPicPreviewIndex=getIntent().getIntExtra("SelectedFilePosition",-1);
 
         Log.i(TAG,"current preview pic index:"+mCurrentPicPreviewIndex);
 
         String filePath=null;
-        //mAllImagePaths= new ArrayList<>();
+
         if(getIntent().getStringArrayListExtra("assets")==null) { //image upload scenario
             setContentView(R.layout.activity_imageview_activity);
             LinearLayout ll = (LinearLayout)findViewById(R.id.linearLayout_imageview_act);
@@ -97,11 +93,11 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                         .crossFade()
                         .into(mImageView);
             } else {
-                //imgView.setImageURI(uri);
+
                 //Note:- Loading an image through uri with Glide can sometimes lead an issue.
                 //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
-                //
-                if(mFilePath!=null) { //determines if the preview is from UploadCamPics
+
+                if(mFilePath!=null) { //determines if the preview is from UploadCamPics (images captured from Camera)
                     Log.i(TAG,"ImagePath position in mAllImagesPath:"+mAllImagePaths.indexOf(filePath));
                     Glide
                             .with(ImageViewActivity.this)
@@ -112,7 +108,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                             .crossFade()
                             .into(mImageView);
                 }
-                else if(mUri!=null) { // this means this is from DisplaySelectedImages.java
+                else if(mUri!=null) { // this means this is from DisplaySelectedImages.java (Images selected from Gallery)
                 Glide
                         .with(this)
                         .load(mUri)
@@ -124,7 +120,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 }
             }
         }
-        // to Display the image(s) captured in an Encounter
+        // to Display the image(s) belonging to an Encounter
         else if(getIntent().getStringArrayListExtra("assets") !=null){
             setContentView(R.layout.activity_display_images_using_recycler_view);
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);

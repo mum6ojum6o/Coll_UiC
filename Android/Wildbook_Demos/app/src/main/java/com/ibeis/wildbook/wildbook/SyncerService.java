@@ -162,8 +162,8 @@ public class SyncerService extends IntentService {
                     }
                 });*/
                 count++;
-                Log.i(TAG, "There are " + c.getCount() + "remaining. Record " + count);
-                Log.i(TAG, "Column ID=" + c.getString(c.getColumnIndex(ImageRecorderDatabase._ID)));
+                /*Log.i(TAG, "There are " + c.getCount() + "remaining. Record " + count);
+                Log.i(TAG, "Column ID=" + c.getString(c.getColumnIndex(ImageRecorderDatabase._ID)));*/
                 c.moveToNext();
 
                 Log.i(TAG, "Checking Next Record!");
@@ -174,7 +174,7 @@ public class SyncerService extends IntentService {
                 /*try{
                     Thread.sleep(1000);
                 }catch(Exception e){e.printStackTrace();}*/
-                Log.i(TAG,name);
+               // Log.i(TAG,name);
             }
             if(count>0 && filenames.size()>0) {
                 Log.i(TAG,"Instantiating Http Request");
