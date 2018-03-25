@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:tools="http://schemas.android.com/tools"
+  >
+    <data>
+        <variable name="userGitHubRepositories" type="com.skydoves.githubfollows.models.UserGitHubRepositories"/>
+        <import type="android.view.View"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:padding="8dp"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"
+        android:layout_marginLeft="4dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:text="Repositories"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/detail_repositories_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        tools:listitem="@layout/item_detail_info"
+        tools:itemCount="3"/>
+    </LinearLayout>
+</layout>

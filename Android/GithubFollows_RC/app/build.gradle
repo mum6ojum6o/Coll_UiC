@@ -1,0 +1,96 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Versions.compileSdk
+    defaultConfig {
+        applicationId "com.skydoves.githubfollows"
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        versionCode Versions.versionCode
+        versionName Versions.versionName
+        testInstrumentationRunner "com.skydoves.githubfollows.util.JunitTestRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        disable 'RestrictedApi'
+    }
+    kapt {
+        generateStubs=true
+        correctErrorTypes = true
+    }
+    dataBinding {
+        enabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+}
+
+dependencies {
+    testCompile Dependencies.junit
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation Dependencies.support_appcompat
+    implementation Dependencies.support_design
+    implementation Dependencies.support_cardview
+    implementation Dependencies.support_recyclerview
+
+    implementation Dependencies.kotlin_stdlib
+    implementation Dependencies.anko
+
+    implementation Dependencies.arch_lifecycle
+    implementation Dependencies.arch_room
+    kapt Dependencies.arch_room_compiler
+    testImplementation Dependencies.arch_core_testing
+    testImplementation Dependencies.mockWebServer
+
+    implementation Dependencies.dagger
+    kapt Dependencies.dagger_compiler
+
+    implementation Dependencies.dagger_android
+    implementation Dependencies.dagger_android_support
+    kapt Dependencies.dagger_android_compiler
+
+    kapt Dependencies.dataBinding
+
+    implementation Dependencies.rxjava
+    implementation Dependencies.rxandroid
+
+    implementation Dependencies.preferenceroom
+    kapt Dependencies.preferenceroom_compiler
+
+    implementation Dependencies.gson
+
+    implementation Dependencies.retrofit
+    implementation Dependencies.retrofit_gson
+
+    implementation Dependencies.timber
+    debugCompile Dependencies.memoryLeakDebug
+    releaseCompile Dependencies.memoryLeakRelease
+
+    implementation Dependencies.glide
+    kapt Dependencies.glide_compiler
+
+    implementation Dependencies.powermenu
+    implementation Dependencies.androidsvg
+    implementation Dependencies.shimmerlayout
+
+    testImplementation Dependencies.mockito
+    androidTestImplementation Dependencies.mockitoAndroid
+}
