@@ -14,7 +14,6 @@ data class UserGitHubRepositories(
         val id:Int,
         val name:String,
         val full_name:String,
-        val privateRepo: Boolean,
         val html_url: String,
         val description:String?,
         var login:String
@@ -24,7 +23,6 @@ data class UserGitHubRepositories(
             parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readByte() != 0.toByte(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString()) {
@@ -35,7 +33,6 @@ data class UserGitHubRepositories(
         parcel.writeInt(id)
         parcel.writeString(name)
         parcel.writeString(full_name)
-        parcel.writeByte(if (privateRepo) 1 else 0)
         parcel.writeString(html_url)
         parcel.writeString(description)
         parcel.writeString(login)

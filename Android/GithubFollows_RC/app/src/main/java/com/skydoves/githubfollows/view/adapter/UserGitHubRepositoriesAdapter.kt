@@ -12,7 +12,7 @@ import com.skydoves.githubfollows.view.viewholder.RepoViewHolder
  */
 class UserGitHubRepositoriesAdapter : BaseAdapter() {
 
-    private val section_itemDetail = 2
+    private val section_itemDetail = 0
 
     init {
         addSection(ArrayList<ItemDetail>())

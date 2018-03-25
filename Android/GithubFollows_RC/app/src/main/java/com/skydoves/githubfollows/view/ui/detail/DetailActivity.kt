@@ -60,6 +60,7 @@ class DetailActivity : AppCompatActivity() {
 
         initializeListeners()
         initializeUI()
+
         //observeViewModel()
     }
 
@@ -101,7 +102,7 @@ class DetailActivity : AppCompatActivity() {
         viewModel.setUser(getLoginFromIntent())
         viewModel.githubUserLiveData.observe(this, Observer { it?.let{ updateUI(it) } })
         Log.i("DA","observeViewModel")
-        viewModel.userGitHubRepositoriesLiveData.observe(this,Observer{updateUserRepositories(it)})
+        viewModel.userGitHubRepositoriesLiveData.observe(this,Observer{updateUserRepositoriesInUI(it)})
         viewModel.toast.observe(this, Observer { toast(it.toString()) })
 
     }
@@ -137,6 +138,22 @@ class DetailActivity : AppCompatActivity() {
                     .into(detail_body_contributes)*/
         }
     }
+    private fun updateUserRepositoriesInUI(resource:Resource<List<UserGitHubRepositories>>?){
+        var datacount:Int=0
+        if(resource!=null && resource?.data!=null)
+         {
+            for (aRepo: UserGitHubRepositories in resource!!.data!!.iterator()) {
+                repAdapter.addItemDetail(ItemDetail(fromResource(this, R.drawable.ic_person_pin), aRepo.html_url))
+                aRepo.name?.let { repAdapter.addItemDetail(ItemDetail(fromResource(this, R.drawable.ic_people), it)) }
+            }
+        }
+        /*{
+            repAdapter.addItemDetail(ItemDetail(fromResource(this, R.drawable.ic_person_pin), it.get(0).html_url))
+            it.get(0).name?.let{repAdapter.addItemDetail(ItemDetail(fromResource(this,R.drawable.ic_people),it))}
+        }*/
+
+
+    }
     private fun updateUserRepositories(resource:Resource<List<UserGitHubRepositories>>?){
         Log.i("DetailAcitvity","updateUserRepositories")
         resource?.data?.let{repAdapter}
@@ -168,3 +185,5 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 }
+
+
