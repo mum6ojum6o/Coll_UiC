@@ -4,42 +4,24 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Message;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -58,11 +40,11 @@ import org.json.JSONObject;
  * Activity to preview the images uploaded by the user
  * Displays User Contribution.
  *******************************************************************/
-public class DisplayImagesUsingRecyclerView extends BaseActivity {
+public class UserContributionsActivity extends BaseActivity {
     private static final int DOWNLOADING = 77;
     private static final int COMPLETE = 200;
     private static final int PROG_UPDATE = 853;
-    public static final String TAG = "DisplayImagesUsingRecyclerView ";
+    public static final String TAG = "UserContributionsActivity ";
 
     public Handler mHandler = new Handler() {
         @Override
@@ -102,7 +84,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                     break;
                 case 404:
                     loadingImageView.setVisibility(View.INVISIBLE);
-                    Dialog dialog = new Dialog(DisplayImagesUsingRecyclerView.this);
+                    Dialog dialog = new Dialog(UserContributionsActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
                     dialog.setTitle(getResources().getString(R.string.file_not_found_error));
@@ -150,7 +132,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                 && naam.equals("")) {//means no user has logged in....
             Log.i(TAG, "Not connected with the same user");
             Toast.makeText(this, "Please login with the appropriate userId.", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
         //someone has logged in but with different account
@@ -160,6 +142,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
+            Log.i(TAG,"Viewing images on clicking the Button in MainActivity");
             setContentView(R.layout.activity_display_images_using_recycler_view);
             loadingImageView = (ImageView)findViewById(R.id.loadingImgView);
             loadingImageView.setVisibility(View.VISIBLE);
@@ -171,7 +154,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
             recyclerView.setHasFixedSize(true);
             recyclerView.setVisibility(View.INVISIBLE);
             // Setting RecyclerView layout as LinearLayout.
-            recyclerView.setLayoutManager(new GridLayoutManager(DisplayImagesUsingRecyclerView.this, 4));
+            recyclerView.setLayoutManager(new GridLayoutManager(UserContributionsActivity.this, 4));
             findViewById(R.id.cardview_EncDetails_encompassing).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setText(R.string.loadingImages);
@@ -191,6 +174,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
                             }
+                            Log.i(TAG,"Launching Worker thread to initiate download!");
                             URL url = new URL("http://uidev.scribble.com/v2/fakeListing.jsp?email=" + new Utilities(getApplicationContext()).getCurrentIdentity());
                             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                             JSONArray jsonArray = null, reversedJSONArray = null;
@@ -261,14 +245,14 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     public void onStart() {
         super.onStart();
         // Assign activity this to progress dialog.
-        progressDialog = new ProgressDialog(DisplayImagesUsingRecyclerView.this);
+        progressDialog = new ProgressDialog(UserContributionsActivity.this);
      }
 
     @Override
     public void onResume() {
 
         super.onResume();
-        ActivityUpdater.activeActivity = this;
+        ActivityUpdaterBroadcastReceiver.activeActivity = this;
         ///this code should be in worker thread.
         if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
             setLAYOUT();
@@ -284,7 +268,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
         String naam = new Utilities(this).getCurrentIdentity();
         Log.i(TAG, "in on Resume:" + naam);
         if (naam.equals("No Email ID") || naam == null) {
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
 
         }
@@ -299,15 +283,15 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient = null;
                         finish();
-                        ActivityUpdater.activeActivity = null;
-                        Intent intent = new Intent(DisplayImagesUsingRecyclerView.this, Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity = null;
+                        Intent intent = new Intent(UserContributionsActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivity(intent);
-                        Log.i(TAG, "Logging out from DisplayImagesUsingRecyclerView");
-                        new Utilities(DisplayImagesUsingRecyclerView.this).setCurrentIdentity("");
-                        DisplayImagesUsingRecyclerView.this.finish();
-                        DisplayImagesUsingRecyclerView.this.finishAffinity();
+                        Log.i(TAG, "Logging out from UserContributionsActivity");
+                        new Utilities(UserContributionsActivity.this).setCurrentIdentity("");
+                        UserContributionsActivity.this.finish();
+                        UserContributionsActivity.this.finishAffinity();
 
                     }
                 });
@@ -317,7 +301,7 @@ public class DisplayImagesUsingRecyclerView extends BaseActivity {
     }
     public void onPause(){
         super.onPause();
-        ActivityUpdater.activeActivity=null;
+        ActivityUpdaterBroadcastReceiver.activeActivity=null;
     }
     /**********************************************
      * Method that displays a snackbar

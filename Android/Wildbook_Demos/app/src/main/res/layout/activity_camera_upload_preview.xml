@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".UploadCamPics"
+    tools:context=".UploadCamPicsActivity"
     android:id="@+id/dispselimgLayout">
 
     <android.support.v7.widget.RecyclerView
@@ -40,7 +40,7 @@
         android:layout_alignParentStart="false"
         android:background="@drawable/rounded_button"
         android:gravity="center_vertical|center"
-        android:text="@string/discardString"
+        android:text="@string/cancelString"
         android:textAlignment="gravity"
         android:textColor="#9c3535"
         android:textStyle="bold"

@@ -60,4 +60,14 @@
         android:layout_alignStart="@+id/galleryRecyclerView"
         android:layout_marginTop="14dp"
         app:srcCompat="@drawable/ic_rotate" />
+    <ImageView
+        android:id="@+id/burstModeButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/textureView"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@id/imageButton"
+        android:alpha="0.5"
+        app:srcCompat="@drawable/ic_burst_mode_48px" />
 </RelativeLayout>

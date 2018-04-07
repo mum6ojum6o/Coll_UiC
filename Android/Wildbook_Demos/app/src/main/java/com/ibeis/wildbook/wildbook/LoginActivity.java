@@ -21,15 +21,15 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+/*import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.GoogleAuthProvider;*/
 
 import static com.google.android.gms.auth.api.signin.GoogleSignIn.getLastSignedInAccount;
 
-public class Login extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG ="WildbookDemo";
     final static  private  int RC_SIGN_IN = 9001;
@@ -94,7 +94,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         }
     }
 
-
+    /**********
+     * Handles silent signIn results of the GoogleSignInApi
+     * @param result
+     */
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -108,7 +111,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
         }
     }
 
-
+    /*************
+     * Handles results obtained from launching the intent from GoogleSignInApi.getSignInIntent
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -125,7 +133,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 if(result==null)
-                    Toast.makeText(getApplicationContext(),"Unable to Login. Please ensure your username and password are correct!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Unable to LoginActivity. Please ensure your username and password are correct!",Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -170,7 +178,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener, Go
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
-
+/***************************************
+* Handles errors when Google APIs are not available.
+ *******************************/
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not

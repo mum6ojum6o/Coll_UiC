@@ -18,19 +18,15 @@ import android.widget.TextView;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.widget.ImageView;
-        import android.widget.TextView;
 
-        import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -138,7 +134,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         @Override
         public void onClick(View view){
-            Intent intent = new Intent(mContext,ImageViewActivity.class);
+            Intent intent = new Intent(mContext,ImagePreviewActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if(mJsonArray==null) {
                 Uri uri = mMainImageUploadInfoList.get(getAdapterPosition());

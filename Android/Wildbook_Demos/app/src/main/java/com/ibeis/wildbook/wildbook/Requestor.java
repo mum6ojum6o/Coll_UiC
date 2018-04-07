@@ -71,11 +71,11 @@ public class Requestor {
         }*/
     }
 
-    /****
+    /********************************
      *  Method to add form headers
      * @param name
      * @param value
-     *************/
+     **********************************/
     public void addHeaderField(String name, String value) {
         mWriter.append(name + ": " + value).append("\r\n");
         mWriter.flush();
@@ -113,6 +113,7 @@ public class Requestor {
         mWriter.append("Content-Type: "+ URLConnection.guessContentTypeFromName(absFileName)).append("\r\n");
         mWriter.append("Content-Transfer-Encoding: binary").append("\r\n");
         mWriter.append("\r\n");
+        Log.i(TAG,mWriter.toString());
         mWriter.flush();
         try {
             FileInputStream inputStream = new FileInputStream(file);
@@ -131,8 +132,7 @@ public class Requestor {
             throw e;
         }
         catch(IOException ioexception){
-
-            throw ioexception;
+             throw ioexception;
         }
     }
 

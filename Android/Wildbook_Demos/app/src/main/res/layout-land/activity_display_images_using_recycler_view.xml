@@ -33,7 +33,7 @@
                 android:layout_weight=".5"
                 android:padding="1dp"
                 android:id="@+id/recycler_layout"
-                tools:context=".DisplayImagesUsingRecyclerView">
+                tools:context=".UserContributionsActivity">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView"

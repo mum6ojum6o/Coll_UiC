@@ -116,7 +116,7 @@ public void onResume() {
                             menuItem.setTitle(googleSignInAccount.getDisplayName());
 
                     } else {
-                        Log.i(TAG, "Login unsuccessful");
+                        Log.i(TAG, "LoginActivity unsuccessful");
                     }//else closes
                 }
             });
@@ -131,7 +131,7 @@ public void onResume() {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
-        startActivity(new Intent(getApplicationContext(),Login.class));
+        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
     }
 
     /*****************
@@ -146,8 +146,8 @@ public void onResume() {
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(ctx, Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+                        Intent intent = new Intent(ctx, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         BaseActivity.this.finish();
                         startActivity(intent);

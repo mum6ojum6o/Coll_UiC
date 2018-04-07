@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.media.ExifInterface;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
@@ -12,10 +11,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +20,12 @@ import java.util.List;
  * Created by Arjan on 11/18/2017.
  */
 
-public class ImageUploaderTask implements Runnable {
-    public static final String TAG="com.ibeis.wildbook.wildbook.ImageUploaderTask";
+public class ImageUploaderTaskRunnable implements Runnable {
+    public static final String TAG="com.ibeis.wildbook.wildbook.ImageUploaderTaskRunnable";
     Context mContext;
     List<String> filenames;
     String naam;
-    public ImageUploaderTask(Context context,List<String> images,String naam){
+    public ImageUploaderTaskRunnable(Context context, List<String> images, String naam){
         this.mContext=context;
         this.filenames = new ArrayList<String>();
         this.naam = naam;
@@ -38,7 +34,7 @@ public class ImageUploaderTask implements Runnable {
             this.filenames.add(image);
         }
     }
-    public ImageUploaderTask(Context context){
+    public ImageUploaderTaskRunnable(Context context){
         this.mContext=context;
         this.filenames = new ArrayList<String>();
     }
@@ -55,6 +51,7 @@ public class ImageUploaderTask implements Runnable {
         mContext.sendBroadcast(intent1);
         Log.i(TAG, "Worker Thread started");
         String url = "http://uidev.scribble.com/v2/EncounterForm";
+       // String url = "http://pachy.cs.uic.edu:5001/api/upload/image/";
         try {
             Requestor request = new Requestor(url, "UTF-8", "POST");
             if(request!=null) {
@@ -79,6 +76,8 @@ public class ImageUploaderTask implements Runnable {
                         Date date = new Date();
                         datepicker = dTo.format(date);
                     }
+                    //commented to work with the latest URL or comment the below call to add form
+                    // field to work with the pachy server.
                     request.addFormField("datepicker", datepicker);
 
                     float[] latLong = new float[2];
@@ -87,6 +86,8 @@ public class ImageUploaderTask implements Runnable {
                         lat = (double) (latLong[0]);
                         Long = (double) (latLong[1]);
                         Log.i(TAG, "lat:" + lat + "long: " + Long);
+                        //commented to work with the latest URL or comment the below call to add form
+                        // field to work with the pachy server.
                         request.addFormField("lat", Double.toString(lat));
                         request.addFormField("longitude", Double.toString(Long));
                     }
@@ -94,12 +95,13 @@ public class ImageUploaderTask implements Runnable {
                     e.printStackTrace();
                     Log.i(TAG, "Coordinates could not be extracted!!");
                 }
-
+                //commented to work with the latest URL or comment the below call to add form
+                // field to work with the pachy server.
                 request.addFormField("submitterEmail", naam);
 
                 for (String file : filenames) {
                     //try {
-                    request.addFile("theFiles", file);
+                    request.addFile("image", file);
                     //}
                 /*catch (Exception e) {
                     e.printStackTrace();
@@ -113,19 +115,19 @@ public class ImageUploaderTask implements Runnable {
                 }
 
                 // try {
-                ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(mContext);
+                ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(mContext);
 //            dbHelper.deleteDatabase();
                 request.finishRequesting();
                 new Thread(new Runnable() {
                     public void run() {
                         ContentValues values = new ContentValues();
-                        values.put(ImageRecorderDatabase.IS_UPLOADED, "1");
-                        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(mContext);
+                        values.put(ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED, "1");
+                        ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(mContext);
                         String[] files = new String[filenames.size()];
                         for (int i = 0; i < filenames.size(); i++) {
                             files[i] = filenames.get(i);
                         }
-                        dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME, values, ImageRecorderDatabase.FILE_NAME + " IN " + placeholders(files.length), files);
+                        dbHelper.getWritableDatabase().update(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME, values, ImageRecorderDatabaseSQLiteOpenHelper.FILE_NAME + " IN " + placeholders(files.length), files);
                         dbHelper.close();
                         values.clear();
                     }

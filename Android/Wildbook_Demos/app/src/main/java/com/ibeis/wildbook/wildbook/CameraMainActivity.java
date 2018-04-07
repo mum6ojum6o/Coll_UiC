@@ -52,11 +52,9 @@
         import android.view.TextureView;
         import android.view.View;
 
-        import android.widget.ImageButton;
         import android.widget.ImageView;
         import android.widget.Toast;
 
-        import com.bumptech.glide.Glide;
         import com.google.android.gms.auth.api.Auth;
         import com.google.android.gms.common.api.ResultCallback;
         import com.google.android.gms.common.api.Status;
@@ -77,9 +75,7 @@
         import java.util.Date;
         import java.util.List;
 
-        import static java.lang.System.load;
-
-/*****************************************************************
+        /*****************************************************************
  * DISCLAIMER:-
  * The code in the class file was referenced from multiple sources.
  * References:-
@@ -124,7 +120,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             switch(what){
                 case UPDATE_PIC_PREVIEW:
                     getGeoTagData(mImageFile.getAbsolutePath());
-                    mCapturedPics.add(mImageFile.getAbsoluteFile().toString());
+                    Log.i("CamAct","UIHandler mImageFile:"+mImageFile.getAbsolutePath().toString());
+                    //mCapturedPics.add(mImageFile.getAbsoluteFile().toString());
                     Intent mediaScanIntent = new Intent(
                             Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(Uri.fromFile(mImageFile)); // may cause lags...
@@ -161,9 +158,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private TextureView mTextureView;
     private RecyclerView mRecycleView;
     private String currentPreview;
-    private ImageView mImageButton;
+    private ImageView mImageButton,mBurstButton;
     private CameraManager mCameraManager;
     private List<Uri> mFileUris;
+
     private TextureView.SurfaceTextureListener mSurfaceTextureListener =
             new TextureView.SurfaceTextureListener() {
                 @Override
@@ -221,6 +219,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         mCaptureButton.setOnClickListener(this);
         //mRecycleView = (RecyclerView) findViewById(R.id.galleryRecyclerView);
         mImageButton =(ImageView) findViewById(R.id.imageButton);
+        mBurstButton =(ImageView) findViewById(R.id.burstModeButton);
         //GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         // gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // mRecycleView.setLayoutManager(gridLayoutManager);
@@ -234,7 +233,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         /*RecyclerView.Adapter imageAdapter = new DispPicAdapter(getApplicationContext(),mFileUris,null);
         mRecycleView.setAdapter(imageAdapter);*/
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        mBurstButton.setOnClickListener(this);
         mImageButton.setOnClickListener(this);
         mPicPreview.setOnClickListener(this);
 
@@ -255,7 +254,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-       // ActivityUpdater.activeActivity=this;
+       // ActivityUpdaterBroadcastReceiver.activeActivity=this;
         openBackgroundThread();
         //mCapturedPics.clear();
         if(sortFilesToLatest(mImageFolder).length>0) {
@@ -280,11 +279,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 takePhoto();
                 break;
             case R.id.picPreview:
-                Intent i = new Intent(CameraMainActivity.this,UploadCamPics.class);
+                Intent i = new Intent(CameraMainActivity.this,UploadCamPicsActivity.class);
 
                 if(mCapturedPics.size()==0){
                     mCapturedPics.add(mLatestFile.getAbsoluteFile().toString());
-
                 }
                 i.putExtra("Files",mCapturedPics);
                 startActivity(i);
@@ -308,6 +306,12 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 //transformImage(width, height);
                 openCamera();
                 break;
+            case R.id.burstModeButton:
+                    if(mBurstButton.getAlpha()==0.5)
+                        mBurstButton.setAlpha(1.0f);
+                    else
+                        mBurstButton.setAlpha(0.5f);
+                break;
         }
     }
     @Override
@@ -318,7 +322,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         if(mSensor!=null){
             mSensorManager.unregisterListener(this);
         }
-        ActivityUpdater.activeActivity=null;
+        ActivityUpdaterBroadcastReceiver.activeActivity=null;
     }
     private Size mPreviewSize;
     private String mCameraId;
@@ -356,10 +360,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                                 }
                             }
                     );
-
-
-
-                    mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
+                     mImageReader = ImageReader.newInstance(largestImageSize.getWidth(),
                             largestImageSize.getHeight(),
                             ImageFormat.JPEG,
                             1);
@@ -367,10 +368,6 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                             mBackgroundHandler);
 
                     int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
-                    //Log.i("CamAct","display Rotation:"+displayRotation);
-                    //noinspection ConstantConditions
-                    // Source :-https://github.com/googlesamples/android-Camera2Basic/tree/master/Application/src/main/java/com/example/android/camera2basic
-                    //this is being done to streamline the Sensor Orientation along with the camera Orientation...
                     mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
                     Log.i("CamAct","Lens FACING FRONT display Rotation:"+displayRotation);
                     Log.i("CamAct","Sensor Orientation: "+mSensorOrientation);
@@ -743,6 +740,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     CaptureRequest.CONTROL_AF_TRIGGER_START);
             mCameraCaptureSession.capture(mPreviewCaptureRequestBuilder.build(),
                     mSessionCaptureCallback, mBackgroundHandler);
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -840,7 +838,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
-                    mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(),mUIHandler));
+                    mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(),mUIHandler,mCapturedPics));
                 }
             };
 
@@ -903,6 +901,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private static class ImageSaver implements Runnable {
         private final Image mImage;
         private final Handler mHandler;
+        private ArrayList<String> capturedImages;
 
         private ImageSaver(Image image) {
             mImage = image;
@@ -912,7 +911,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             mImage = image;
             mHandler = handler;
         }
-
+        private ImageSaver(Image image,Handler handler,ArrayList<String> imageFileNames) {
+            mImage = image;
+            mHandler = handler;
+            capturedImages=imageFileNames;
+        }
 
         @Override
         public void run() {
@@ -938,6 +941,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     }
                 }
             }
+            capturedImages.add(mImageFile.getAbsolutePath().toString());
             Message message = mHandler.obtainMessage(UPDATE_PIC_PREVIEW);
             mHandler.sendMessage(message);
         }
@@ -951,6 +955,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             CaptureRequest.Builder captureStillBuilder =
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureStillBuilder.addTarget(mImageReader.getSurface());
+            List<CaptureRequest> requests = new ArrayList<>();
+
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
             mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
@@ -988,10 +994,10 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         @Override
                         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                             super.onCaptureCompleted(session, request, result);
-                            toast = Toast.makeText(getApplicationContext(),
+                            /*toast = Toast.makeText(getApplicationContext(),
                                     "Image Captured!", Toast.LENGTH_SHORT);
 
-                            toast.show();
+                            toast.show();*/
                             unLockFocus();
 
                         }
@@ -1001,11 +1007,19 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                             try {
                                 //createImageFile();
                                 mImageFile=createImageFileName();
+                                Log.i("CamAct","FileName generated:"+mImageFile);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     };
+            if(mBurstButton.getAlpha()==0.5f) {
+                requests.add(captureStillBuilder.build());
+                requests.add(captureStillBuilder.build());
+                requests.add(captureStillBuilder.build());
+
+                mCameraCaptureSession.captureBurst(requests, captureCallback, null);
+            }else
             mCameraCaptureSession.capture(
                     captureStillBuilder.build(), captureCallback, null
             );
@@ -1198,14 +1212,14 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(CameraMainActivity.this, Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+                        Intent intent = new Intent(CameraMainActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         // toast.cancel();
                         startActivity(intent);
 
-                        Log.i("CameraMainActivity","Logging out from DisplayImagesUsingRecyclerView");
+                        Log.i("CameraMainActivity","Logging out from UserContributionsActivity");
                         new Utilities(CameraMainActivity.this).setCurrentIdentity("");
                         CameraMainActivity.this.finish();
                         CameraMainActivity.this.finishAffinity();

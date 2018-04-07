@@ -2,12 +2,12 @@ package com.ibeis.wildbook.wildbook;
 
 import java.util.Date;
 
-/**
+/***************************************************************
  * Created by Arjan on 10/18/2017.
  * This class represents a record to be inserted into the
- * ImageRecorderDatabase's images_recorder table
+ * ImageRecorderDatabaseSQLiteOpenHelper's images_recorder table
  * This class should be passed to the Utilities class's InsertToDB method to inser the record.
- */
+ **************************************************************/
 
 public class ImageRecordDBRecord {
     private String mFileName;

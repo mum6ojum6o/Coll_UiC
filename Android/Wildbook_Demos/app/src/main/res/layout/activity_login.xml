@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ibeis.wildbook.wildbook.Login"
+    tools:context="com.ibeis.wildbook.wildbook.LoginActivity"
     android:background="@drawable/oceanic_bg"
-    >
+    android:id="@+id/login_Layout">
  <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"

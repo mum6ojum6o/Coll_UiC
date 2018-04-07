@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -29,17 +25,14 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
 
 /*************************************************************************
  * Class to view full screen preview of the images
  *********************************************************************/
-public class ImageViewActivity extends BaseActivity implements GestureDetector.OnGestureListener,View.OnClickListener{
-    private static final String TAG="ImageViewActivity";
+public class ImagePreviewActivity extends BaseActivity implements GestureDetector.OnGestureListener,View.OnClickListener{
+    private static final String TAG="ImagePreviewActivity";
     private GestureDetectorCompat mDetector;
     double mPrimaryXCoord= 0.0,mSecondaryXCoord= 0.0;
     ImageView mImageView;
@@ -86,7 +79,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
             Display display = getWindowManager().getDefaultDisplay();
             if (!getIntent().getStringExtra("Adapter").equals("DispPic")) {// images from report encounter.
                 Glide
-                        .with(ImageViewActivity.this)
+                        .with(ImagePreviewActivity.this)
                         .load(mUri)// the uri you got from Firebase
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .fitCenter()
@@ -97,10 +90,10 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                 //Note:- Loading an image through uri with Glide can sometimes lead an issue.
                 //thats because,sometime the uri may not contain headers like (Uri:, http:, https:)
 
-                if(mFilePath!=null) { //determines if the preview is from UploadCamPics (images captured from Camera)
+                if(mFilePath!=null) { //determines if the preview is from UploadCamPicsActivity (images captured from Camera)
                     Log.i(TAG,"ImagePath position in mAllImagesPath:"+mAllImagePaths.indexOf(filePath));
                     Glide
-                            .with(ImageViewActivity.this)
+                            .with(ImagePreviewActivity.this)
                             .load(new File(mFilePath).getPath())
                             .placeholder(R.mipmap.wildbook2)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -108,7 +101,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                             .crossFade()
                             .into(mImageView);
                 }
-                else if(mUri!=null) { // this means this is from DisplaySelectedImages.java (Images selected from Gallery)
+                else if(mUri!=null) { // this means this is from GalleryUploadImagePreviewRecyclerViewActivity.java (Images selected from Gallery)
                 Glide
                         .with(this)
                         .load(mUri)
@@ -125,7 +118,9 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
             setContentView(R.layout.activity_display_images_using_recycler_view);
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             findViewById(R.id.encounter_details).setVisibility(View.VISIBLE);
-            TextView longitude,latitude,date,encounterId,individualId,individualName;
+            TextView longitude,latitude,date,encounterId,individualId,individualName,errorMessageTxtView;
+            errorMessageTxtView = (TextView)findViewById(R.id.errormsgtxtvw);
+            errorMessageTxtView.setVisibility(View.INVISIBLE);
             longitude=(TextView)findViewById(R.id.encounter_long);
             latitude=(TextView)findViewById(R.id.encounter_lat);
             date=(TextView)findViewById(R.id.encounter_date);
@@ -155,16 +150,16 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
 
             recyclerView.setHasFixedSize(true);
             if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)
-                recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,2));
+                recyclerView.setLayoutManager(new GridLayoutManager(ImagePreviewActivity.this,2));
             else
-                recyclerView.setLayoutManager(new GridLayoutManager(ImageViewActivity.this,3));
+                recyclerView.setLayoutManager(new GridLayoutManager(ImagePreviewActivity.this,3));
             //JSONArray jsonObject = new JSONObject(getIntent().getStringArrayListExtra("assets"));
             ArrayList<String> imagePaths = getIntent().getStringArrayListExtra("assets");
             //ArrayList<Uri> imageUris = new ArrayList<Uri>();
             mAllImageUris=new ArrayList<>();
             for (String aUri:imagePaths)
                 mAllImageUris.add(Uri.parse(aUri));
-            RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(ImageViewActivity.this,mAllImageUris);
+            RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(ImagePreviewActivity.this,mAllImageUris);
             recyclerView.setAdapter(recyclerViewAdapter);
         }
     }
@@ -176,13 +171,13 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        new Utilities(ImageViewActivity.this).setCurrentIdentity("");
+                        new Utilities(ImagePreviewActivity.this).setCurrentIdentity("");
                         startActivity(intent);
-                        Log.i(TAG,"Logging out from ImageViewActivity");
-                        new Utilities(ImageViewActivity.this).setCurrentIdentity("");
+                        Log.i(TAG,"Logging out from ImagePreviewActivity");
+                        new Utilities(ImagePreviewActivity.this).setCurrentIdentity("");
                         finishAffinity();
                     }
                 });
@@ -194,7 +189,7 @@ public class ImageViewActivity extends BaseActivity implements GestureDetector.O
         Log.i(TAG,"position:"+position+" mCuurenPicPreview:"+mCurrentPicPreviewIndex);
         if(mAllImagePaths!=null && position<mAllImagePaths.size()&& position>=0 && mUri==null) {
             Glide
-                    .with(ImageViewActivity.this)
+                    .with(ImagePreviewActivity.this)
                     .load(new File(mAllImagePaths.get(position)).getPath())
                     .placeholder(R.mipmap.wildbook2)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

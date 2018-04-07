@@ -1,10 +1,8 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -13,50 +11,29 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -64,20 +41,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,
@@ -116,7 +85,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
         //MAIN_ACTIVITY_IS_RUNNING=true;
         super.onCreate(savedInstanceState);
-        NetworkScanner scanner = new NetworkScanner();
+        NetworkScannerBroadcastReceiver scanner = new NetworkScannerBroadcastReceiver();
         //test
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -140,7 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         History.setOnClickListener(this);
         UploadFromGallery.setOnClickListener(this);
         //mSync.setOnClickListener(this);
-       Log.i("Login",Auth.GOOGLE_SIGN_IN_API.getName());
+       Log.i("LoginActivity",Auth.GOOGLE_SIGN_IN_API.getName());
        Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
         if(getIntent().hasExtra("UploadRequested"))
             DisplayDialogue();
@@ -161,7 +130,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onResume(){
         super.onResume();
-        ActivityUpdater.activeActivity = this;
+        ActivityUpdaterBroadcastReceiver.activeActivity = this;
         MAIN_ACTIVITY_IS_RUNNING=true;
         String naam=new Utilities(this).getCurrentIdentity();
         Log.i(TAG,""+new Utilities(this).getCurrentIdentity());
@@ -209,7 +178,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.GallUpload:
-
+                Log.i(TAG,"R.id.GallUpload clicked");
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")==PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getApplicationContext(), R.string.maxuploadString, Toast.LENGTH_LONG).show();
                     requestPictureGalleryUpload();
@@ -220,7 +189,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.historyBtn:
                 if(new Utilities(this).isNetworkAvailable())
-                    startActivity(new Intent(MainActivity.this, DisplayImagesUsingRecyclerView.class));
+                    startActivity(new Intent(MainActivity.this, UserContributionsActivity.class));
                 else {
                     displaySnackBar(R.string.offline,MainActivity.WARNING);
                 }
@@ -268,9 +237,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             if (requestCode == IMAGE_GALLERY_REQUEST) {  //Handling images selected by the users....
                 Uri dataUri = data.getData();
                 selectedImages = new ArrayList<String>();
-                //ontentResolver contentResolver = getContentResolver();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                //Log.i(TAG,"Scheme:" +data.getData().getScheme());
                 if (data.getClipData() != null) {
                     ClipData mClipData = data.getClipData();
                     if (mClipData.getItemCount() > 10) {
@@ -285,10 +252,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             mArrayUri.add(uri);
                             // Get the cursor
                             Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-
                             // Move to first row
                             cursor.moveToFirst();
-
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                             selectedImage = cursor.getString(columnIndex);
                             try {
@@ -297,7 +262,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                                 Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
                             }
                             cursor.close();
-
                         }
 
                             showGallPicturesPreview(selectedImages, mArrayUri,dataUri);
@@ -388,7 +352,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     //method that redirects user to preview the list of images selected
     public void showGallPicturesPreview(ArrayList<String> images,ArrayList<Uri> uris,Uri uriData){
-        Intent intent = new Intent(MainActivity.this,DisplaySelectedImages.class);
+        Intent intent = new Intent(MainActivity.this,GalleryUploadImagePreviewRecyclerViewActivity.class);
         if(uriData!=null)
             intent.setData(uriData);
         intent.putExtra("selectedImages",images);
@@ -406,11 +370,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
     //this method enables users to select multiple pictures from the mobile device.
     public void requestPictureGalleryUpload(){
-
-        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Log.i(TAG,"Launch Upload Encounter(s) images");
+        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT); //Set Action
         photoPickerIntent.setType("image/*");
         photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-
         startActivityForResult(Intent.createChooser(photoPickerIntent, "Select Picture"), IMAGE_GALLERY_REQUEST);
     }
 
@@ -430,7 +393,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         Log.i(TAG,"OnResume");
         selectedImages=null;
         MAIN_ACTIVITY_IS_RUNNING=false;
-        ActivityUpdater.activeActivity = null;
+        ActivityUpdaterBroadcastReceiver.activeActivity = null;
     }
 
 
@@ -439,7 +402,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
-        startActivity(new Intent(MainActivity.this,Login.class));
+        startActivity(new Intent(MainActivity.this,LoginActivity.class));
     }
 
     /*******************
@@ -488,8 +451,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             mGoogleApiClient.disconnect();
                             mGoogleApiClient = null;
                             finish();
-                            ActivityUpdater.activeActivity = null;
-                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                            ActivityUpdaterBroadcastReceiver.activeActivity = null;
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             Log.i(TAG,"Logging out from MainActivity");

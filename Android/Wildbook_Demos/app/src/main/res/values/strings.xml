@@ -16,6 +16,7 @@
     <string name="signoutString">Sign Out</string>
     <string name="uploadString">Upload</string>
     <string name="discardString">Discard</string>
+    <string name="cancelString">Cancel</string>
     <string name="imagePreviewString">Image Preview</string>
     <string name="yesString">Yes</string>
     <string name="noString">No</string>

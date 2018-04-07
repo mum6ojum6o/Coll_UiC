@@ -8,72 +8,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Messenger;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /****************************************************************
  * Created by Arjan on 10/17/2017.
@@ -88,17 +35,17 @@ public class Utilities {
     private SharedPreferences mSharedPreference;
     private Context mContext;
     private List<ImageRecordDBRecord> mRecord;
-    private ImageRecorderDatabase mDbhelper;
+    private ImageRecorderDatabaseSQLiteOpenHelper mDbhelper;
     private List<String> mImagePaths;
     Utilities (Context context){
         mContext = context;
     }
-    Utilities (Context context, ImageRecorderDatabase dbHelper,List<ImageRecordDBRecord> record){
+    Utilities (Context context, ImageRecorderDatabaseSQLiteOpenHelper dbHelper, List<ImageRecordDBRecord> record){
         this.mContext = context;
         this.mRecord=record;
         this.mDbhelper=dbHelper;
     }
-    Utilities (Context context, List<String> images,ImageRecorderDatabase dbHelper){
+    Utilities (Context context, List<String> images,ImageRecorderDatabaseSQLiteOpenHelper dbHelper){
         this.mContext = context;
         this.mDbhelper=dbHelper;
         this.mImagePaths=images;
@@ -151,7 +98,7 @@ public class Utilities {
                         Toast.makeText(mContext,R.string.uploadRequestOnNoNetwork,Toast.LENGTH_SHORT).show();
                         writeSyncPreferences(mContext.getString(R.string.wifiString));
                         //TODO - call a function that enters records to the SQLite database
-                        //Challenge- how to get the values from the UploadCamPics class?
+                        //Challenge- how to get the values from the UploadCamPicsActivity class?
                        insertRecords();
 
                         mContext.startActivity(new Intent(mContext,MainActivity.class));
@@ -310,15 +257,15 @@ public void setCurrentIdentity(String zzxxyz){
      * A thread that will insert records to the SQLite database
      **********************************************************************************/
     public class InsertToDB implements Runnable{
-        private ImageRecorderDatabase mDbhelper;
+        private ImageRecorderDatabaseSQLiteOpenHelper mDbhelper;
         private List<ImageRecordDBRecord> mRecords;
         private String mEncounterId;
         private String mEmail;
-        public InsertToDB(ImageRecorderDatabase dbHelper,List<ImageRecordDBRecord> records){
+        public InsertToDB(ImageRecorderDatabaseSQLiteOpenHelper dbHelper, List<ImageRecordDBRecord> records){
             this.mDbhelper=dbHelper;
             this.mRecords=records;
         }
-        public InsertToDB(ImageRecorderDatabase dbHelper,String encounterId){
+        public InsertToDB(ImageRecorderDatabaseSQLiteOpenHelper dbHelper, String encounterId){
             this.mDbhelper=dbHelper;
             this.mEncounterId=encounterId;
             this.mEmail=getCurrentIdentity();
@@ -330,22 +277,22 @@ public void setCurrentIdentity(String zzxxyz){
 
         SQLiteDatabase db=null;
                 if(mDbhelper==null) {
-                    mDbhelper=new ImageRecorderDatabase(mContext);
+                    mDbhelper=new ImageRecorderDatabaseSQLiteOpenHelper(mContext);
                 }
                db= mDbhelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         if(mRecords !=null){
            for (ImageRecordDBRecord record: this.mRecords){
-               values.put(ImageRecorderDatabase.FILE_NAME,record.getmFileName());
-               values.put(ImageRecorderDatabase.ENCOUNTER_NUM,record.getmEncounterNum());
-               values.put(ImageRecorderDatabase.LONGITUDE,record.getmLongitude());
-               values.put(ImageRecorderDatabase.LATITUDE,record.getmLatitude());
-               values.put(ImageRecorderDatabase.USER_NAME,record.getmUsername());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.FILE_NAME,record.getmFileName());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_NUM,record.getmEncounterNum());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.LONGITUDE,record.getmLongitude());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.LATITUDE,record.getmLatitude());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.USER_NAME,record.getmUsername());
                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                String date = sdf.format(record.getmDate());
-               values.put(ImageRecorderDatabase.DATE,record.getmDate().toString());
-               values.put(ImageRecorderDatabase.IS_UPLOADED,record.getmIsUploaded());
-               db.insert(ImageRecorderDatabase.TABLE_NAME,null,values);
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.DATE,record.getmDate().toString());
+               values.put(ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED,record.getmIsUploaded());
+               db.insert(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME,null,values);
                values.clear();
 
             }
@@ -354,10 +301,10 @@ public void setCurrentIdentity(String zzxxyz){
 
             DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
 
-            values.put(ImageRecorderDatabase.ENCOUNTER_ID,mEncounterId);
-            values.put(ImageRecorderDatabase.DATE, dTo.format(new Date()));
-            values.put(ImageRecorderDatabase.USER_NAME,mEmail);
-            db.insert(ImageRecorderDatabase.UPLOAD_RESPONSE,null,values);
+            values.put(ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_ID,mEncounterId);
+            values.put(ImageRecorderDatabaseSQLiteOpenHelper.DATE, dTo.format(new Date()));
+            values.put(ImageRecorderDatabaseSQLiteOpenHelper.USER_NAME,mEmail);
+            db.insert(ImageRecorderDatabaseSQLiteOpenHelper.UPLOAD_RESPONSE,null,values);
             values.clear();
         }
        //close the database.
@@ -560,7 +507,7 @@ public void setCurrentIdentity(String zzxxyz){
             //mBuilder.setContentText(mContext.getResources().getString(R.string.sync_error));
         }
         else{
-            Intent intent = new Intent(mContext,DisplayImagesUsingRecyclerView.class);
+            Intent intent = new Intent(mContext,UserContributionsActivity.class);
             Log.i(TAG,"naam in Utilities:"+naam);
             intent.putExtra("UploadedBy",naam);
             intent.putExtra("source","notification");

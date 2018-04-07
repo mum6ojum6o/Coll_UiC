@@ -1,16 +1,10 @@
 package com.ibeis.wildbook.wildbook;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -22,46 +16,23 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import static com.ibeis.wildbook.wildbook.GalleryUploadImagePreviewRecyclerViewActivity.SAVED_LAYOUT_MANAGER;
 
 
-/*
+/*********************************
 This Activity is used for displaying the preview of images captured by the user using the
 cameraMainActivity.
 This activity also enables user to either Upload or Discard the pictures clicked by the user.
-
- */
-public class UploadCamPics extends BaseActivity implements View.OnClickListener {
+ *******************************/
+public class UploadCamPicsActivity extends BaseActivity implements View.OnClickListener {
     public static final String url="http://uidev.scribble.com/v2/EncounterForm";
-    final static public String TAG= "DisplaySelectedImages";
+    final static public String TAG= "GalleryUploadImagePreviewRecyclerViewActivity";
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter ;
+    private DispPicAdapter adapter ;
     private Button mUploadBtn,mDiscardBtn,mSelectAll,mUnselectAll;
     //private FirebaseAuth mAuth;
 
@@ -78,7 +49,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
         mDiscardBtn = (Button) findViewById(R.id.DiscardBtn2);
         mUnselectAll = (Button) findViewById(R.id.UnselectAll);
         Intent intent = getIntent();
-
+        Log.i(TAG, ""+intent.hasExtra("Files"));
         imagesNames =intent.getStringArrayListExtra("Files");
         for(String file: imagesNames){
             imagesUris.add(Uri.parse(new File(file).toString()));
@@ -89,7 +60,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
         recyclerView.setHasFixedSize(true);
 
         // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new  GridLayoutManager(UploadCamPics.this,3));
+        recyclerView.setLayoutManager(new  GridLayoutManager(UploadCamPicsActivity.this,3));
         adapter = new DispPicAdapter(this, imagesUris,imagesNames);
         //adapter = new RecyclerViewAdapter(getApplicationContext(),imagesList);
         recyclerView.setAdapter(adapter);
@@ -120,17 +91,17 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
 
                         int uploadCount = 0;
                         //adapter.getSelectedImages();
-                        ImageUploaderTask task = new ImageUploaderTask(this, mSelectedImages, new Utilities(this).getCurrentIdentity());
+                        ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this, mSelectedImages, new Utilities(this).getCurrentIdentity());
                         new Thread(task).start();
                         Log.i(TAG, "redirecting....");
                         //redirect(imagesNames.size(), imagesNames.size());
                         Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(UploadCamPics.this,MainActivity.class);
+                        Intent intent = new Intent(UploadCamPicsActivity.this,MainActivity.class);
                         intent.putExtra("UploadRequested",true);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
-                    /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabase(this));
+                    /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabaseSQLiteOpenHelper(this));
                     util.uploadPictures(imagesNames);
                     redirect(imagesNames.size(), imagesNames.size());*/
 
@@ -145,7 +116,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                          }
                          finish();
                          Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
-                         startActivity(new Intent(UploadCamPics.this,MainActivity.class));*/
+                         startActivity(new Intent(UploadCamPicsActivity.this,MainActivity.class));*/
 
                         /****************************
                          Requestor request = new Requestor(url,"UTF-8","POST");
@@ -188,7 +159,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                          try{
                          request.finishRequesting();
                          Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                         //startActivity(new Intent(UploadCamPics.this,MainActivity.class));
+                         //startActivity(new Intent(UploadCamPicsActivity.this,MainActivity.class));
                          redirect(imagesNames.size(),imagesNames.size());
                          }catch(Exception e){
                          Log.i(TAG,"Server response error!!");
@@ -196,7 +167,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                          } **************************************/
                     } else {
 
-                        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
+                        ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
                         Utilities utility = new Utilities(this, mSelectedImages, dbHelper);
                         utility.prepareBatchForInsertToDB(false);
                         Log.i(TAG, "Loggedin as: " + utility.getCurrentIdentity());
@@ -206,7 +177,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                             Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
                             utility.insertRecords();
                             Log.i(TAG, "Results saved to SQLite3");
-                            Intent intent = new Intent(UploadCamPics.this,MainActivity.class);
+                            Intent intent = new Intent(UploadCamPicsActivity.this,MainActivity.class);
                             intent.putExtra("UploadRequested",true);
                             startActivity(intent);
                             finish();
@@ -216,7 +187,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                     }
                 }
                 else if(mSelectedImages.size()>10){
-                    Dialog dialog = new Dialog(UploadCamPics.this);
+                    Dialog dialog = new Dialog(UploadCamPicsActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
                     dialog.setTitle(getResources().getString(R.string.maxuploadHeaderString));
@@ -227,7 +198,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
                     dialog.show();
                 }
                 else{//no images selected...
-                    Dialog dialog = new Dialog(UploadCamPics.this);
+                    Dialog dialog = new Dialog(UploadCamPicsActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
                     dialog.setTitle(getResources().getString(R.string.noimageselected));
@@ -240,7 +211,7 @@ public class UploadCamPics extends BaseActivity implements View.OnClickListener 
 
                 break;
             case R.id.DiscardBtn2:
-                startActivity(new Intent(UploadCamPics.this , CameraMainActivity.class));
+                startActivity(new Intent(UploadCamPicsActivity.this , CameraMainActivity.class));
                 finish();
                 break;
             case R.id.SelectAllBtn:
@@ -284,11 +255,11 @@ protected void unselectAll(){
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        Log.i("ImageViewActivity","Logging out from ImageViewActivity");
-                        new Utilities(UploadCamPics.this).setCurrentIdentity("");
+                        Log.i("ImagePreviewActivity","Logging out from ImagePreviewActivity");
+                        new Utilities(UploadCamPicsActivity.this).setCurrentIdentity("");
                         startActivity(intent);
 
                         finishAffinity();
@@ -296,5 +267,18 @@ protected void unselectAll(){
                 });
 
 
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        Bundle b = new Bundle();
+        adapter.onSaveState(b);
+        outState.putBundle(SAVED_LAYOUT_MANAGER,b);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle inState ){
+        super.onRestoreInstanceState(inState);
+        if(inState.containsKey(SAVED_LAYOUT_MANAGER) && inState.getBundle(SAVED_LAYOUT_MANAGER).containsKey("SELECTED_IMAGES"))
+            adapter.setmSelectedImages(inState.getBundle(SAVED_LAYOUT_MANAGER).getIntegerArrayList("SELECTED_IMAGES"));
     }
 }

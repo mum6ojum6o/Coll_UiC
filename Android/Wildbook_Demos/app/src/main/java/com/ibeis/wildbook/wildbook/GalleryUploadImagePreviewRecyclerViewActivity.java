@@ -1,26 +1,20 @@
 package com.ibeis.wildbook.wildbook;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Parcelable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
@@ -36,18 +30,22 @@ import java.util.Date;
 /************************************************
  * Activity to preview the images selected from the Image Gallery of the device.
  ************************************************/
-public class DisplaySelectedImages extends BaseActivity implements View.OnClickListener{
-    final static public String TAG= "DisplaySelectedImages";
+public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity implements View.OnClickListener{
+    final static public String TAG= "GalleryUploadImagePreviewRecyclerViewActivity";
     protected ArrayList<String> selectedImages = new ArrayList<String>();
     protected  ArrayList<Uri> imageUri = new ArrayList<Uri>();
+    protected  ArrayList<Integer> savedPositions;
     protected Button UploadBtn,DiscardBtn,SelectAllBtn,UnSelectAllBtn;
     private RecyclerView recyclerView;
     private DispPicAdapter adapter ;
-    private ArrayList<String> mSelectedImages=new ArrayList<String>(); //represents the images selected after long press.
+    private ArrayList<String> mClickedImages=new ArrayList<String>(); //represents the images selected after long press.
+    public static final String SAVED_LAYOUT_MANAGER="SAVED_LAYOUT_MANAGER";
+    private Parcelable savedLayoutState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_grid_view);
+
         setContentView(R.layout.activity_camera_upload_preview);
         ArrayList<String> stringToUri;
         selectedImages = getIntent().getStringArrayListExtra("selectedImages");
@@ -70,7 +68,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             UnSelectAllBtn =(Button)findViewById(R.id.UnselectAll);
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(DisplaySelectedImages.this, 3));
+            recyclerView.setLayoutManager(new GridLayoutManager(GalleryUploadImagePreviewRecyclerViewActivity.this, 3));
             adapter = new DispPicAdapter(this, imageUri, selectedImages);
             recyclerView.setAdapter(adapter);
             UploadBtn.setOnClickListener(this);
@@ -80,14 +78,14 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         }
         else{
             Toast.makeText(getApplicationContext(),"Unable to Load Image",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
+            startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this, MainActivity.class));
         }
         setLAYOUT();
     }
     public void getSelectedImages(){
         for (int i=0;i<selectedImages.size();i++){
             if(recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility()==View.VISIBLE){
-                mSelectedImages.add(selectedImages.get(i));
+                mClickedImages.add(selectedImages.get(i));
             }
         }
     }
@@ -95,15 +93,15 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
         getSelectedImages();
         switch(view.getId()){
             case R.id.UploadBtn2:
-                if(mSelectedImages.size()>0) {
+                if(mClickedImages.size()>0) {
                     if (new Utilities(this).isNetworkAvailable()) {
-                        if (areValidPaths(mSelectedImages)) {
+                        if (areValidPaths(mClickedImages)) {
                             startUpload();
                         }
                         else {//download image from uri and then upload it....
-                            mSelectedImages.clear();
-                            mSelectedImages = returnDownloadedFilePath(imageUri);
-                            if (mSelectedImages == null) { //error while downloading file from other sources....
+                            mClickedImages.clear();
+                            mClickedImages = returnDownloadedFilePath(imageUri);
+                            if (mClickedImages == null) { //error while downloading file from other sources....
                                 Toast.makeText(getApplicationContext(),
                                         "Something went wrong while Downloading the image!!",
                                         Toast.LENGTH_LONG).show();
@@ -115,21 +113,21 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
 
 
                     } else {//no connectivity
-                        if (areValidPaths(mSelectedImages)) {
+                        if (areValidPaths(mClickedImages)) {
                             saveToDb();
                         } else {
-                            mSelectedImages = returnDownloadedFilePath(imageUri); //download the files
-                            if (mSelectedImages != null)
+                            mClickedImages = returnDownloadedFilePath(imageUri); //download the files
+                            if (mClickedImages != null)
                                 saveToDb();
                             else {
                                 Toast.makeText(getApplicationContext(), "Something went wrong! Please try again!", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(DisplaySelectedImages.this, MainActivity.class));
+                                startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this, MainActivity.class));
                             }
                         }
                     }
                 }
                 else{
-                    Dialog dialog = new Dialog(DisplaySelectedImages.this);
+                    Dialog dialog = new Dialog(GalleryUploadImagePreviewRecyclerViewActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.dialog_layout);
                     dialog.setTitle(getResources().getString(R.string.noimageselected));
@@ -142,7 +140,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                 }
                 break;
             case R.id.DiscardBtn2:
-                startActivity(new Intent(DisplaySelectedImages.this , MainActivity.class));
+                startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this , MainActivity.class));
                 finish();
                 break;
             case R.id.SelectAllBtn:
@@ -180,13 +178,13 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             }
             adapter.updateAllViewHolderVisibilityStatus(false);
         }
-        mSelectedImages.clear();
+        mClickedImages.clear();
     }
 
     //Method that captures details of images in the device sqlite database instance.
     public void saveToDb(){
-        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
-        Utilities utility = new Utilities(this,mSelectedImages,dbHelper);
+        ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
+        Utilities utility = new Utilities(this,mClickedImages,dbHelper);
         utility.prepareBatchForInsertToDB(false);
         Log.i(TAG,"prepared");
         if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getCurrentIdentity()))) {
@@ -197,7 +195,7 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             utility.insertRecords();
             Log.i(TAG,"Results saved to SQLite3");
             Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
-            startActivity(new Intent(DisplaySelectedImages.this,MainActivity.class));
+            startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this,MainActivity.class));
             finish();
             // redirect(0, 0);
         }
@@ -205,16 +203,15 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
 
     public void onResume(){
         super.onResume();
-
     }
     //Method that starts the upload process
     public void startUpload(){
-        ImageUploaderTask task = new ImageUploaderTask(this, mSelectedImages,new Utilities(this).getCurrentIdentity());
+        ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this, mClickedImages,new Utilities(this).getCurrentIdentity());
         Log.i(TAG, "Starting fileupload request using worker thread!!");
         new Thread(task).start();
         Log.i(TAG, "redirecting....to mainActivity");
         Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(DisplaySelectedImages.this,MainActivity.class);
+        Intent intent = new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this,MainActivity.class);
         intent.putExtra("UploadRequested",true);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -309,13 +306,13 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdater.activeActivity=null;
-                        Intent intent = new Intent(DisplaySelectedImages.this, Login.class);
+                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+                        Intent intent = new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        Log.i(TAG,"Logging out from DisplayImagesUsingRecyclerView");
-                        new Utilities(DisplaySelectedImages.this).setCurrentIdentity("");
-                        DisplaySelectedImages.this.finish();
+                        Log.i(TAG,"Logging out from UserContributionsActivity");
+                        new Utilities(GalleryUploadImagePreviewRecyclerViewActivity.this).setCurrentIdentity("");
+                        GalleryUploadImagePreviewRecyclerViewActivity.this.finish();
                     }
                 });
     }
@@ -332,4 +329,18 @@ public class DisplaySelectedImages extends BaseActivity implements View.OnClickL
             LAYOUT=findViewById(R.id.display_history_layout);
         }
     }
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        Bundle b = new Bundle();
+        adapter.onSaveState(b);
+        outState.putBundle(SAVED_LAYOUT_MANAGER,b);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle inState ){
+        super.onRestoreInstanceState(inState);
+        if(inState.containsKey(SAVED_LAYOUT_MANAGER) && inState.getBundle(SAVED_LAYOUT_MANAGER).containsKey("SELECTED_IMAGES"))
+            adapter.setmSelectedImages(inState.getBundle(SAVED_LAYOUT_MANAGER).getIntegerArrayList("SELECTED_IMAGES"));
+    }
+
 }

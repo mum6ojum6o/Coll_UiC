@@ -24,7 +24,7 @@ public class SyncerService extends IntentService {
 
     private static final String TAG = "SyncerService";
     private SQLiteCursor mSQLiteCursor;
-    private ImageRecorderDatabase mDBHelper;
+    private ImageRecorderDatabaseSQLiteOpenHelper mDBHelper;
 
    public SyncerService(){
        super(TAG);
@@ -39,18 +39,18 @@ public class SyncerService extends IntentService {
         Bundle extras=intent.getExtras();
         IsRunning=true;
         int count=0;
-        mDBHelper= new ImageRecorderDatabase(this);
+        mDBHelper= new ImageRecorderDatabaseSQLiteOpenHelper(this);
         mDBHelper.getReadableDatabase();
         String where = "isUploaded = 0";
         //String orderBy= "ORDER BY "
-        String columns[]={ImageRecorderDatabase._ID,ImageRecorderDatabase.ENCOUNTER_NUM,
-                ImageRecorderDatabase.FILE_NAME,ImageRecorderDatabase.LONGITUDE,
-                ImageRecorderDatabase.LATITUDE,ImageRecorderDatabase.USER_NAME};
-        String column[]={ImageRecorderDatabase.ENCOUNTER_NUM};
+        String columns[]={ImageRecorderDatabaseSQLiteOpenHelper._ID, ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_NUM,
+                ImageRecorderDatabaseSQLiteOpenHelper.FILE_NAME, ImageRecorderDatabaseSQLiteOpenHelper.LONGITUDE,
+                ImageRecorderDatabaseSQLiteOpenHelper.LATITUDE, ImageRecorderDatabaseSQLiteOpenHelper.USER_NAME};
+        String column[]={ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_NUM};
 
 
-        Cursor c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
-                new String[]{"0"},null,null,ImageRecorderDatabase.ENCOUNTER_NUM);
+        Cursor c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME,columns, ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED +"=?",
+                new String[]{"0"},null,null, ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_NUM);
         c.moveToFirst();
 
         ArrayList<Integer> filesUploadedIds= new ArrayList<Integer>();
@@ -83,13 +83,13 @@ public class SyncerService extends IntentService {
 
                 Log.i(TAG,"Network Available & Sync Started!");
 
-                final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabase.FILE_NAME));
-                int colIndex = c.getColumnIndex(ImageRecorderDatabase.USER_NAME);
+                final String filename =c.getString(c.getColumnIndex(ImageRecorderDatabaseSQLiteOpenHelper.FILE_NAME));
+                int colIndex = c.getColumnIndex(ImageRecorderDatabaseSQLiteOpenHelper.USER_NAME);
                 name=c.getString(colIndex);
                 Log.i(TAG,"Image for the user:"+name);
-                int fileId = c.getInt(c.getColumnIndex(ImageRecorderDatabase._ID));
+                int fileId = c.getInt(c.getColumnIndex(ImageRecorderDatabaseSQLiteOpenHelper._ID));
                 filesUploadedIds.add(fileId);
-                int currEncNum=c.getInt(c.getColumnIndex(ImageRecorderDatabase.ENCOUNTER_NUM));
+                int currEncNum=c.getInt(c.getColumnIndex(ImageRecorderDatabaseSQLiteOpenHelper.ENCOUNTER_NUM));
                 Log.i(TAG, "record:"+fileId+", "+filename+", "+currEncNum);
                 Log.i(TAG,"filename Uploading..."+filename);
                 String userNetworkPref = utilities.getSyncSharedPreference(name);
@@ -111,7 +111,7 @@ public class SyncerService extends IntentService {
 
                 }
                 else if(count>0&& encounterNum!=currEncNum){
-                    ImageUploaderTask task = new ImageUploaderTask(this,filenames,prevName);
+                    ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this,filenames,prevName);
                     //task.run(); // why not a separate thread???
                     new Thread(task).start();
                    // updateStatus(fileId);
@@ -152,9 +152,9 @@ public class SyncerService extends IntentService {
                         successUploads.add(downloadUrl);
                         // set the isUploaded field to 1 for that file....
                         ContentValues values = new ContentValues();
-                        values.put(ImageRecorderDatabase.IS_UPLOADED,"1");
-                        ImageRecorderDatabase dbHelper= new ImageRecorderDatabase(getApplicationContext());
-                        dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME,values,ImageRecorderDatabase.FILE_NAME +"=?", new String[]{filename});
+                        values.put(ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED,"1");
+                        ImageRecorderDatabaseSQLiteOpenHelper dbHelper= new ImageRecorderDatabaseSQLiteOpenHelper(getApplicationContext());
+                        dbHelper.getWritableDatabase().update(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME,values,ImageRecorderDatabaseSQLiteOpenHelper.FILE_NAME +"=?", new String[]{filename});
                         dbHelper.close();
                         values.clear();
                         //how to make this synchronous?????????
@@ -163,11 +163,11 @@ public class SyncerService extends IntentService {
                 });*/
                 count++;
                 /*Log.i(TAG, "There are " + c.getCount() + "remaining. Record " + count);
-                Log.i(TAG, "Column ID=" + c.getString(c.getColumnIndex(ImageRecorderDatabase._ID)));*/
+                Log.i(TAG, "Column ID=" + c.getString(c.getColumnIndex(ImageRecorderDatabaseSQLiteOpenHelper._ID)));*/
                 c.moveToNext();
 
-                Log.i(TAG, "Checking Next Record!");
-                /*c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabase.TABLE_NAME,columns,ImageRecorderDatabase.IS_UPLOADED +"=?",
+                //Log.i(TAG, "Checking Next Record!");
+                /*c = mDBHelper.getReadableDatabase().query(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME,columns,ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED +"=?",
                         new String[]{"0"},null,null,null);*/
                 Log.i(TAG,"After updating count="+c.getCount() );
                 //c.moveToFirst();
@@ -179,7 +179,7 @@ public class SyncerService extends IntentService {
             if(count>0 && filenames.size()>0) {
                 Log.i(TAG,"Instantiating Http Request");
                 Log.i(TAG, "filesRead:"+filenames.size());
-                ImageUploaderTask task = new ImageUploaderTask(this,filenames,name); //the last record....
+                ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this,filenames,name); //the last record....
                 task.run();
 
             }
@@ -219,11 +219,11 @@ public class SyncerService extends IntentService {
 
     public void updateStatus(int fileId){
         Log.i(TAG,"updattng status of fileId "+fileId);
-        ImageRecorderDatabase dbHelper = new ImageRecorderDatabase(this);
+        ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
         dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ImageRecorderDatabase.IS_UPLOADED, "1");
-        dbHelper.getWritableDatabase().update(ImageRecorderDatabase.TABLE_NAME, values, ImageRecorderDatabase._ID + " = "+"?",new String[]{Integer.toString(fileId)});
+        values.put(ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED, "1");
+        dbHelper.getWritableDatabase().update(ImageRecorderDatabaseSQLiteOpenHelper.TABLE_NAME, values, ImageRecorderDatabaseSQLiteOpenHelper._ID + " = "+"?",new String[]{Integer.toString(fileId)});
         dbHelper.close();
         values.clear();
 
@@ -248,7 +248,7 @@ public class SyncerService extends IntentService {
         }
         else{
             contentIntent = PendingIntent.getActivity(this, 0,
-                    new Intent(this, DisplayImagesUsingRecyclerView.class), 0);
+                    new Intent(this, UserContributionsActivity.class), 0);
             mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
 
         }

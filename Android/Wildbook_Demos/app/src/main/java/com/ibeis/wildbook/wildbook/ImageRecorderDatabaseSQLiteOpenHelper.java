@@ -16,7 +16,7 @@ import android.util.Log;
 
 
 
-public class ImageRecorderDatabase extends SQLiteOpenHelper {
+public class ImageRecorderDatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME="images_recorder";
     public static final String TABLE_NAME_II="sync_record";
     public static final String DATABASE_NAME="Wildbook_db";
@@ -72,7 +72,7 @@ public class ImageRecorderDatabase extends SQLiteOpenHelper {
 		* 3. SQLiteDatabase.CursorFactory: used to create cursor objects.null for default factory
 		* 4. version number (int)*/
     //the constructor does not created. the db will be created when either getReadable() or getWritable() is called.
-    public ImageRecorderDatabase(Context context){
+    public ImageRecorderDatabaseSQLiteOpenHelper(Context context){
         super(context,DATABASE_NAME,null,VERSION);
         mContext = context;
     }

@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/OceanicTheme">
         <activity
-            android:name=".Login"
+            android:name=".LoginActivity"
             android:launchMode="singleInstance"></activity>
         <activity
             android:name=".MainActivity"
@@ -27,21 +27,21 @@
             />
 
         <activity
-            android:name=".DisplaySelectedImages"
+            android:name=".GalleryUploadImagePreviewRecyclerViewActivity"
             android:noHistory="false"/>
-        <activity android:name=".DisplayImagesUsingRecyclerView"/>
+        <activity android:name=".UserContributionsActivity"/>
         <!-- android:screenOrientation="portrait"-->
         <activity
             android:name=".CameraMainActivity"
             android:screenOrientation="portrait"
             android:noHistory="true" />
-        <activity android:name=".UploadCamPics" />
+        <activity android:name=".UploadCamPicsActivity" />
         <service android:name=".SyncerService" />
 
-        <activity android:name=".ImageViewActivity" />
+        <activity android:name=".ImagePreviewActivity" />
         <!--
         <receiver
-            android:name=".NetworkScanner"
+            android:namNetworkScannerBroadcastReceivernner"
             android:enabled="true"
             android:label="WiFi Scanner Broadcast Receiver">
         <intent-filter android:priority="10">
@@ -50,7 +50,7 @@
         </receiver>
         -->
         <receiver
-            android:name=".ActivityUpdater"
+            android:name=".ActivityUpdaterBroadcastReceiver"
             android:enabled="true"
             android:exported="false"
             android:label="Displays updates on the resumed activity">
