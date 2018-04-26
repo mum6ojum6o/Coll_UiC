@@ -29,7 +29,10 @@ allprojects {
         }
     }
 }
-
+ext{
+    supportLibVersion = "25.4.0"
+    espressoVersion = "3.0.1"
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

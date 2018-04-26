@@ -32,7 +32,7 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
     List<ViewHolder> viewHoldersList;
     boolean mLongClicked;
     public static final String TAG="DispPicAdapter";
-    public int mImagesSelectedCount;
+    public int mImagesSelectedCount; //mImagesSelectedCount variable helps in keeping track of the images selcted by the user
     public DispPicAdapter(Context context, List<Uri> TempList,ArrayList<String>imagePaths) {
         this.MainImageUploadInfoListUris = TempList;
         this.mImagePaths = imagePaths;
@@ -67,7 +67,7 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         if(context instanceof UploadCamPicsActivity) {
         Glide.with(context).load(Uri.fromFile(new File(UploadInfo.getPath())))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
+                .centerCrop()
                 .crossFade()
                 .into(holder.imageView);
 
@@ -75,7 +75,7 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         else {
             Glide.with(context).load(UploadInfo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .fitCenter()
+                    .centerCrop()
                     .crossFade()
                     .into(holder.imageView);
 
@@ -90,7 +90,7 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         }
         Glide.with(context).load(R.drawable.notification_sync_complete)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
+                .centerCrop()
                 .crossFade()
                 .into(holder.imageView2);
         }
@@ -99,9 +99,11 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
     public int getItemCount() {
         return MainImageUploadInfoListUris.size();
     }
+
     public void setmLongClicked(boolean val){
         mLongClicked=val;
     }
+
     public void updateAllViewHolderVisibilityStatus(boolean val){
         for(ViewHolder vh:viewHoldersList)
             vh.setImageViewisSelected(val);
@@ -124,13 +126,13 @@ public class DispPicAdapter extends RecyclerView.Adapter<DispPicAdapter.ViewHold
         public boolean imageViewisSelected;
         public ViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            imageView2 = (ImageView) itemView.findViewById(R.id.imageView2);
+            imageView = (ImageView) itemView.findViewById(R.id.imagePreview);
+            imageView2 = (ImageView) itemView.findViewById(R.id.image_selected_icon);
             imageView2.setVisibility(View.INVISIBLE);
-            imageView2.setBackgroundColor(itemView.getResources().getColor(R.color.red, null));
+            imageView2.setBackgroundColor(itemView.getResources().getColor(R.color.green, null));
             imageView.setOnClickListener(this);
             imageView.setOnLongClickListener(this);
-            imageViewisSelected=false;
+            //imageViewisSelected=true;
         }
         public ViewHolder(View itemView, boolean updatedValue){
             super(itemView);

@@ -36,13 +36,14 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import java.util.ArrayList;
 
-public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+public abstract class BaseActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener
 {
     protected View LAYOUT;
     protected GoogleApiClient mGoogleApiClient;
     protected GoogleSignInAccount googleSignInAccount;
     private ImageView mCircleImageView;
-    protected ActionBar action;
+    protected ActionBar mActionBar;
     private MenuItem menuItem;
     private RadioGroup mRadioGroup ;
     private static final String TAG="BaseActivity";
@@ -59,12 +60,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         //mGoogleApiClient.connect();
-         action =getSupportActionBar();
-        action.setCustomView(R.layout.circular_imageview_for_action_bar);
-        action.setBackgroundDrawable(getDrawable(R.drawable.actionbar_portrait));
+        mActionBar =getSupportActionBar();
+        mActionBar.setCustomView(R.layout.circular_imageview_for_action_bar);
+        mActionBar.setBackgroundDrawable(getDrawable(R.drawable.actionbar_portrait));
         LinearLayout ll = (LinearLayout)findViewById(R.id.circular_image_view_layout);
-        mCircleImageView = action.getCustomView().findViewById(R.id.circle_imgeview);
-        action.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);
+        mCircleImageView = (ImageView)mActionBar.getCustomView().findViewById(R.id.circle_imgeview);
+        mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);
 
 
 
@@ -134,9 +135,9 @@ public void onResume() {
         startActivity(new Intent(getApplicationContext(),LoginActivity.class));
     }
 
-    /*****************
-     * signs User out of the application
-     ****************/
+    /*******************************************
+     * Signs User out of the application
+     *******************************************/
     protected void signOut() {
         final Context ctx=getApplicationContext();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -146,7 +147,6 @@ public void onResume() {
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
                         Intent intent = new Intent(ctx, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         BaseActivity.this.finish();
@@ -177,7 +177,7 @@ public void onResume() {
     }
 
     /***********************************
-     * performs action on the basis of the option selected in the actionbar
+     * performs mActionBar on the basis of the option selected in the actionbar
      * @param item
      * @return
      ************************************/
@@ -230,7 +230,7 @@ public void onResume() {
        final Utilities util = new Utilities(this);
         ArrayList<String> preferences = new ArrayList<>();
         preferences.add(getResources().getString(R.string.wifiString));
-        preferences.add(getResources().getString(R.string.mobiledataString));
+        preferences.add(getResources().getString(R.string.mobile_data_wifi_string));
         //preferences.add(getResources().getString(R.string.anyString));
         final String getPref = util.getSyncSharedPreference(util.getCurrentIdentity());
         Log.i(TAG, "selected pref="+getPref);
@@ -238,7 +238,7 @@ public void onResume() {
         RadioButton rb = new RadioButton(this);
         rb.setText(getResources().getString(R.string.wifiString));
         RadioButton rb2 = new RadioButton(this);
-        rb2.setText(getResources().getString(R.string.mobiledataString));
+        rb2.setText(getResources().getString(R.string.mobile_data_wifi_string));
         //RadioButton rb3 = new RadioButton(this);
         //rb3.setText(getResources().getString(R.string.anyString));
         switch(preferences.indexOf(getPref)){
@@ -264,7 +264,7 @@ public void onResume() {
                     if (btn.getId() == i) {
                         Log.i(TAG, "buttonn clicked"+i);
                         Log.e(TAG,"selected RadioButton->"+btn.getText().toString());
-                        if(btn.getText().toString().equals(getString(R.string.mobiledataString))){
+                        if(btn.getText().toString().equals(getString(R.string.mobile_data_wifi_string))){
                             Log.i(TAG,"mobile data selected!!");
                             mAlertDialogBuilder = new AlertDialog.Builder(BaseActivity.this);
                             mAlertDialogBuilder.setMessage(R.string.mobiledatacost);
@@ -298,30 +298,19 @@ public void onResume() {
         super.onStop();
         Log.i(TAG, "in BASE onSTOP");
         //Log.i("BASE","googleApiClient is connected?"+(mGoogleApiClient.isConnected()));
-        Log.i(TAG, "bye bye!! "+ new Utilities(this).getCurrentIdentity());
+        //Log.i(TAG, "bye bye!! "+ new Utilities(this).getCurrentIdentity());
 
     }
-    public void  displaySnackBar(int message,int bgcolor){
-        Snackbar snack=null;
-        View snackView;
-        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
-            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);
-        else
-            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
-        snackView = snack.getView();
-        snackView.bringToFront();
-        snackView.setBackgroundColor(bgcolor);
-        snack.show();
-    }
+
     public void setLAYOUT(){
         //LAYOUT=findViewById(R.id.display_history_layout);//setupLayout;
         Log.i(TAG,"BaseActivity setLAYOUT!!");
     }
 
-    /*****************
+    /**********************************************************
      * fucntion to render the profile picture of the user.
      *  @param uri - Uri of the users' profile picture.
-     ****************/
+     **********************************************************/
     public void displayProfilePic(Uri uri, final ImageView anImageView){
         Glide.with(getApplicationContext())
                 .load(uri)

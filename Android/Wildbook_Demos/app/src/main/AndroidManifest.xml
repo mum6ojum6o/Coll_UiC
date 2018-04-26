@@ -12,6 +12,7 @@
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
+        android:name=".WildbookApplication"
         android:allowBackup="true"
         android:icon="@mipmap/wildbook2"
         android:label="@string/app_name"
@@ -23,39 +24,28 @@
             android:launchMode="singleInstance"></activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleInstance"
-            />
+            android:launchMode="standard" />
 
         <activity
             android:name=".GalleryUploadImagePreviewRecyclerViewActivity"
-            android:noHistory="false"/>
-        <activity android:name=".UserContributionsActivity"/>
+            android:noHistory="false" />
+        <activity android:name=".UserContributionsActivity" />
         <!-- android:screenOrientation="portrait"-->
         <activity
+            android:noHistory="true"
             android:name=".CameraMainActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true" />
+            android:screenOrientation="portrait" />
         <activity android:name=".UploadCamPicsActivity" />
         <service android:name=".SyncerService" />
-
         <activity android:name=".ImagePreviewActivity" />
-        <!--
+
         <receiver
-            android:namNetworkScannerBroadcastReceivernner"
+            android:name=".NetworkScannerBroadcastReceiver"
             android:enabled="true"
             android:label="WiFi Scanner Broadcast Receiver">
-        <intent-filter android:priority="10">
-            <action android:name="android.net.wifi.STATE_CHANGE"></action>
-        </intent-filter>
-        </receiver>
-        -->
-        <receiver
-            android:name=".ActivityUpdaterBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:label="Displays updates on the resumed activity">
             <intent-filter android:priority="10">
-                <action android:name="com.ibeis.Wildbook.Wildbook_demos" />
+                <action android:name="android.net.wifi.STATE_CHANGE"></action>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
             </intent-filter>
         </receiver>
 

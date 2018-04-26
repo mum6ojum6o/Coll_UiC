@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/camera_main_layout"
     android:gravity="bottom">
     <TextureView
         android:layout_width="match_parent"

@@ -29,6 +29,7 @@ import java.util.Date;
 
 /************************************************
  * Activity to preview the images selected from the Image Gallery of the device.
+ * This class will be deprecated
  ************************************************/
 public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity implements View.OnClickListener{
     final static public String TAG= "GalleryUploadImagePreviewRecyclerViewActivity";
@@ -48,7 +49,7 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
 
         setContentView(R.layout.activity_camera_upload_preview);
         ArrayList<String> stringToUri;
-        selectedImages = getIntent().getStringArrayListExtra("selectedImages");
+        selectedImages = getIntent().getStringArrayListExtra("mSelectedImages");
         stringToUri = getIntent().getStringArrayListExtra("ImageUris");
         if (stringToUri != null && selectedImages.get(0) != null) {
             for (String aUri : stringToUri) {
@@ -84,7 +85,7 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
     }
     public void getSelectedImages(){
         for (int i=0;i<selectedImages.size();i++){
-            if(recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility()==View.VISIBLE){
+            if(recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility()==View.VISIBLE){
                 mClickedImages.add(selectedImages.get(i));
             }
         }
@@ -162,8 +163,8 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
      **************************/
     public void selectAll(){
         for(int i=0;i<selectedImages.size();i++) {
-            if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() != View.VISIBLE) {
-                recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.VISIBLE);
+            if (recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility() != View.VISIBLE) {
+                recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).setVisibility(View.VISIBLE);
             }
         }
         adapter.updateAllViewHolderVisibilityStatus(true);
@@ -172,8 +173,8 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
     //method to unselcet all images
     protected void unSelectAll(){
         for (int i=0;i<selectedImages.size();i++) {
-            if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() == View.VISIBLE) {
-                recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
+            if (recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility() == View.VISIBLE) {
+                recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).setVisibility(View.INVISIBLE);
                 //mSelectedImages.add(imagesNames.get(i));
             }
             adapter.updateAllViewHolderVisibilityStatus(false);
@@ -220,7 +221,7 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
 
     /***************************************
      *
-     * Method to check if all filesPaths that are to be previewed/uploaded are valied and exist in the device.
+     * Method to check if all filesPaths that are to be previewed/uploaded are valid and exist in the device.
      * @param selectedImages
      * @return
      *************************************/
@@ -306,7 +307,7 @@ public class GalleryUploadImagePreviewRecyclerViewActivity extends BaseActivity 
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+
                         Intent intent = new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

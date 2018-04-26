@@ -3,6 +3,7 @@ package com.ibeis.wildbook.wildbook;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -31,7 +32,8 @@ import java.util.ArrayList;
 /*************************************************************************
  * Class to view full screen preview of the images
  *********************************************************************/
-public class ImagePreviewActivity extends BaseActivity implements GestureDetector.OnGestureListener,View.OnClickListener{
+public class ImagePreviewActivity extends BaseActivity implements GestureDetector.OnGestureListener,
+        View.OnClickListener,NetworkScannerBroadcastReceiver.NetworkChangeReceiverListener{
     private static final String TAG="ImagePreviewActivity";
     private GestureDetectorCompat mDetector;
     double mPrimaryXCoord= 0.0,mSecondaryXCoord= 0.0;
@@ -59,6 +61,7 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
         if(getIntent().getStringArrayListExtra("assets")==null) { //image upload scenario
             setContentView(R.layout.activity_imageview_activity);
             LinearLayout ll = (LinearLayout)findViewById(R.id.linearLayout_imageview_act);
+            LAYOUT = ll;
             ll.setBackgroundColor(getColor(R.color.font));
             if(getIntent().hasExtra("POS"))
                 mUri= Uri.parse(getIntent().getStringExtra("POS"));
@@ -116,6 +119,7 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
         // to Display the image(s) belonging to an Encounter
         else if(getIntent().getStringArrayListExtra("assets") !=null){
             setContentView(R.layout.activity_display_images_using_recycler_view);
+            LAYOUT = findViewById(R.id.display_history_layout);
             recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
             findViewById(R.id.encounter_details).setVisibility(View.VISIBLE);
             TextView longitude,latitude,date,encounterId,individualId,individualName,errorMessageTxtView;
@@ -147,7 +151,6 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
 
             }
 
-
             recyclerView.setHasFixedSize(true);
             if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)
                 recyclerView.setLayoutManager(new GridLayoutManager(ImagePreviewActivity.this,2));
@@ -163,6 +166,14 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
             recyclerView.setAdapter(recyclerViewAdapter);
         }
     }
+    public void onResume(){
+        super.onResume();
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(this);
+    }
+    public void onPause(){
+        super.onPause();
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(null);
+    }
     protected void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -171,7 +182,7 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         new Utilities(ImagePreviewActivity.this).setCurrentIdentity("");
@@ -288,6 +299,17 @@ public class ImagePreviewActivity extends BaseActivity implements GestureDetecto
                     startActivity(intent);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onNetworkStatusChanged(boolean isConnected) {
+        setLAYOUT();
+        if(isConnected){
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.online,MainActivity.POS_FEEDBACK);
+        }
+        else{
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.offline, Color.RED);
         }
     }
 }

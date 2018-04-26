@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by Arjan on 4/1/2018.
+ * the test class can be deprecated
  */
 @RunWith(AndroidJUnit4.class)
 public class GalleryUploadImagePreviewRecyclerViewActivityTest {
@@ -54,7 +55,7 @@ public class GalleryUploadImagePreviewRecyclerViewActivityTest {
         uriArrayList.add(uri2);
         Intent intent = new Intent();
         intent.putStringArrayListExtra("ImageUris",uriArrayList);
-        intent.putStringArrayListExtra("selectedImages",selectedImagesArrayList);
+        intent.putStringArrayListExtra("mSelectedImages",selectedImagesArrayList);
         galleryUploadImagePreviewRecyclerViewActivityActivityTestRule.launchActivity(intent);
         onView(withId(R.id.dispselimgLayout)).check(matches(isDisplayed()));
 

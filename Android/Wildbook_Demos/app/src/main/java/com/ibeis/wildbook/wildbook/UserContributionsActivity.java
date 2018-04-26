@@ -4,11 +4,15 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Message;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,12 +44,19 @@ import org.json.JSONObject;
  * Activity to preview the images uploaded by the user
  * Displays User Contribution.
  *******************************************************************/
-public class UserContributionsActivity extends BaseActivity {
-    private static final int DOWNLOADING = 77;
-    private static final int COMPLETE = 200;
-    private static final int PROG_UPDATE = 853;
+public class UserContributionsActivity extends BaseActivity
+        implements NetworkScannerBroadcastReceiver.NetworkChangeReceiverListener {
+    public static final int DOWNLOADING = 77;
+    public static final int COMPLETE = 200;
+    public static final int PROG_UPDATE = 853;
     public static final String TAG = "UserContributionsActivity ";
+    // this handler may cause a memory leak.
+    /****************************************
+     * "Messages posted to the message queue will hold a reference to the Handler so that the framework
+     * can call Handler#handleMessage(Message) when the Looper eventually processes the message." - https://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
+     *  When:
 
+    ****************************/
     public Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message message) {
@@ -82,7 +93,7 @@ public class UserContributionsActivity extends BaseActivity {
                     adapter = new RecyclerViewAdapter(getApplicationContext(), reversedJSONArray);
                     recyclerView.setAdapter(adapter);
                     break;
-                case 404:
+                case 404: // When an error is encountered while downloading the images.
                     loadingImageView.setVisibility(View.INVISIBLE);
                     Dialog dialog = new Dialog(UserContributionsActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -109,6 +120,8 @@ public class UserContributionsActivity extends BaseActivity {
     // Creating RecyclerView.
     RecyclerView recyclerView;
 
+    //CountingResources are used to test asynchronous tasks.
+    CountingIdlingResource idlingResource = new CountingIdlingResource("TEST");
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter;
     private TextView errorMessage;
@@ -154,16 +167,20 @@ public class UserContributionsActivity extends BaseActivity {
             recyclerView.setHasFixedSize(true);
             recyclerView.setVisibility(View.INVISIBLE);
             // Setting RecyclerView layout as LinearLayout.
-            recyclerView.setLayoutManager(new GridLayoutManager(UserContributionsActivity.this, 4));
+            recyclerView.setLayoutManager(new GridLayoutManager(UserContributionsActivity.this, 3));
             findViewById(R.id.cardview_EncDetails_encompassing).setVisibility(View.GONE);
             errorMessage = (TextView) findViewById(R.id.errormsgtxtvw);
             errorMessage.setText(R.string.loadingImages);
 
             if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
-                setLAYOUT();
-                displaySnackBar(R.string.offline, getColor(R.color.red));
+               // setLAYOUT();
+                //displaySnackBar(R.string.offline, getColor(R.color.red));
             }
             else {
+                progressDialog = new ProgressDialog(UserContributionsActivity.this);
+                progressDialog.setMessage(getResources().getString(R.string.imageloading));
+                progressDialog.show();
+                idlingResource.increment();
                 //initiate the download of user contribution in a worker thread
                 new Thread(new Runnable() {
 
@@ -202,13 +219,13 @@ public class UserContributionsActivity extends BaseActivity {
                                         if (jsonArray.getJSONObject(i).has("thumbnailUrl"))
                                             imagePaths.add((jsonArray.getJSONObject(i).get("thumbnailUrl").toString()));
                                     }
-
-
+                                    // could this statement cause a Memory leak on config change?
                                     Message msg = mHandler.obtainMessage(200);
                                     Bundle bundle = new Bundle();
                                     bundle.putStringArrayList("JSON_RESPONE", imagePaths);
                                     bundle.putString("JSON_RESPONEI", response);
 
+                                    idlingResource.decrement();
                                     msg.setData(bundle);
                                     msg.sendToTarget();
                             /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
@@ -217,6 +234,7 @@ public class UserContributionsActivity extends BaseActivity {
                                     Message msg = mHandler.obtainMessage(404);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("404", getResources().getString(R.string.server_offline));
+                                    idlingResource.decrement();
                                     msg.setData(bundle);
                                     msg.sendToTarget();
                                 }
@@ -228,11 +246,12 @@ public class UserContributionsActivity extends BaseActivity {
                             Message msg = mHandler.obtainMessage(404);
                             Bundle bundle = new Bundle();
                             bundle.putString("404", getResources().getString(R.string.server_offline));
+                            idlingResource.decrement();
                             msg.setData(bundle);
                             msg.sendToTarget();
                         }
 
-                        progressDialog.dismiss();
+                        progressDialog.dismiss(); // no point of having a progress
 
                     }
                 }).start();
@@ -245,14 +264,14 @@ public class UserContributionsActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         // Assign activity this to progress dialog.
-        progressDialog = new ProgressDialog(UserContributionsActivity.this);
+
      }
 
     @Override
     public void onResume() {
 
         super.onResume();
-        ActivityUpdaterBroadcastReceiver.activeActivity = this;
+
         ///this code should be in worker thread.
         if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
             setLAYOUT();
@@ -262,16 +281,19 @@ public class UserContributionsActivity extends BaseActivity {
             if(LAYOUT!=null) {
                 setLAYOUT();
                 displaySnackBar(R.string.online, getColor(R.color.green));
+
             }
 
         }
         String naam = new Utilities(this).getCurrentIdentity();
         Log.i(TAG, "in on Resume:" + naam);
+        // if the current user information is not found in the shared preference then redirect to the Login Activity
         if (naam.equals("No Email ID") || naam == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
 
         }
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(this);
     }
 
     protected void signOut() {
@@ -283,7 +305,7 @@ public class UserContributionsActivity extends BaseActivity {
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient = null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity = null;
+
                         Intent intent = new Intent(UserContributionsActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
@@ -301,7 +323,7 @@ public class UserContributionsActivity extends BaseActivity {
     }
     public void onPause(){
         super.onPause();
-        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(null);
     }
     /**********************************************
      * Method that displays a snackbar
@@ -319,5 +341,24 @@ public class UserContributionsActivity extends BaseActivity {
         snackView = snack.getView();
         snackView.setBackgroundColor(bgcolor);
         snack.show();
+    }
+
+    @Override
+    public void onNetworkStatusChanged(boolean isConnected) {
+            setLAYOUT();
+            if(isConnected){
+                new Utilities(this).displaySnackBar(LAYOUT,R.string.online,MainActivity.POS_FEEDBACK);
+            }
+            else{
+                new Utilities(this).displaySnackBar(LAYOUT,R.string.offline, Color.RED);
+            }
+
+    }
+    @VisibleForTesting
+    @NonNull
+    public CountingIdlingResource getIdlingResource(){
+        if(idlingResource==null)
+            idlingResource = new CountingIdlingResource("TEST");
+        return idlingResource;
     }
 }

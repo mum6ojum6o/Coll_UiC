@@ -69,5 +69,5 @@
         android:layout_marginRight="14dp"
         android:layout_toLeftOf="@id/imageButton"
         android:alpha="0.5"
-        app:srcCompat="@drawable/ic_burst_mode_48px" />
+        app:srcCompat="@drawable/ic_burst" />
 </RelativeLayout>

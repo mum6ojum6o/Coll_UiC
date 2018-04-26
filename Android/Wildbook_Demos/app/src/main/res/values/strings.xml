@@ -26,9 +26,11 @@
     <string name="historyString">Your Contribution</string>
     <string name="wifiString">Wifi Only</string>
     <string name="mobiledataString">Mobile Data</string>
+    <string name="mobile_data_wifi_string">Mobile Data and Wifi</string>
     <string name="anyString">Any</string>
     <string name="online">You are online!</string>
     <string name="imagesNotUploaded">Images were not uploaded!!</string>
+    <string name="imagesWillBeUploadedShortly"> Images will be uploaded shortly</string>
     <string name="uploading_images">Uploading Images...</string>
     <string name="connectivityLossMessageString">Since you are no longer connected to the internet,
         the selected images will be uploaded automatically once your device connectivity resumes.
@@ -42,6 +44,7 @@
     <string name="live_encounter">Capture Encounter</string>
     <string name="uploadRequestOnNoNetwork">The images will be uploaded on the availability of appropriate network!</string>
     <string name="server_offline">Unfortunately, you contribution could not be retrieved.\n Please try again after sometime</string>
+    <string name="error_title">Something went wrong!</string>
     <string name="sync_error">There was an issue during syncing. Please try again after some time</string>
     <string name="file_not_found_error">The File you were trying to upload could not be found!</string>
     <string name="preferences">Preferences</string>
@@ -55,14 +58,23 @@
     <string name="maxuploadString">Please select upto 10 images only</string>
     <string name="maxuploadHeaderString">Maximum Upload Limit</string>
     <string name="encounterDetailsLabel"><u>Encounter Details</u></string>
-    <string name="mobiledatacost">Data charges may apply. Agree?</string>
+    <string name="mobiledatacost">Data charges may apply. Do you agree?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="userdetails">User Details</string>
     <string name="thankyou">Hurray!</string>
+    <string name="sync_completed">Upload Sucessfull</string>
     <string name="whatnext">We appreciate your contribution to the Wildbook cause.
         What next? While we process the encounter you posted, you can check out your contributions
         by clicking on the "Your Contibutions" button.
     </string>
     <string name="loadingImages">Loading Images...</string>
+    <string name="channel_name">Sync Notifications</string>
+    <string name="sync_started">Sync Started!</string>
+    <string name="upload_started">Upload Started</string>
+    <string name="error">Error</string>
+    <string name="channel_description">Notifications pertaining to encounters</string>
+    <string name="downloading_images">Downloading Images</string>
+    <string name="burstmodeon"> Burst Mode is On and set to capture 3 images</string>
+    <string name="burstmodeoff"> Burst Mode is Off</string>
 </resources>

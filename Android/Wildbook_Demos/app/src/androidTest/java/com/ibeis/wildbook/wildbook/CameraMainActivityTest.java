@@ -1,5 +1,6 @@
 package com.ibeis.wildbook.wildbook;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -30,5 +31,6 @@ public class CameraMainActivityTest {
         onView(withId(R.id.DiscardBtn2)).check(matches(isDisplayed()));
         onView(withId(R.id.UnselectAll)).check(matches(isDisplayed()));
     }
+
 
 }

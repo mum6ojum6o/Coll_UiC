@@ -11,17 +11,17 @@
     card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="65dp"
         android:background="#ECEFF1">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imagePreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@mipmap/ic_launcher" />
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/image_selected_icon"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@mipmap/ic_launcher" />
@@ -29,7 +29,7 @@
             android:id="@+id/imageView3_positive_ID"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_alignEnd="@id/imageView"
+            android:layout_alignEnd="@id/imagePreview"
             />
 
     </RelativeLayout>

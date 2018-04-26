@@ -1,6 +1,7 @@
 package com.ibeis.wildbook.wildbook;
 
 import android.app.Activity;
+//import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -11,9 +12,16 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -29,7 +37,7 @@ import java.util.List;
  ***************************************************************/
 
 public class Utilities {
-
+    public CountingIdlingResource idlingResource = new CountingIdlingResource("TEST1");
     private static final String TAG = "Utilities Class";
     private AlertDialog.Builder mAlertDialogBuilder;
     private SharedPreferences mSharedPreference;
@@ -120,18 +128,7 @@ public class Utilities {
 
                     }
                 });
-                /*.setNeutralButton(R.string.anyString,new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int id){
-                        Log.i(TAG," = Button");
-                   //     Toast.makeText(mContext,"neutral Button",Toast.LENGTH_SHORT).show();
-                        writeSyncPreferences(mContext.getString(R.string.anyString));
-                        //TODO - call a function that enters records to the SQLite database
-                        mContext.startActivity(new Intent(mContext,MainActivity.class));
-                        insertRecords();
-                        ((Activity)mContext).finish();
-                    }
-                });*/
+
         return mAlertDialogBuilder;
     }
     /*****************************************************************
@@ -140,18 +137,18 @@ public class Utilities {
     public boolean checkSharedPreference(String username){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
                 R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
-        if(mSharedPreference.getString(username,"Sync_Preference")=="Sync_Preference"){
+        if(mSharedPreference.getString(username,"Sync_Preference").equals("Sync_Preference")){
             return false;
         }
         else
             return true;
     }
-public String getSyncSharedPreference(){
-    mSharedPreference = mContext.getSharedPreferences(mContext.getString(
+    public String getSyncSharedPreference(){
+        mSharedPreference = mContext.getSharedPreferences(mContext.getString(
             R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
-    String username = getCurrentIdentity();
-    return mSharedPreference.getString(username,"Sync_Preference");
-}
+        String username = getCurrentIdentity();
+        return mSharedPreference.getString(username,"Sync_Preference");
+    }
     public String getSyncSharedPreference(String zzxxyz){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
                 R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
@@ -159,6 +156,7 @@ public String getSyncSharedPreference(){
     }
     /****************************************************************
     Method writes to the sharedPreferences file
+     @param string
      ****************************************************************/
     public void writeSyncPreferences(String string){
         mSharedPreference = mContext.getSharedPreferences(mContext.getString(
@@ -185,7 +183,6 @@ public long getEncounterNumPreferences(){
             R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
     if(mSharedPreference.contains(mContext.getString(R.string.encounter))){
         enctrNum=mSharedPreference.getLong(mContext.getString(R.string.encounter),-1);
-
     }
     else{
         enctrNum=1;
@@ -194,53 +191,37 @@ public long getEncounterNumPreferences(){
     return enctrNum;
 }
 
-    /*******
+    /*****************************************
      * Gets the details of the user that is currently logged in
      * @return
-     */
+     ***************************************/
     public String getCurrentIdentity(){
     mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
-    if(mSharedPreference.contains("zzxxyz"))
-        return mSharedPreference.getString("zzxxyz","");
+    if(mSharedPreference.contains("zzxxyz")) {
+
+        return mSharedPreference.getString("zzxxyz", "");
+    }
     else
         return "";
 }
-    /*******
+    /*************************************
      * Sets the details of the user that is currently logged in
      * @return
-     */
-public void setCurrentIdentity(String zzxxyz){
-    mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
-    SharedPreferences.Editor editor=mSharedPreference.edit();
-    editor.putString("zzxxyz",zzxxyz);
-    editor.commit();
-}
-
-    /****
-     * This method will be used to insert data into the imageRecorder database.
-     * @param fileName
-     * @param latitude
-     * @param longitude
-     * @param username
-     * @param date
-     * @param isUploaded
-     */
-    //final static String[] columns_imagesrecorder = {_ID,FILE_NAME,LONGITUDE,LATITUDE,USER_NAME,DATE,IS_UPLOADED};
-    public void writeToDB(String fileName,
-                          long latitude,
-                          long longitude,
-                          String username,
-                          Date date,
-                          boolean isUploaded){
-
+     *************************************/
+    public void setCurrentIdentity(String zzxxyz){
+        mSharedPreference = mContext.getSharedPreferences( mContext.getString(R.string.sharedpreferencesFileName),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=mSharedPreference.edit();
+        editor.putString("zzxxyz",zzxxyz);
+        editor.commit();
     }
 
-    /****
+    /****************************************************
      * Method to insert record in to the SQLite database
-     */
+     ****************************************************/
     public void insertRecords(){
         InsertToDB insertRecords= new InsertToDB(mDbhelper,mRecord);
         Log.i(TAG, "starting insertion on a new Thread!!");
+        idlingResource.increment();
         new Thread(insertRecords).start();
 
     }
@@ -273,6 +254,7 @@ public void setCurrentIdentity(String zzxxyz){
         }
     @Override
     public void run() {
+
         Log.i(TAG,"inserting records");
 
         SQLiteDatabase db=null;
@@ -309,7 +291,7 @@ public void setCurrentIdentity(String zzxxyz){
         }
        //close the database.
         db.close();
-        //Start the Syncing Service.
+        idlingResource.decrement();
      }
 
     }
@@ -320,6 +302,7 @@ public void setCurrentIdentity(String zzxxyz){
      @buttonId refers to the Id of the button that initiates the sync. value is -1 if service is started internally
      *************************************/
     public void startSyncing(){
+        Log.i(TAG,"in start Syncing");
         Intent intent = new Intent(mContext,SyncerService.class);
         if(!SyncerService.IsRunning) {
             intent.putExtra("SyncStarted", MainActivity.SYNC_STARTED);
@@ -480,31 +463,49 @@ public void setCurrentIdentity(String zzxxyz){
         return false;
     }*/
 
+
     // Method used for sending Syncing Notifications....
     public void sendNotification(String msg,  String naam) {
+        String CHANNEL_ID = "Wildbook Notification Channel";
+        /* //This code works just fine. but it has been commented because the Target SDK is 25.
+        //It needs Target SDK to be 26+ in order to work.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            CharSequence name =  mContext.getResources().getString(R.string.channel_name);
+            String description = mContext.getResources().getString(R.string.channel_description);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(description);
+            // Register the channel with the system
+            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+        }*/
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+                .setContentTitle(mContext.getResources().getString(R.string.app_name))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
         NotificationManager mNotificationManager = (NotificationManager)
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder;
         PendingIntent contentIntent=null;
-        mBuilder = new NotificationCompat.Builder(mContext)
-                        .setContentTitle("Wildbook")
-                        .setAutoCancel(true)
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
-        if(msg.equals("Sync Started!")) {
+        if(msg.equals(mContext.getResources().getString(R.string.sync_started))) {
             contentIntent = PendingIntent.getActivity(mContext, 0,
                     new Intent(mContext, MainActivity.class), 0);
             mBuilder.setSmallIcon(R.drawable.notification_sync);
-
-
+            mBuilder.setContentText(msg);
         }
-        else if(msg.equals("Upload Started")){
+        else if(msg.equals(mContext.getResources().getString(R.string.upload_started))){//difference between this and the one on top?
             mBuilder.setSmallIcon(R.drawable.imageuploading);
+            mBuilder.setContentText(msg);
         }
-        else if(msg.equals("Error")){
+        else if(msg.equals(mContext.getString(R.string.sync_error))||
+                msg.equals(mContext.getString(R.string.file_not_found_error))||
+                msg.equals(mContext.getResources().getString(R.string.error))){
+            Log.i(TAG,"Error notification reported!");
             mBuilder.setSmallIcon(R.drawable.error);
-            //mBuilder.setContentText(mContext.getResources().getString(R.string.sync_error));
+            mBuilder.setContentText(mContext.getResources().getString(R.string.error_title));
+            mBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText(mContext.getResources().getString(R.string.sync_error)));
         }
         else{
             Intent intent = new Intent(mContext,UserContributionsActivity.class);
@@ -514,7 +515,7 @@ public void setCurrentIdentity(String zzxxyz){
             contentIntent = PendingIntent.getActivity(mContext, 0,
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setSmallIcon(R.drawable.notification_sync_complete);
-
+            mBuilder.setContentText(mContext.getResources().getString(R.string.sync_completed));
         }
         if(contentIntent!=null) {
             mBuilder.setContentIntent(contentIntent);
@@ -522,8 +523,38 @@ public void setCurrentIdentity(String zzxxyz){
         mNotificationManager.notify(1, mBuilder.build());
     }
 
+    /**********************************************
+     * Method that displays a snackbar
+     * @param message to be displayed in the snackbar
+     * @param bgcolor background color of the snackbar
+     ***********************************************/
+    public void  displaySnackBar(View layout,int message,int bgcolor){
+        Snackbar snack=null;
+        View snackView;
 
-
+        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
+            snack=Snackbar.make(layout,message,Snackbar.LENGTH_INDEFINITE);
+        else
+            snack=Snackbar.make(layout,message,Snackbar.LENGTH_SHORT);
+        snackView = snack.getView();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
+    }
+    public void  displaySnackBar(View layout,String message,int bgcolor){
+        Snackbar snack=null;
+        View snackView;
+        snack=Snackbar.make(layout,message,Snackbar.LENGTH_SHORT);
+        snackView = snack.getView();
+        snackView.setBackgroundColor(bgcolor);
+        snack.show();
+    }
+    @VisibleForTesting
+    @NonNull
+    public CountingIdlingResource getIdlingResource(){
+        if(idlingResource==null)
+            idlingResource = new CountingIdlingResource("TEST1");
+        return idlingResource;
+    }
 
 
 }

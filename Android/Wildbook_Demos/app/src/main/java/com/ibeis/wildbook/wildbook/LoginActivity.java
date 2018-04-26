@@ -139,9 +139,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /*************************************
-     *method to prompt user to select one of google accounts added on the device
+     *Method to prompt user to select one of google accounts added on the device
      ************************************/
-
     private void signIn(){
         Log.i(TAG,"Signing In!!");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);

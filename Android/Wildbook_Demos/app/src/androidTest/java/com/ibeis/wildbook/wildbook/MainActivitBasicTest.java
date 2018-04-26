@@ -19,7 +19,11 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import static android.support.test.InstrumentationRegistry.getContext;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -61,12 +65,7 @@ public class MainActivitBasicTest {
         onView(withId(R.id.RepEnc)).perform(click());
         onView(withId(R.id.imageButton)).check(matches(isDisplayed()));
     }
-    @Test
-    //needs work...
-    public void onYourContributionsButtonClick_LaunchesUserContributionsActivity(){
-        onView(withId(R.id.historyBtn)).perform(click());
-        onView(withId(R.id.loadingImgView)).check(matches(not(isDisplayed())));
-    }
+
 
 
    /* @Test
@@ -80,8 +79,17 @@ public class MainActivitBasicTest {
     public void onNameContextMenuItemClick(){
         openContextualActionModeOverflowMenu();
         onView(withText("Arjan Mundy")).perform(click());
+        //onView(withId(R.id.menu_name)).perform(click());
         onView(withId(R.id.user_name_details)).check(matches(isDisplayed()));
     }
+
+    /*public void optionMenuItemSelect_Logout(){
+        //onView(withId(R.id.menu)).perform(click());
+        openContextualActionModeOverflowMenu();
+        onView(withText("Logout"))
+                .perform(click());
+        onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
+    }*/
 
     @Test
     public void onPreferencesContextMenuItemClick(){
@@ -94,8 +102,8 @@ public class MainActivitBasicTest {
     public void onUploadEncounterClick_GreaterThan10ImagesSelected(){
         Intent resultData = new Intent();
         ArrayList<Parcelable> parcelableArrayList = new ArrayList<>();
-        Uri uri1= Uri.parse("image/* {U:content://com.android.providers.media.documents/document/image%3A17545}");
-        Uri uri2= Uri.parse("image/* {U:content://com.android.providers.media.documents/document/image%3A17510}");
+        Uri uri1= Uri.parse("image {U:content://com.android.providers.media.documents/document/image%3A17545}");
+        Uri uri2= Uri.parse("image {U:content://com.android.providers.media.documents/document/image%3A17510}");
         for(int i=0;i<6;i++){
             parcelableArrayList.add(uri1);
             parcelableArrayList.add(uri2);
@@ -114,19 +122,6 @@ public class MainActivitBasicTest {
                 check(matches(isDisplayed()));
     }
 
-    @Test
-    public void onUploadEncounterClick(){
-        parcelableArrayList.add(uri1);
-        parcelableArrayList.add(uri2);
-        resultData.setData(uri1);
-        resultData.setData(uri2);
-        Instrumentation.ActivityResult result =
-                new Instrumentation.ActivityResult(Activity.RESULT_OK,resultData);
-        Intents.init();
-        intending(Matchers.not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData));
-        onView(withId(R.id.GallUpload)).perform(click());
-        Intents.release();
-        onView(withId(R.id.dispselimgLayout)).check(matches(isDisplayed()));
-    }
+
 
 }

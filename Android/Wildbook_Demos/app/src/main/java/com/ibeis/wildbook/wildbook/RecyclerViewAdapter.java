@@ -45,14 +45,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(Context context, JSONArray jsonArray){
         this.mContext =context;
         this.mJsonArray=jsonArray;
-
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_items, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(view,mContext);
         viewHolder.imageView3_identified.setVisibility(View.INVISIBLE);
         Log.i("RecyclerViewAdapter","ON_create_VIEW_HOLDER!!!");
@@ -62,11 +59,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.imageView3_identified.setVisibility(View.INVISIBLE);
-        if(mMainImageUploadInfoList!=null) {
+        if(mMainImageUploadInfoList!=null) {//
             Uri UploadInfo = mMainImageUploadInfoList.get(position);
             // holder.imageNameTextView.setText(UploadInfo.getImageName());
             Log.i("RecyclerViewAdapter", "ON_BIND_VIEW_HOLDER!!!");
-            //Loading image from Glide library.
+            //Loading image using Glide library.
             Glide.with(mContext)
                     .load(UploadInfo)
                     .centerCrop()
@@ -78,6 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             try {
                 Uri uploadInfo = Uri.parse(mJsonArray.getJSONObject(position).getString("thumbnailUrl"));
                 if(mJsonArray.getJSONObject(position).has("individualId")) {
+                    // if the encounter has individual ID
                     Log.i(TAG,"identified:"+mJsonArray.getJSONObject(position).getString("individualId"));
                     holder.imageView3_identified.setVisibility(View.VISIBLE);
                     //holder.imageView3_identified.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_tag,null));
@@ -92,6 +90,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 else{
                     holder.imageView.setPadding(0,0,0,0);
                 }
+                String anUploadInfo = uploadInfo.toString();
+                uploadInfo = Uri.parse(anUploadInfo);
                 Glide.with(mContext)
                         .load(uploadInfo)
                         .centerCrop()
@@ -123,8 +123,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View itemView,Context context) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            imageView2 = (ImageView)itemView.findViewById(R.id.imageView2);
+            imageView = (ImageView) itemView.findViewById(R.id.imagePreview);
+            imageView2 = (ImageView)itemView.findViewById(R.id.image_selected_icon);
             imageView3_identified = (ImageView)itemView.findViewById(R.id.imageView3_positive_ID);
             imageView2.setVisibility(View.INVISIBLE);
             imageView3_identified.setVisibility(View.INVISIBLE);

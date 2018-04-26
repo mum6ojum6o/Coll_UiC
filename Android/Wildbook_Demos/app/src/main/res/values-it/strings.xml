@@ -55,8 +55,26 @@
     <string name="maxuploadHeaderString">Limite di caricamento massimo</string>
     <string name="encounterDetailsLabel"><u>Dettagli dell\'incontro</u></string>
     <string name="thankyou">Hurray!</string>
-    <string name="whatnext">We appreciate your contribution to the Wildbook cause.
-        What next? While we process the encounter you posted, you can check out your contributions
-        by clicking on the "Your Contibutions" button.
+    <string name="whatnext">Apprezziamo il tuo contributo alla causa Wildbook.
+         Cosa succederà? Mentre elaboriamo l\'incontro che hai pubblicato, puoi dare un\'occhiata ai tuoi contributi
+         facendo clic sul pulsante "Your Contibutions".
     </string>
+    <string name="loadingImages">Caricamento immagini ...</string>
+    <string name="channel_name">Notifiche di sincronizzazione</string>
+    <string name="sync_started">Sincronizzazione avviata</string>
+    <string name="upload_started">Caricamento avviato</string>
+    <string name="error">Errore</string>
+    <string name="channel_description">Notifiche relative agli incontri</string>
+    <string name="downloading_images">Download di immagini </string>
+    <string name="cancelString">Annulla</string>
+    <string name="mobile_data_wifi_string">Dati mobili e Wifi</string>
+    <string name="imagesWillBeUploadedShortly">Le immagini verranno caricate a breve</string>
+    <string name="error_title">Qualcosa è andato storto!</string>
+    <string name="mobiledatacost">Potrebbero essere applicati costi di dati.</string>
+    <string name="yes">sì</string>
+    <string name="no">No</string>
+    <string name="userdetails">Dettagli utente</string>
+    <string name="sync_completed">Carica con successo</string>
+    <string name="burstmodeon"> Burst Mode is On and set to capture 3 images</string>
+    <string name="burstmodeoff"> La modalità Burst è disattivata</string>
 </resources>

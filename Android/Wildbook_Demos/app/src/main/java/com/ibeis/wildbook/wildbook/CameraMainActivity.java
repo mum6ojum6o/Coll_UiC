@@ -3,6 +3,7 @@
         import android.content.Context;
         import android.content.Intent;
         import android.content.pm.PackageManager;
+        import android.content.res.Configuration;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
         import android.graphics.ImageFormat;
@@ -85,7 +86,8 @@
  *********************************************************************/
 
 
-public class CameraMainActivity extends BaseActivity implements  View.OnClickListener,View.OnTouchListener,SensorEventListener {
+public class CameraMainActivity extends BaseActivity implements
+                View.OnClickListener,View.OnTouchListener,SensorEventListener {
     public static String SWAP="Rear";
     public static final int ROTATE_RIGHT=180,ROTATE_LEFT=0,DEF_ORIENTATION=270,UPSIDE_DOWN=90;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -193,6 +195,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private FloatingActionButton mCaptureButton;
     private static File mLatestFile;
     private static ImageView mPicPreview;
+    private CaptureRequest.Builder[] mCaptureStillBuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,13 +208,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         if(mSensor == null)
             Toast.makeText(this,"No Accelerometer!1",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_camera_main);
-        /*getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.wildbook2);
-        getSupportActionBar().setTitle(R.string.live_encounter);*/
-        /*action.setBackgroundDrawable(
-                new ColorDrawable(getResources().getColor(R.color.action_bar,null)));*/
-        createImageFolder();
+        createImageFolder();//setup directory
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mTextureView.setOnTouchListener(this);
         mCaptureButton = (FloatingActionButton) findViewById(R.id.photoButton);
@@ -225,6 +222,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         // mRecycleView.setLayoutManager(gridLayoutManager);
         //RecyclerView.Adapter imageAdapter = new CameraImageAdapter(mImageFolder);
         //List<File> files = Arrays.asList(Uri.fromFile(mImageFolder.listFiles()));
+
         mFileUris = new ArrayList<Uri>();
         for(File f: mImageFolder.listFiles()){
             mFileUris.add(Uri.fromFile(f));
@@ -236,7 +234,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         mBurstButton.setOnClickListener(this);
         mImageButton.setOnClickListener(this);
         mPicPreview.setOnClickListener(this);
-
+        setLAYOUT();
 
     }
 
@@ -270,12 +268,23 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+        if(mBurstButton.getAlpha()==0.5f) {
+            //Toast.makeText(this,getResources().getString(R.string.burstmodeon),Toast.LENGTH_SHORT).show();
+            mCaptureStillBuilder = new CaptureRequest.Builder[3];
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.burstmodeon,MainActivity.WARNING);
+        }
+        else {
+            mCaptureStillBuilder = new CaptureRequest.Builder[1];
+            //Toast.makeText(this,getResources().getString(R.string.burstmodeoff),Toast.LENGTH_SHORT).show();
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.burstmodeoff,MainActivity.WARNING);
+        }
         mSensorManager.registerListener(this,mSensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
     @Override
     public void onClick(View view){
         switch(view.getId()){
             case R.id.photoButton:
+                Toast.makeText(this,"Click!",Toast.LENGTH_SHORT).show();
                 takePhoto();
                 break;
             case R.id.picPreview:
@@ -307,10 +316,16 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 openCamera();
                 break;
             case R.id.burstModeButton:
-                    if(mBurstButton.getAlpha()==0.5)
-                        mBurstButton.setAlpha(1.0f);
-                    else
-                        mBurstButton.setAlpha(0.5f);
+                    if(mBurstButton.getAlpha()==0.5) {
+                        mBurstButton.setAlpha(1.0f); // Burst mode deactivated
+                        //Toast.makeText(this,getResources().getString(R.string.burstmodeoff),Toast.LENGTH_SHORT).show();
+                        new Utilities(this).displaySnackBar(LAYOUT,R.string.burstmodeoff,MainActivity.WARNING);
+                    }
+                    else {
+                        mBurstButton.setAlpha(0.5f); // Burst mode activated
+                        //Toast.makeText(this,getResources().getString(R.string.burstmodeon),Toast.LENGTH_SHORT).show();
+                        new Utilities(this).displaySnackBar(LAYOUT,R.string.burstmodeon,MainActivity.WARNING);
+                    }
                 break;
         }
     }
@@ -322,7 +337,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         if(mSensor!=null){
             mSensorManager.unregisterListener(this);
         }
-        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+
     }
     private Size mPreviewSize;
     private String mCameraId;
@@ -767,8 +782,11 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     private void createImageFolder() {
         //Log.i(TAG,"createImageFolder");
         if(ContextCompat.checkSelfPermission(getApplicationContext(),"android.permission.READ_EXTERNAL_STORAGE")== PackageManager.PERMISSION_GRANTED) {
+            //creating a directory on the external storage and tagging it for the purpose of storing images
+            //https://developer.android.com/guide/topics/data/data-storage.html
             File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             mImageFolder = new File(imageFile, "Wildbook");
+            ImageSaver.mImageSaver_folder =mImageFolder;
             if (!mImageFolder.exists()) {
                 mImageFolder.mkdirs();
             }
@@ -804,20 +822,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         }
     }
 
-    /****************
-     * Creates a file with the timestamp for an Image
-     * @return
-     * @throws IOException
-     *******************/
-    private File createImageFileName() throws IOException {
-        // Log.i(TAG,"createImageFileName");
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String prepend = "IMG_" + timestamp + "_";
-        File imageFile = File.createTempFile(prepend, ".jpg", mImageFolder);
-        mImageFileName = imageFile.getAbsolutePath();
-        //  Log.i(TAG,"Image FILE NAME="+mImageFileName);
-        return imageFile;
-    }
+
 
     /***************
      * Requests to Capturing of an Image to the connected Camera
@@ -842,6 +847,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                 }
             };
 
+    //Gestures Listener that enables zoom feature.
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         Log.i("CameraMain","onTouch!!!!!!!!");
@@ -902,6 +908,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
         private final Image mImage;
         private final Handler mHandler;
         private ArrayList<String> capturedImages;
+        public static File mImageSaver_folder;
 
         private ImageSaver(Image image) {
             mImage = image;
@@ -924,6 +931,8 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             byteBuffer.get(bytes);
             FileOutputStream fileOutputStream = null;
             try {
+                mImageFile=createImageFileName();
+                    Log.i("CamAct","FileName generated:"+mImageFile);
                 fileOutputStream = new FileOutputStream(mImageFile);
                 fileOutputStream.write(bytes);
 
@@ -941,92 +950,108 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                     }
                 }
             }
+            Log.i("CamAct","file:"+mImageFile);
             capturedImages.add(mImageFile.getAbsolutePath().toString());
             Message message = mHandler.obtainMessage(UPDATE_PIC_PREVIEW);
             mHandler.sendMessage(message);
         }
-    }
-
-    /**********
-     * Method that captures a still Image
-     */
-    private void captureStillImage() {
-        try {
-            CaptureRequest.Builder captureStillBuilder =
-                    mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureStillBuilder.addTarget(mImageReader.getSurface());
-            List<CaptureRequest> requests = new ArrayList<>();
-
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
-            CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
-            mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-            if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT){
-                /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
-                        ORIENTATIONSFRONT.get(rotation));
-                *///captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
-                Log.i("CamAct:","rotation:"+rotation);
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONSFRONT.get(rotation));
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,180); //rotate right
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,0); //rotate left
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,270); //default orientation
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,90); //portrait mode reciprocated.
-                Log.i("CamAct","mOrientation="+mOrientation);
-                captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);
-                Log.i("CamAct","LENS_FACING_FRONT ORIENTATIONSFRONT.get("+rotation+")="+ORIENTATIONSFRONT.get(rotation));
-            }
-            else {
-                /*captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,
-                        ORIENTATIONS.get(rotation));*/
-                // captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,getOrientation(rotation));
-               /* if (mZoom != null) {
-                    captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
-                }*/
-                Log.i("CamAct:","rotation:"+rotation);
-                Log.i("CamAct","mOrientation="+mOrientation);
-                //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONS.get(rotation));
-                captureStillBuilder.set(CaptureRequest.SCALER_CROP_REGION, mZoom);
-                captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);
-                Log.i("CamAct","getOrientation("+rotation+")="+getOrientation(rotation));
-            }
-            CameraCaptureSession.CaptureCallback captureCallback =
-                    new CameraCaptureSession.CaptureCallback() {
-                        @Override
-                        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-                            super.onCaptureCompleted(session, request, result);
-                            /*toast = Toast.makeText(getApplicationContext(),
-                                    "Image Captured!", Toast.LENGTH_SHORT);
-
-                            toast.show();*/
-                            unLockFocus();
-
-                        }
-                        public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
-                            super.onCaptureStarted(session, request, timestamp, frameNumber);
-                            //   Log.i(TAG,"captureStillImage+ onCapturestarted");
-                            try {
-                                //createImageFile();
-                                mImageFile=createImageFileName();
-                                Log.i("CamAct","FileName generated:"+mImageFile);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-            if(mBurstButton.getAlpha()==0.5f) {
-                requests.add(captureStillBuilder.build());
-                requests.add(captureStillBuilder.build());
-                requests.add(captureStillBuilder.build());
-
-                mCameraCaptureSession.captureBurst(requests, captureCallback, null);
-            }else
-            mCameraCaptureSession.capture(
-                    captureStillBuilder.build(), captureCallback, null
-            );
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
+        /****************
+         * Creates a file with the timestamp for an Image
+         * @return
+         * @throws IOException
+         *******************/
+        private File createImageFileName() throws IOException {
+            Log.i("CamAct","createImageFileName");
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String prepend = "IMG_" + timestamp + "_";
+            File imageFile = File.createTempFile(prepend, ".jpg", mImageSaver_folder);
+            mImageFileName = imageFile.getAbsolutePath();
+            Log.i("CamAct","Image FILE NAME="+mImageFileName);
+            return imageFile;
         }
     }
+
+    /***************************************
+     * Method that captures a still Image
+     *************************************/
+    private void captureStillImage() {
+        try {
+            CaptureRequest.Builder[] captureStillBuilder;
+
+            //list of capture requests to process burst mode.
+                List<CaptureRequest> requests = new ArrayList<>();
+                int rotation = getWindowManager().getDefaultDisplay().getRotation();
+                CameraCharacteristics cameraCharacteristics = mCameraManager.getCameraCharacteristics(mCameraId);
+                mSensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+                /*if(mBurstButton.getAlpha()==0.5f) { //Burst mode is enabled
+                    captureStillBuilder = new CaptureRequest.Builder[3];
+                    for(int i=0;i<captureStillBuilder.length;i++) {
+                        captureStillBuilder[i] = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                        captureStillBuilder[i].addTarget(mImageReader.getSurface());
+                    }
+                }
+                else {//burst Mode is disabled
+                    captureStillBuilder = new CaptureRequest.Builder[1];
+                    captureStillBuilder[0] = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                    captureStillBuilder[0].addTarget(mImageReader.getSurface());
+                }*/
+                for(int i=0;i<mCaptureStillBuilder.length;i++) {
+                mCaptureStillBuilder[i] = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                mCaptureStillBuilder[i].addTarget(mImageReader.getSurface());
+                }
+
+                if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT){
+
+                    Log.i("CamAct:","rotation:"+rotation);
+                    Log.i("CamAct","mOrientation="+mOrientation);
+                    for(int i=0;i<mCaptureStillBuilder.length;i++) {
+                        mCaptureStillBuilder[i].set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                        mCaptureStillBuilder[i].set(CaptureRequest.JPEG_ORIENTATION, mOrientation);
+                    }
+                    /*if(captureStillBuilder1!=null)
+                        captureStillBuilder1.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);*/
+                    Log.i("CamAct","LENS_FACING_FRONT ORIENTATIONSFRONT.get("+rotation+")="+ORIENTATIONSFRONT.get(rotation));
+                }
+                else {
+                    Log.i("CamAct:","rotation:"+rotation);
+                    Log.i("CamAct","mOrientation="+mOrientation);
+                    //captureStillBuilder.set(CaptureRequest.JPEG_ORIENTATION,ORIENTATIONS.get(rotation));
+                    for(int i=0;i<mCaptureStillBuilder.length;i++) {
+                        mCaptureStillBuilder[i].set(CaptureRequest.SCALER_CROP_REGION, mZoom);
+                        mCaptureStillBuilder[i].set(CaptureRequest.JPEG_ORIENTATION, mOrientation);
+                    }
+                    /*if(captureStillBuilder1!=null)
+                        captureStillBuilder1.set(CaptureRequest.JPEG_ORIENTATION,mOrientation);*/
+                    Log.i("CamAct","getOrientation("+rotation+")="+getOrientation(rotation));
+                }
+                CameraCaptureSession.CaptureCallback captureCallback =
+                        new CameraCaptureSession.CaptureCallback() {
+                            @Override
+                            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                                super.onCaptureCompleted(session, request, result);
+                                /*toast = Toast.makeText(getApplicationContext(),
+                                        "Image Captured!", Toast.LENGTH_SHORT);
+
+                                toast.show();*/
+                                unLockFocus();
+
+                            }
+                            public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+                                super.onCaptureStarted(session, request, timestamp, frameNumber);
+                            }
+                        };
+                    for(int i=0;i<mCaptureStillBuilder.length;i++) {
+                        requests.add(mCaptureStillBuilder[i].build());
+                    }
+                    //requests.add(captureStillBuilder.build());
+                    if(mBurstButton.getAlpha()==0.5f)
+                        mCameraCaptureSession.captureBurst(requests, captureCallback, null);
+                    else
+                        mCameraCaptureSession.capture(mCaptureStillBuilder[0].build(), captureCallback, null);
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
 
     /******
      * Method that sets the image preview for the best suitable dimensions
@@ -1212,7 +1237,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+
                         Intent intent = new Intent(CameraMainActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK|
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
@@ -1235,6 +1260,7 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
     protected Rect mZoom;
     protected int mOrientation=-1;
 
+    //Method that returns distance between two touch points.
     private float getFingerSpacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
@@ -1268,5 +1294,13 @@ public class CameraMainActivity extends BaseActivity implements  View.OnClickLis
             mOrientation=UPSIDE_DOWN;
         }*/
     }
+            public void setLAYOUT(){
+                if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
+                    LAYOUT=findViewById(R.id.camera_main_layout);//setupLayout;
 
+                }
+                else{
+                    LAYOUT=findViewById(R.id.camera_main_layout);
+                }
+            }
 }

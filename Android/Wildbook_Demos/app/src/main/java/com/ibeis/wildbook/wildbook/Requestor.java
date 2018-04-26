@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
 /*************************************************************************************************
  * Created by Arjan on 11/16/2017.
  *
- * This class creates the http request and uploads the mutlipart/form-data to the database API!!
+ * This class creates the http request and uploads the mutlipart/form-data to the Wildbook Server!!
  *************************************************************************************************/
 
 public class Requestor {
@@ -81,11 +81,11 @@ public class Requestor {
         mWriter.flush();
     }
 
-    /******
+    /*****************************************************
      * Method to add form field and its value to the http form
      * @param key
      * @param value
-     */
+     *******************************************************/
     public void addFormField(String key,String value){
         mWriter.append("--"+mBoundary).append("\r\n");
         mWriter.append("Content-Disposition: form-data;name=\""+ key+"\"").append("\r\n");
@@ -95,13 +95,13 @@ public class Requestor {
         mWriter.flush();
     }
 
-    /********
+    /*************************************************
      * Method to add filename to the HTTP form
      * @param fieldname
      * @param filename
      * @throws FileNotFoundException
      * @throws IOException
-     */
+     **************************************************/
     public void addFile(String fieldname,String filename) throws FileNotFoundException,IOException{
         File file =new File(filename);
         if(!file.exists()){
@@ -136,11 +136,11 @@ public class Requestor {
         }
     }
 
-    /********
+    /**********************************************
      * Creates the end of the HTTP request and retreives the response sent by the server.
      * @throws IOException
      * @throws JSONException
-     */
+     *********************************************/
     public void finishRequesting() throws IOException,JSONException {
         mWriter.append("\r\n").flush();
         mWriter.append("--" + mBoundary + "--").append("\r\n");
@@ -156,7 +156,6 @@ public class Requestor {
             while ((line = reader.readLine()) != null) {
                 Log.i(TAG, line);
                 jsonResponse = new JSONObject(line);
-
                 if (jsonResponse == null) {
                     Log.i(TAG,"Throwing Exception!!");
                     mHttpURLConnection.disconnect();
@@ -167,7 +166,7 @@ public class Requestor {
 
 
         } else {
-            Log.i(TAG,"Throwing Exception!! IOException");
+            Log.i(TAG,"Throwing Exception!!");
             mHttpURLConnection.disconnect();
             throw new IOException("Server returned non-OK status: " + status);
         }

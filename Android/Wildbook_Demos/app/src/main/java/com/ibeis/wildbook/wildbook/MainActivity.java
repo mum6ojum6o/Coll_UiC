@@ -11,18 +11,19 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -45,12 +46,22 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        NetworkScannerBroadcastReceiver.NetworkChangeReceiverListener,
+        ImageUploaderTaskRunnable.ImageUploadStatusListener{
+
+    LocalBroadcastManager mLocalBroadcastManager;
+    NetworkScannerBroadcastReceiver mReceiver;
    // protected View LAYOUT;
     protected static int WARNING,POS_FEEDBACK;
     protected static final int ONLINE=1;
@@ -63,34 +74,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     protected static final int CAMERA_PERMISSION_REQUEST_CODE=88;
     //request code for identifying the results for Internal_Storage permission
     protected static final int READ_STORAGE_PERMISSION_REQUEST=99;
+    //constant used to display sncakbar if Internet not Connected.
     protected  static final int INTERNET_NOT_CONNECTED =11;
     public static final String TAG ="MainActivity";
+    public int mCount=0;
     protected Button RepEncounter,SignOutBut,UploadFromGallery,History,mSync;
     //private FirebaseAuth mAuth;
     protected TextView UserName;
-    protected ArrayList<String> selectedImages= new ArrayList<String>();
+    protected ArrayList<String> mSelectedImages = new ArrayList<String>();
+    protected ArrayList<Uri> mUris = new ArrayList<>();
    // protected static String storagePath="Photos/";
    // protected static String databasePath="Photos/";
     //private GoogleApiClient mGoogleApiClient;
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
-    public static boolean MAIN_ACTIVITY_IS_RUNNING;
+    //public static boolean MAIN_ACTIVITY_IS_RUNNING;
     //private GoogleSignInAccount googleSignInAccount;
     //private ImageView mCricleImageView;
     private LocationRequest mLocationRequest;
     private LocationSettingsRequest mLocationSettingsRequest;
-
+    private static int syncRunCount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //MAIN_ACTIVITY_IS_RUNNING=true;
         super.onCreate(savedInstanceState);
-        NetworkScannerBroadcastReceiver scanner = new NetworkScannerBroadcastReceiver();
-        //test
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        getApplicationContext().registerReceiver(scanner,filter);
         Log.i(TAG,"MainActivity onCreate");
 
        // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -112,29 +120,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
        Log.i("LoginActivity",Auth.GOOGLE_SIGN_IN_API.getName());
        Log.i(TAG,"IsUploaded:"+getIntent().hasExtra("UploadRequested"));
         if(getIntent().hasExtra("UploadRequested"))
-            DisplayDialogue();
-
+            displayDialogue();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        MAIN_ACTIVITY_IS_RUNNING=true;
+        //MAIN_ACTIVITY_IS_RUNNING=true;
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        MAIN_ACTIVITY_IS_RUNNING=false;
+        //MAIN_ACTIVITY_IS_RUNNING=false;
     }
     @Override
     public void onResume(){
         super.onResume();
-        ActivityUpdaterBroadcastReceiver.activeActivity = this;
-        MAIN_ACTIVITY_IS_RUNNING=true;
-        String naam=new Utilities(this).getCurrentIdentity();
+        Utilities utilities = new Utilities(this);
+        //ActivityUpdaterBroadcastReceiver.activeActivity = this;
+        //MAIN_ACTIVITY_IS_RUNNING=true;
+        String naam=utilities.getCurrentIdentity();
         Log.i(TAG,""+new Utilities(this).getCurrentIdentity());
-        if(new Utilities(this).getCurrentIdentity().equals("")){
+        if(utilities.getCurrentIdentity().equals("")){
             Log.i(TAG,"zzxxyz not set!!");
             signOut();
             finish();
@@ -142,9 +150,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         Log.i(TAG,"in on Resume:"+ naam);
         Log.i(TAG,"uploadRequested?:"+getIntent().hasExtra("UploadRequested"));
 
+        //registering local listeners
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(this);
+        WildbookApplication.getmInstance().setImageStatusChangedListener(this);
+
+        if(utilities.isNetworkAvailable()){
+            setLAYOUT();
+            utilities.displaySnackBar(LAYOUT,R.string.online,MainActivity.POS_FEEDBACK);
+        }
+        else{
+            setLAYOUT();
+            utilities.displaySnackBar(LAYOUT,R.string.offline,MainActivity.WARNING);
+        }
+
+
         if(getIntent().hasExtra("UploadRequested"))
-            DisplayDialogue();
-        Log.i(TAG,"OnResume selectedImagesCreated n size");//+selectedImages.size());
+            displayDialogue();
+        Log.i(TAG,"OnResume selectedImagesCreated n size");//+mSelectedImages.size());
+
+
+        //startSync();
+
     }
 
     /*************************
@@ -191,10 +217,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 if(new Utilities(this).isNetworkAvailable())
                     startActivity(new Intent(MainActivity.this, UserContributionsActivity.class));
                 else {
-                    displaySnackBar(R.string.offline,MainActivity.WARNING);
+                    new Utilities(this).displaySnackBar(LAYOUT,R.string.offline,MainActivity.WARNING);
                 }
                 break;
         }
+
     }
 
 @Override
@@ -236,7 +263,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
             if (requestCode == IMAGE_GALLERY_REQUEST) {  //Handling images selected by the users....
                 Uri dataUri = data.getData();
-                selectedImages = new ArrayList<String>();
+                mSelectedImages = new ArrayList<String>();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 if (data.getClipData() != null) {
                     ClipData mClipData = data.getClipData();
@@ -245,11 +272,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                         Toast.makeText(getApplicationContext(), R.string.maxuploadString, Toast.LENGTH_LONG).show();
                         requestPictureGalleryUpload();
                     } else {
-                        ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                        //ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            mArrayUri.add(uri);
+                            mUris.add(uri);
                             // Get the cursor
                             Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
                             // Move to first row
@@ -257,27 +284,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                             selectedImage = cursor.getString(columnIndex);
                             try {
-                                selectedImages.add(getFilePath(this, uri));
+                                mSelectedImages.add(getFilePath(this, uri));
                             }catch(Exception e){
                                 Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
                             }
                             cursor.close();
                         }
 
-                            showGallPicturesPreview(selectedImages, mArrayUri,dataUri);
+                            //showGallPicturesPreview(mSelectedImages, mUris,dataUri);
+                        showGallPicturesPreview();
 
                     }
                 } else if (data.getData() != null) {
                     Uri uri = data.getData();
                     ArrayList<Uri> uris = new ArrayList<Uri>();
+                    mUris.add(uri);
                     uris.add(uri);
                     try{
-                        selectedImages.add(getFilePath(this,uri));
+                        mSelectedImages.add(getFilePath(this,uri));
                     }catch(Exception e){
                         e.printStackTrace();
                         Toast.makeText(this,"Something went wrong!",Toast.LENGTH_LONG).show();
                     }
-                    showGallPicturesPreview(selectedImages, uris,uri);
+                    //showGallPicturesPreview(mSelectedImages, uris,uri);
+                    showGallPicturesPreview();
                 }
             }
         }
@@ -350,24 +380,63 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    //method that redirects user to preview the list of images selected
-    public void showGallPicturesPreview(ArrayList<String> images,ArrayList<Uri> uris,Uri uriData){
-        Intent intent = new Intent(MainActivity.this,GalleryUploadImagePreviewRecyclerViewActivity.class);
-        if(uriData!=null)
-            intent.setData(uriData);
-        intent.putExtra("selectedImages",images);
-        ArrayList<String> uriToString = new ArrayList<String>();
-        if(uris!=null) {
-            for (Uri uri : uris) {
-                uriToString.add(uri.toString());
+    //method uploads the images selected or caches them in the absence of network.
+    //public void showGallPicturesPreview(ArrayList<String> images,ArrayList<Uri> uris,Uri uriData){
+    public void showGallPicturesPreview(){
+       //check the network availability....
+        if (new Utilities(this).isNetworkAvailable()) {
+            if (areValidPaths(mSelectedImages)) {
+                startUpload();
+            } else {//download image from uri and then upload it....
+                mSelectedImages.clear();
+                new Utilities(getApplicationContext()).displaySnackBar(LAYOUT, R.string.imagesWillBeUploadedShortly, POS_FEEDBACK);
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        mSelectedImages = returnDownloadedFilePath(mUris);
+                        if (mSelectedImages == null) { //error while downloading file from other sources....
+                           runOnUiThread(new Runnable (){
+                               @Override
+                               public void run() {
+                                   Toast.makeText(getApplicationContext(),
+                                           "Something went wrong while Downloading the image!!",
+                                           Toast.LENGTH_LONG).show();
+                               }
+                           });
+                        } else {
+                            //start download....
+                            startUpload();
+                        }
+                    }
+                }).start();
+
             }
         }
-        if(uriToString!=null && uriToString.size()>0)
-            intent.putExtra("ImageUris",uriToString);
+        else {//no connectivity
+            if (areValidPaths(mSelectedImages)) {
+                saveToDb();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSelectedImages = returnDownloadedFilePath(mUris); //download the files
+                        if (mSelectedImages != null)
+                            saveToDb();
+                        else {
+                            runOnUiThread(new Runnable (){
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Something went wrong while Downloading the image!!", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
+        }
 
-        startActivity(intent);
 
-    }
+        }
     //this method enables users to select multiple pictures from the mobile device.
     public void requestPictureGalleryUpload(){
         Log.i(TAG,"Launch Upload Encounter(s) images");
@@ -391,9 +460,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void onPause(){
         super.onPause();
         Log.i(TAG,"OnResume");
-        selectedImages=null;
-        MAIN_ACTIVITY_IS_RUNNING=false;
-        ActivityUpdaterBroadcastReceiver.activeActivity = null;
+        mSelectedImages =null;
+        //MAIN_ACTIVITY_IS_RUNNING=false;
+        WildbookApplication.getmInstance().setNetworkStatusChangeListener(null);
+        WildbookApplication.getmInstance().setImageStatusChangedListener(null);
+
+        //ActivityUpdaterBroadcastReceiver.activeActivity = null;
     }
 
 
@@ -410,7 +482,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
      * @param message to be displayed in the snackbar
      * @param bgcolor background color of the snackbar
      */
-    public void  displaySnackBar(int message,int bgcolor){
+    /*public void  displaySnackBar(int message,int bgcolor){
         Snackbar snack=null;
         View snackView;
         if(message == com.ibeis.wildbook.wildbook.R.string.offline)
@@ -420,7 +492,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         snackView = snack.getView();
         snackView.setBackgroundColor(bgcolor);
         snack.show();
-    }
+    }*/
 
     /********************************************
      * Setup the LAYOUT
@@ -436,9 +508,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    /********
+    /****************************************
      * performs User Logout operations
-     */
+     *****************************************/
     protected void signOut() {
        final Context ctx = getApplicationContext();
         //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
@@ -451,7 +523,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                             mGoogleApiClient.disconnect();
                             mGoogleApiClient = null;
                             finish();
-                            ActivityUpdaterBroadcastReceiver.activeActivity = null;
+
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -527,16 +599,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     });
 
     }
+
+    //????
     protected void onNewIntent(Intent newIntent){
         super.onNewIntent(newIntent);
         setIntent(newIntent);
     }
+
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         mLocationSettingsRequest = builder.build();
     }
-    protected void DisplayDialogue(){
+    //Displays the Hurray! dialog on the iniatiaing an upload through Report encounter
+    protected void displayDialogue(){
         getIntent().removeExtra("UploadRequested");
         onNewIntent(getIntent());
         Dialog dialog = new Dialog(MainActivity.this);
@@ -550,5 +626,164 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         dialog.show();
 
     }
+    /***************************************
+     *
+     * Method to check if all filesPaths that are to be previewed/uploaded are valid and exist in the device.
+     * @param selectedImages
+     * @return
+     *************************************/
+    public boolean areValidPaths(ArrayList<String> selectedImages){
 
+        try{
+            for(String aPath:selectedImages){
+                File f= new File(aPath);
+                if(!f.exists())
+                    return false;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    /**************************************
+     * Downloads a file from the internet if downloading from google drive etc
+     * provides the path of the file.
+     * @param selectedImages
+     * @return
+     * DO NOT CALL THIS METHOD FROM THE UI THREAD!!
+     *************************************/
+
+    public ArrayList<String> returnDownloadedFilePath(final ArrayList<Uri> selectedImages){
+        ArrayList<String> downloadedImagePaths = new ArrayList<String>();
+        File imageFolder=null;
+        File imageFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        imageFolder = new File(imageFile, "Wildbook");
+        if (!imageFolder.exists()) {
+            imageFolder.mkdirs();
+        }
+
+        for(Uri aUri: selectedImages){
+            mCount++;
+            Bitmap bitmap=null;
+            runOnUiThread(new Runnable (){
+
+                @Override
+                public void run() {
+                    String message = getApplicationContext().getResources().getString(R.string.downloading_images);
+                   new Utilities(getApplicationContext())
+                           .displaySnackBar(LAYOUT,
+                                   message+mCount+"/"+selectedImages.size(),
+                                   MainActivity.POS_FEEDBACK);
+                }
+            });
+            if(getContentResolver().getType(aUri).contains("Image")|| getContentResolver().getType(aUri).contains("image")) {
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(aUri));
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    File f = new File(imageFolder + "/" + timestamp + ".jpg");
+                    FileOutputStream fo = new FileOutputStream(f);
+                    fo.write(bytes.toByteArray());
+                    fo.flush();
+                    fo.close();
+                    downloadedImagePaths.add(f.getAbsolutePath());
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+            else{
+                return null;
+            }
+        }
+        return downloadedImagePaths;
+
+    }
+    //Method that starts the upload process
+    public void startUpload(){
+        ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this, mSelectedImages,new Utilities(this).getCurrentIdentity());
+        Log.i(TAG, "Starting fileupload request using worker thread!!");
+        new Thread(task).start();
+        Log.i(TAG, "redirecting....to mainActivity");
+        //Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
+
+    }
+    //Method that stores the details of images to be uploaded in the device sqlite database instance.
+    public void saveToDb(){
+        ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
+        Utilities utility = new Utilities(this, mSelectedImages,dbHelper);
+        utility.prepareBatchForInsertToDB(false);
+        Log.i(TAG,"prepared");
+        if(!(new Utilities(this).checkSharedPreference(new Utilities(this).getCurrentIdentity()))) {
+            utility.connectivityAlert().show();
+        }
+        else {
+
+            utility.insertRecords();
+            Log.i(TAG,"Results saved to SQLite3");
+            runOnUiThread(new Runnable (){
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
+                }
+            });
+            /*startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this,MainActivity.class));
+            finish();*/
+            // redirect(0, 0);
+        }
+    }
+
+    //Displays network status using SnackBar
+    @Override
+    public void onNetworkStatusChanged(boolean isConnected) {
+        setLAYOUT();
+        if(isConnected){
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.online,MainActivity.POS_FEEDBACK);
+        }
+        else{
+            new Utilities(this).displaySnackBar(LAYOUT,R.string.offline, Color.RED);
+        }
+
+    }
+
+    /***********************************************************
+     *  This method displays the status of Image Upload using snackbar
+     *
+     * @param imagesUploadedStatus - the status of the ImageUpload is represented using the following:-
+     *                             -1 ->error,
+     *                             1 -> Upload Started,
+     *                             2 -> Upload Completed Succesfully
+     *                             TBT
+     ************************************************************/
+    @Override
+    public void onImageUploadStatusChangedListener(int imagesUploadedStatus) {
+        Utilities utilities = new Utilities(this);
+        switch(imagesUploadedStatus){
+            case ImageUploaderTaskRunnable.UPLOAD_STARTED:
+                utilities.displaySnackBar(LAYOUT,R.string.uploading_images,MainActivity.POS_FEEDBACK);
+                break;
+            case ImageUploaderTaskRunnable.UPLOAD_COMPLETED_SUCCESSFULLY:
+                utilities.displaySnackBar(LAYOUT,R.string.imageUploadedString,MainActivity.POS_FEEDBACK);
+                break;
+            case ImageUploaderTaskRunnable.UPLOAD_ERROR:
+                utilities.displaySnackBar(LAYOUT,R.string.imagesNotUploaded,MainActivity.WARNING);
+        }
+    }
+
+    /**************************
+     * This method is deprecated.
+     *************************/
+    protected void localBroadcast(){
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mReceiver = new NetworkScannerBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        mLocalBroadcastManager.registerReceiver(mReceiver,intentFilter);
+        Intent intent = new Intent("android.net.conn.CONNECTIVITY_CHANGE");
+        intent.putExtra("string",com.ibeis.wildbook.wildbook.R.string.online);
+        mLocalBroadcastManager.sendBroadcast(intent);
+    }
 }

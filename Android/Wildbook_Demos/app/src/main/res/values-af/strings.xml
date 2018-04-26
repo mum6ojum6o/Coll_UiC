@@ -57,8 +57,26 @@
     <string name="maxuploadHeaderString">Maksimum uploadlimiet</string>
     <string name="encounterDetailsLabel"><u>Ontmoeting besonderhede</u></string>
     <string name="thankyou">Hurray!</string>
-    <string name="whatnext">We appreciate your contribution to the Wildbook cause.
-        What next? While we process the encounter you posted, you can check out your contributions
-        by clicking on the "Your Contibutions" button.
+    <string name="whatnext">Ons waardeer u bydrae tot die Wildbook-oorsaak.
+         Wat volgende? Terwyl ons die ontmoeting wat u opgelaai het, verwerk, kan u u bydraes nagaan
+         deur op die knoppie "Jou kontrasies" te klik.
     </string>
+    <string name="loadingImages">Laai tans beelde ...</string>
+    <string name="channel_name">Sinkronisasie kennisgewings</string>
+    <string name="sync_started">Sinkronisering begin</string>
+    <string name="upload_started">Oplaai begin</string>
+    <string name="error">Fout</string>
+    <string name="channel_description">Kennisgewings rakende die vergaderings</string>
+    <string name="downloading_images">Aflaai van beelde</string>
+    <string name="cancelString">Kanselleer</string>
+    <string name="mobile_data_wifi_string">Mobiele data en Wifi</string>
+    <string name="imagesWillBeUploadedShortly">Die beelde sal binnekort opgelaai word</string>
+    <string name="error_title">Iets het verkeerd gegaan!</string>
+    <string name="mobiledatacost">Datakoste kan van toepassing wees.</string>
+    <string name="yes">Ja</string>
+    <string name="no">Geen</string>
+    <string name="userdetails">Gebruiker besonderhede</string>
+    <string name="sync_completed">Laai suksesvol op</string>
+    <string name="burstmodeon"> Burst Mode is Aan en stel 3 prente vas</string>
+    <string name="burstmodeoff"> Burst Mode is af</string>
 </resources>

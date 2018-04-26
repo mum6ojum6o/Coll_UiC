@@ -4,7 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.media.ExifInterface;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,20 +19,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**************
+/****************************
  * A class that is responsible for uploading the images to the Wildbook database
  * Created by Arjan on 11/18/2017.
- */
+ ***************************/
 
 public class ImageUploaderTaskRunnable implements Runnable {
+    public static final int UPLOAD_STARTED=1,UPLOAD_COMPLETED_SUCCESSFULLY=2,UPLOAD_ERROR=-1;
+    public static ImageUploadStatusListener imageUploadStatusListener;
     public static final String TAG="com.ibeis.wildbook.wildbook.ImageUploaderTaskRunnable";
-    Context mContext;
-    List<String> filenames;
-    String naam;
+    private Context mContext;
+    private List<String> filenames;
+    private String naam;
+    private JSONObject mJSONResponse;
+    public static boolean mUploadStatus=false;
     public ImageUploaderTaskRunnable(Context context, List<String> images, String naam){
         this.mContext=context;
         this.filenames = new ArrayList<String>();
         this.naam = naam;
+
         //hardcopy
         for(String image:images){
             this.filenames.add(image);
@@ -43,6 +52,9 @@ public class ImageUploaderTaskRunnable implements Runnable {
     }
     @Override
     public void run() {
+        if(imageUploadStatusListener!=null)
+            imageUploadStatusListener.onImageUploadStatusChangedListener(UPLOAD_STARTED);
+        mUploadStatus=false; //resetting the value on every call to run();
         Utilities utilities = new Utilities(mContext);
         int progress = 3;
         Intent intent1 = new Intent();
@@ -55,7 +67,7 @@ public class ImageUploaderTaskRunnable implements Runnable {
         try {
             Requestor request = new Requestor(url, "UTF-8", "POST");
             if(request!=null) {
-                new Utilities(mContext).sendNotification("Upload Started", null);
+                new Utilities(mContext).sendNotification(mContext.getResources().getString(R.string.sync_started), null);
                 request.addFormField("jsonResponse", "true");
                 try {
                     ExifInterface exif = new ExifInterface(filenames.get(0));
@@ -76,8 +88,7 @@ public class ImageUploaderTaskRunnable implements Runnable {
                         Date date = new Date();
                         datepicker = dTo.format(date);
                     }
-                    //commented to work with the latest URL or comment the below call to add form
-                    // field to work with the pachy server.
+                    //comment the below call to add form field to work with the pachy server.
                     request.addFormField("datepicker", datepicker);
 
                     float[] latLong = new float[2];
@@ -86,8 +97,8 @@ public class ImageUploaderTaskRunnable implements Runnable {
                         lat = (double) (latLong[0]);
                         Long = (double) (latLong[1]);
                         Log.i(TAG, "lat:" + lat + "long: " + Long);
-                        //commented to work with the latest URL or comment the below call to add form
-                        // field to work with the pachy server.
+                        /*comment the below call to add form
+                         field to work with the pachy server.*/
                         request.addFormField("lat", Double.toString(lat));
                         request.addFormField("longitude", Double.toString(Long));
                     }
@@ -95,30 +106,85 @@ public class ImageUploaderTaskRunnable implements Runnable {
                     e.printStackTrace();
                     Log.i(TAG, "Coordinates could not be extracted!!");
                 }
-                //commented to work with the latest URL or comment the below call to add form
+                // comment the below call to add form
                 // field to work with the pachy server.
                 request.addFormField("submitterEmail", naam);
 
                 for (String file : filenames) {
-                    //try {
                     request.addFile("image", file);
-                    //}
-                /*catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i(TAG, "case UploadBtn2: exception occured while building request");
-                    new Utilities(mContext).sendNotification("Error", null);
-                    request = null;
-                    return;
-
-                }*/
-
                 }
 
                 // try {
                 ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(mContext);
-//            dbHelper.deleteDatabase();
+                //            dbHelper.deleteDatabase();
+                Log.i(TAG,"Starting data transfer");
                 request.finishRequesting();
-                new Thread(new Runnable() {
+                updateDB();
+
+                Log.i(TAG, "Request Completed!!");
+                //communicate with the active activity of the application....
+            /*if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
+                //too easy. may not be the best approach. I want to reduce the use static variables as much as possible.
+                Message msg=MainActivity.handler.obtainMessage(200);
+                MainActivity.handler.sendMessage(msg);
+            }*/
+
+                //Context ctx= ActiveActivityTracker.getInstance().getmCurrentContext();
+                //utilities.sendNotification("Sync Completed!", naam);
+
+                // Log.i(TAG,"Server response error!!");
+                //Log.i(TAG, "Saving Response to DB");
+
+                Log.i(TAG, "saving encounterId:" + request.getResponse().getString("encounterId"));
+                mJSONResponse = request.getResponse();
+               /* intent1.putExtra("string", R.string.imageUploadedString);
+                mContext.sendBroadcast(intent1);*/
+                mUploadStatus=true;
+               /* Message msg = SyncerService.mHandler.obtainMessage(UserContributionsActivity.COMPLETE);
+                Bundle b = new Bundle();
+                b.putString("naam",this.naam);
+                msg.setData(b);
+                msg.sendToTarget();*/
+                if(imageUploadStatusListener!=null)
+                    imageUploadStatusListener.onImageUploadStatusChangedListener(UPLOAD_COMPLETED_SUCCESSFULLY);
+                utilities.sendNotification(mContext.getResources().getString(R.string.sync_completed),this.naam);
+            }
+        }
+        catch (FileNotFoundException e){
+            Log.i(TAG,"methog: addFileError: Error in addFile!!");
+            utilities.sendNotification(mContext.getResources().getString(R.string.file_not_found_error),null);
+            // e.printStackTrace();
+           /* Message msg = SyncerService.mHandler.obtainMessage(SyncerService.ERROR);
+            msg.sendToTarget();*/
+            if(imageUploadStatusListener!=null)
+                imageUploadStatusListener.onImageUploadStatusChangedListener(UPLOAD_ERROR);
+        }
+        catch(IOException ioexception){
+            Log.i(TAG,"IOException!");
+            ioexception.printStackTrace();
+            /*Message msg = SyncerService.mHandler.obtainMessage(SyncerService.ERROR);
+            msg.sendToTarget();*/
+            if(imageUploadStatusListener!=null)
+                imageUploadStatusListener.onImageUploadStatusChangedListener(UPLOAD_ERROR);
+            utilities.sendNotification(mContext.getResources().getString(R.string.sync_error),null);
+        }
+        catch (Exception e) {
+            Log.i(TAG,"Something Went Wrong!");
+            e.printStackTrace();
+            utilities.sendNotification(mContext.getResources().getString(R.string.sync_error),null);
+            /*Message msg = SyncerService.mHandler.obtainMessage(SyncerService.ERROR);
+            msg.sendToTarget();*/
+            if(imageUploadStatusListener!=null)
+                imageUploadStatusListener.onImageUploadStatusChangedListener(UPLOAD_ERROR);
+        }
+    }
+
+    /********************
+     * Method that updates the SQLDBrecord once a record has been uploaded
+     *
+     ***************/
+    public void updateDB(){
+         new Thread(new Runnable() {
                     public void run() {
                         ContentValues values = new ContentValues();
                         values.put(ImageRecorderDatabaseSQLiteOpenHelper.IS_UPLOADED, "1");
@@ -132,46 +198,6 @@ public class ImageUploaderTaskRunnable implements Runnable {
                         values.clear();
                     }
                 }).start();
-                Log.i(TAG, "Reuest Completed!!");
-                //communicate with the active activity of the application....
-            /*if(MainActivity.MAIN_ACTIVITY_IS_RUNNING){
-                //too easy. may not be the best approach. I want to reduce the use static variables as much as possible.
-                Message msg=MainActivity.handler.obtainMessage(200);
-                MainActivity.handler.sendMessage(msg);
-            }*/
-
-                //Context ctx= ActiveActivityTracker.getInstance().getmCurrentContext();
-                utilities.sendNotification("Sync Completed!", naam);
-                // Log.i(TAG,"Server response error!!");
-                //Log.i(TAG, "Saving Response to DB");
-                Log.i(TAG, "saving encounterId:" + request.getResponse().getString("encounterId"));
-                String email = utilities.getCurrentIdentity();
-                utilities.insertRecords(request.getResponse().getString("encounterId"));
-            /*} catch (Exception e) {
-                new Utilities(mContext).sendNotification("Error", null);
-                e.printStackTrace();
-                request = null;
-                Log.i(TAG, "Server response error!!");
-                return;
-            }*/
-                intent1.putExtra("string", R.string.imageUploadedString);
-                mContext.sendBroadcast(intent1);
-            }
-        }
-        catch (FileNotFoundException e){
-            Log.i(TAG,"methog: addFileError: Error in addFile!!");
-            utilities.sendNotification(mContext.getResources().getString(R.string.file_not_found_error),null);
-            // e.printStackTrace();
-        }
-        catch(IOException ioexception){
-
-            ioexception.printStackTrace();
-            utilities.sendNotification(mContext.getResources().getString(R.string.sync_error),null);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            utilities.sendNotification(mContext.getResources().getString(R.string.sync_error),null);
-        }
     }
 
     /*****************************
@@ -189,5 +215,13 @@ public class ImageUploaderTaskRunnable implements Runnable {
         }
         sb.append(")");
         return sb.toString();
+    }
+
+    public JSONObject getmJSONResponse(){
+        return mJSONResponse;
+    }
+    //creating a listener to update respective activities about the status of image upload.
+    interface ImageUploadStatusListener{
+        public void onImageUploadStatusChangedListener(int imagesUploadedStatus);
     }
 }

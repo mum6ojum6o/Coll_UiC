@@ -74,7 +74,7 @@ public class UploadCamPicsActivity extends BaseActivity implements View.OnClickL
 
     public void getSelectedImages(){
         for (int i=0;i<imagesNames.size();i++){
-            if(recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility()==View.VISIBLE){
+            if(recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility()==View.VISIBLE){
                 mSelectedImages.add(imagesNames.get(i));
             }
         }
@@ -86,11 +86,13 @@ public class UploadCamPicsActivity extends BaseActivity implements View.OnClickL
         switch (view.getId()){
             case R.id.UploadBtn2:
                 getSelectedImages();
+                //check if any image(s) are selected
                 if(mSelectedImages.size()>0 && mSelectedImages.size()<=10) {
+                    //check if network is available
                     if (new Utilities(this).isNetworkAvailable()) {
-
                         int uploadCount = 0;
                         //adapter.getSelectedImages();
+                        //start the image upload.
                         ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this, mSelectedImages, new Utilities(this).getCurrentIdentity());
                         new Thread(task).start();
                         Log.i(TAG, "redirecting....");
@@ -99,84 +101,22 @@ public class UploadCamPicsActivity extends BaseActivity implements View.OnClickL
                         Intent intent = new Intent(UploadCamPicsActivity.this,MainActivity.class);
                         intent.putExtra("UploadRequested",true);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        startActivity(intent); // proceed to the MainActivity
                         finish();
-                    /*Utilities util = new Utilities(getApplicationContext(),imagesNames,new ImageRecorderDatabaseSQLiteOpenHelper(this));
-                    util.uploadPictures(imagesNames);
-                    redirect(imagesNames.size(), imagesNames.size());*/
-
-                        /*************************************
-                         *
-                         * this commented block runs just fine!
-                         * ***************************************
-                         for (String filename:imagesNames){
-                         if(new Utilities(this).uploadPictures(filename)){
-                         uploadCount++;
-                         }
-                         }
-                         finish();
-                         Toast.makeText(this,uploadCount+" pictures were uploaded!",Toast.LENGTH_LONG).show();
-                         startActivity(new Intent(UploadCamPicsActivity.this,MainActivity.class));*/
-
-                        /****************************
-                         Requestor request = new Requestor(url,"UTF-8","POST");
-                         request.addFormField("jsonResponse","true");
-                         try {
-
-
-                         ExifInterface exif = new ExifInterface(imagesNames.get(0));
-                         String datepicker = exif.getAttribute(ExifInterface.TAG_DATETIME);
-                         DateFormat dfrom = new  SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-                         DateFormat dTo = new  SimpleDateFormat("yyyy-MM-dd");
-
-                         try{
-                         Date date = dfrom.parse(datepicker);
-                         datepicker = dTo.format(date);
-                         }catch(ParseException pe){pe.printStackTrace();Log.i(TAG,"Parsing Issue");}
-                         request.addFormField("datepicker",datepicker);
-                         float[] latLong = new float[2];
-                         String lat=null,Long=null;
-                         if(exif.getLatLong(latLong)){
-                         lat=Float.toString(latLong[0]);
-                         Long=Float.toString(latLong[1]);
-                         Log.i(TAG,"lat:"+lat+"long: "+Long);
-                         request.addFormField("lat",lat);
-                         request.addFormField("longitude",Long);
-                         }
-                         }catch(IOException e){
-                         e.printStackTrace();
-                         Log.i(TAG,"Coordinates could not be extracted!!");
-                         }
-                         for(String file:imagesNames){
-                         try {
-                         request.addFile("theFiles", file);
-                         }catch(Exception e){
-                         e.printStackTrace();
-                         Log.i(TAG,"case UploadBtn2: exception occured while building request");
-                         break;
-                         }
-                         }
-                         try{
-                         request.finishRequesting();
-                         Toast.makeText(this," Images uploaded!",Toast.LENGTH_LONG).show();
-                         //startActivity(new Intent(UploadCamPicsActivity.this,MainActivity.class));
-                         redirect(imagesNames.size(),imagesNames.size());
-                         }catch(Exception e){
-                         Log.i(TAG,"Server response error!!");
-                         Toast.makeText(getApplicationContext(),"The images were not uploaded!!",Toast.LENGTH_LONG).show();
-                         } **************************************/
-                    } else {
-
+                    }
+                    else {
+                        //If no network is available prepare to insert records to the SQLite database
+                        Log.i(TAG,"No Network prepare data for caching");
                         ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
                         Utilities utility = new Utilities(this, mSelectedImages, dbHelper);
                         utility.prepareBatchForInsertToDB(false);
-                        Log.i(TAG, "Loggedin as: " + utility.getCurrentIdentity());
+                        // if the user's preferences are not found on the device
                         if (!(utility.checkSharedPreference(utility.getCurrentIdentity()))) {
                             utility.connectivityAlert().show(); //show preferences dialog.
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.uploadRequestOnNoNetwork, Toast.LENGTH_LONG).show();
-                            utility.insertRecords();
-                            Log.i(TAG, "Results saved to SQLite3");
+                            utility.insertRecords(); //insert records to cache.
+                            Log.i(TAG, "Results saved to cache");
                             Intent intent = new Intent(UploadCamPicsActivity.this,MainActivity.class);
                             intent.putExtra("UploadRequested",true);
                             startActivity(intent);
@@ -187,26 +127,11 @@ public class UploadCamPicsActivity extends BaseActivity implements View.OnClickL
                     }
                 }
                 else if(mSelectedImages.size()>10){
-                    Dialog dialog = new Dialog(UploadCamPicsActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.dialog_layout);
-                    dialog.setTitle(getResources().getString(R.string.maxuploadHeaderString));
-                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
-                    tv.setText(getResources().getString(R.string.maxuploadString));
-                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
-                    tv1.setText(" ");
-                    dialog.show();
+                    //more than 10 images selected, display dialogue.
+                    displayDialog(R.string.maxuploadHeaderString,R.string.maxuploadHeaderString);
                 }
-                else{//no images selected...
-                    Dialog dialog = new Dialog(UploadCamPicsActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.dialog_layout);
-                    dialog.setTitle(getResources().getString(R.string.noimageselected));
-                    TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
-                    tv.setText(getResources().getString(R.string.noimageselected));
-                    TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
-                    tv1.setText(getResources().getString(R.string.requestimageselection));
-                    dialog.show();
+                else{//no images selected, display dialogue.
+                    displayDialog(R.string.noimageselected,R.string.requestimageselection);
                 }
 
                 break;
@@ -225,26 +150,30 @@ public class UploadCamPicsActivity extends BaseActivity implements View.OnClickL
     }
     //method to select all images
 protected void selectAll(){
+        ArrayList<Integer> selectedImagesIndices = new ArrayList<>();
     for (int i=0;i<imagesNames.size();i++) {
-        if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() != View.VISIBLE) {
-            recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.VISIBLE);
-            int pos=recyclerView.getChildAdapterPosition(recyclerView.getChildAt(i));
-            //recyclerView.getAdapter().;
-            //mSelectedImages.add(imagesNames.get(i));
+        if (recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility() != View.VISIBLE) {
+            recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).setVisibility(View.VISIBLE);
+            selectedImagesIndices.add(i);
         }
-    }
 
+    }
+    //adapter.updateAllViewHolderVisibilityStatus(true);
+    adapter.setmSelectedImages(selectedImagesIndices); //update the list of selected images for the adapter
+    adapter.setmLongClicked(true); //inform adapter to set mLongClicked member variable
 
 }
     //method to unselcet all images
-protected void unselectAll(){
+    protected void unselectAll(){
     for (int i=0;i<imagesNames.size();i++) {
-        if (recyclerView.getChildAt(i).findViewById(R.id.imageView2).getVisibility() == View.VISIBLE) {
-            recyclerView.getChildAt(i).findViewById(R.id.imageView2).setVisibility(View.INVISIBLE);
-            //mSelectedImages.add(imagesNames.get(i));
+        if (recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).getVisibility() == View.VISIBLE) {
+            recyclerView.getChildAt(i).findViewById(R.id.image_selected_icon).setVisibility(View.INVISIBLE);
         }
     }
-    mSelectedImages.clear();
+    //adapter.updateAllViewHolderVisibilityStatus(false);
+    //mSelectedImages.clear();
+    adapter.setmSelectedImages(new ArrayList<Integer>()); // clear the list of selected images for the adapter
+    adapter.setmLongClicked(false);     // inform the adapter that longClick operation is reset.
 }
 
     protected void signOut() {
@@ -255,7 +184,7 @@ protected void unselectAll(){
                         mGoogleApiClient.disconnect();
                         mGoogleApiClient=null;
                         finish();
-                        ActivityUpdaterBroadcastReceiver.activeActivity=null;
+
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         Log.i("ImagePreviewActivity","Logging out from ImagePreviewActivity");
@@ -280,5 +209,17 @@ protected void unselectAll(){
         super.onRestoreInstanceState(inState);
         if(inState.containsKey(SAVED_LAYOUT_MANAGER) && inState.getBundle(SAVED_LAYOUT_MANAGER).containsKey("SELECTED_IMAGES"))
             adapter.setmSelectedImages(inState.getBundle(SAVED_LAYOUT_MANAGER).getIntegerArrayList("SELECTED_IMAGES"));
+    }
+    //Method to display a Dialog in the event User clicks on the Upload button while no Image(s) have been seleced.
+    public void displayDialog(int heading,int body){
+        Dialog dialog = new Dialog(UploadCamPicsActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.setTitle(getResources().getString(heading));
+        TextView tv = (TextView)dialog.findViewById(R.id.dialog_txt);
+        tv.setText(getResources().getString(body));
+        TextView tv1 = (TextView)dialog.findViewById(R.id.dialog_txt1);
+        tv1.setText(getResources().getString(body));
+        dialog.show();
     }
 }
