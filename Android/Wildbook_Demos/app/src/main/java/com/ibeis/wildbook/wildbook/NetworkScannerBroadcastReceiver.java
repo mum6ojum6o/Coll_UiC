@@ -3,20 +3,11 @@ package com.ibeis.wildbook.wildbook;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.R;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -43,7 +34,7 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
      * In the event the activity is suspended but there is a delayed message in its message queue,
      * the delayed message will continue to remain in the main thread until it is processed.
      * ***********************************************************/
-    public Handler networkScannerBRHandler = new Handler(){
+   /* public  Handler networkScannerBRHandler = new Handler(){
       public void handleMessage(Message msg){
         switch(msg.what){
             case NETWORK_HAS_INTERNET:
@@ -62,7 +53,7 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
                 break;
         }
       }
-    };
+    };*/
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -84,6 +75,7 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
             }catch(Exception e){
                 e.printStackTrace();
             }
+            // Wifi network connected
             if(networkChangeReceiver !=null && newNetworkInfo!=null && newNetworkInfo.isConnectedOrConnecting() && networkInfo!=null
                     && networkInfo.getType()==ConnectivityManager.TYPE_WIFI){
                 Log.i(TAG,"Wifi is connected");
@@ -91,6 +83,7 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
                 takeAction(mContext);
                 networkChangeReceiver.onNetworkStatusChanged(true);
             }
+            //Mobile data is connected
             else if(networkChangeReceiver !=null && newNetworkInfo!=null && newNetworkInfo.isConnectedOrConnecting() && networkInfo!=null
                     && networkInfo.getType()==ConnectivityManager.TYPE_MOBILE){
                 Log.i(TAG,"Mobiledata is connected");
@@ -98,16 +91,19 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
                 takeAction(mContext);
                 networkChangeReceiver.onNetworkStatusChanged(true);
             }
+            //No data is connected
             else if(!new Utilities(context).isNetworkAvailable()){
-                 Message message = networkScannerBRHandler.obtainMessage(NO_INTERNET_ACCESS);
-                 networkScannerBRHandler.sendMessage(message);
-
+                if(networkChangeReceiver!=null)
+                    networkChangeReceiver.onNetworkStatusChanged(false);
+                 /*Message message = networkScannerBRHandler.obtainMessage(NO_INTERNET_ACCESS);
+                 networkScannerBRHandler.sendMessage(message);*/
                 //int message = com.ibeis.wildbook.wildbook.R.string.offline;
                 //updateAppComponents(com.ibeis.wildbook.wildbook.R.string.offline);
                /* broadcastIntent.putExtra("string",message);
                 mContext.sendBroadcast(broadcastIntent);*/
             }
         }
+        //Method that starts the Sync service.
     public static void takeAction(Context context){
         Log.i(TAG,"Is ServiceRunning"+SyncerService.IsRunning);
         if(!SyncerService.IsRunning) {
@@ -121,7 +117,7 @@ public class NetworkScannerBroadcastReceiver extends BroadcastReceiver {
     }
 
     //this is deprecated
-public void isOnline() {
+/*public void isOnline() {
 new Thread(new Runnable(){
     @Override
     public void run() {
@@ -139,7 +135,7 @@ new Thread(new Runnable(){
         }
     }
 }).start();
-}
+}*/
 // This method will check whether the current connected network has internet access.
     //Source:-
     public boolean doesDeviceHaveInternet() {

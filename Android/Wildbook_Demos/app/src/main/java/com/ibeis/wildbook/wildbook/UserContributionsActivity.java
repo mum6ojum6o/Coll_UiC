@@ -228,8 +228,6 @@ public class UserContributionsActivity extends BaseActivity
                                     idlingResource.decrement();
                                     msg.setData(bundle);
                                     msg.sendToTarget();
-                            /*RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(),imagePaths);
-                            recyclerView.setAdapter(adapter);*/
                                 } else {
                                     Message msg = mHandler.obtainMessage(404);
                                     Bundle bundle = new Bundle();
@@ -250,8 +248,7 @@ public class UserContributionsActivity extends BaseActivity
                             msg.setData(bundle);
                             msg.sendToTarget();
                         }
-
-                        progressDialog.dismiss(); // no point of having a progress
+                        progressDialog.dismiss();
 
                     }
                 }).start();
@@ -263,16 +260,11 @@ public class UserContributionsActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
-        // Assign activity this to progress dialog.
-
-     }
+    }
 
     @Override
     public void onResume() {
-
         super.onResume();
-
-        ///this code should be in worker thread.
         if(!new Utilities(getApplicationContext()).isNetworkAvailable()) {
             setLAYOUT();
             displaySnackBar(R.string.offline, getColor(R.color.red));
@@ -281,12 +273,11 @@ public class UserContributionsActivity extends BaseActivity
             if(LAYOUT!=null) {
                 setLAYOUT();
                 displaySnackBar(R.string.online, getColor(R.color.green));
-
             }
-
         }
+        //gets current logged in entry from the shared preference file.
         String naam = new Utilities(this).getCurrentIdentity();
-        Log.i(TAG, "in on Resume:" + naam);
+        //Log.i(TAG, "in on Resume:" + naam);
         // if the current user information is not found in the shared preference then redirect to the Login Activity
         if (naam.equals("No Email ID") || naam == null) {
             startActivity(new Intent(this, LoginActivity.class));

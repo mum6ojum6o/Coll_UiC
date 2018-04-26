@@ -79,33 +79,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public static final String TAG ="MainActivity";
     public int mCount=0;
     protected Button RepEncounter,SignOutBut,UploadFromGallery,History,mSync;
-    //private FirebaseAuth mAuth;
     protected TextView UserName;
     protected ArrayList<String> mSelectedImages = new ArrayList<String>();
     protected ArrayList<Uri> mUris = new ArrayList<>();
-   // protected static String storagePath="Photos/";
-   // protected static String databasePath="Photos/";
-    //private GoogleApiClient mGoogleApiClient;
     public static final int SYNC_COMPLETE=1;
     public static final int SYNC_STARTED=2;
-    //public static boolean MAIN_ACTIVITY_IS_RUNNING;
-    //private GoogleSignInAccount googleSignInAccount;
-    //private ImageView mCricleImageView;
     private LocationRequest mLocationRequest;
     private LocationSettingsRequest mLocationSettingsRequest;
     private static int syncRunCount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //MAIN_ACTIVITY_IS_RUNNING=true;
         super.onCreate(savedInstanceState);
         Log.i(TAG,"MainActivity onCreate");
-
-       // Log.i(TAG,"Username:"+FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        Log.i("Logging window","Orientation is"+getResources().getConfiguration().orientation);
-
-            setContentView(R.layout.activity_main);
-            setLAYOUT();
+        setContentView(R.layout.activity_main);
+        setLAYOUT();
         WARNING=getColor(R.color.red);
         POS_FEEDBACK=getColor(R.color.green);
         UserName=(TextView)findViewById(R.id.username);
@@ -126,20 +114,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onStart() {
         super.onStart();
-        //MAIN_ACTIVITY_IS_RUNNING=true;
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        //MAIN_ACTIVITY_IS_RUNNING=false;
+
     }
     @Override
     public void onResume(){
         super.onResume();
         Utilities utilities = new Utilities(this);
-        //ActivityUpdaterBroadcastReceiver.activeActivity = this;
-        //MAIN_ACTIVITY_IS_RUNNING=true;
+
         String naam=utilities.getCurrentIdentity();
         Log.i(TAG,""+new Utilities(this).getCurrentIdentity());
         if(utilities.getCurrentIdentity().equals("")){
@@ -147,7 +133,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             signOut();
             finish();
         }
-        Log.i(TAG,"in on Resume:"+ naam);
+        //Log.i(TAG,"in on Resume:"+ naam);
         Log.i(TAG,"uploadRequested?:"+getIntent().hasExtra("UploadRequested"));
 
         //registering local listeners
@@ -167,15 +153,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         if(getIntent().hasExtra("UploadRequested"))
             displayDialogue();
         Log.i(TAG,"OnResume selectedImagesCreated n size");//+mSelectedImages.size());
-
-
-        //startSync();
-
     }
 
-    /*************************
-     *
-     * Button click Callback
+    /****************************************************
+     *Button click Callback
      * @param v
      *************************/
     @Override
@@ -256,8 +237,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
 
         String selectedImage = null;
-
-
         if (resultCode == RESULT_OK) {
             Log.i(TAG, "OnActivityResult OK");
 
@@ -316,7 +295,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
             startActivity(new Intent(MainActivity.this,CameraMainActivity.class));
         }
     }
-
+    //If the file selected from external data providers then this method returns that file's path.
     @SuppressLint("NewApi")
     public  String getFilePath(Context context, Uri uri) throws URISyntaxException {
         String selection = null;
@@ -436,12 +415,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         }
 
 
-        }
-    //this method enables users to select multiple pictures from the mobile device.
+    }
+    //This method enables users to select multiple pictures from the mobile device.
     public void requestPictureGalleryUpload(){
         Log.i(TAG,"Launch Upload Encounter(s) images");
         Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT); //Set Action
         photoPickerIntent.setType("image/*");
+        //Extra enables user to select multiple images
         photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(photoPickerIntent, "Select Picture"), IMAGE_GALLERY_REQUEST);
     }
@@ -464,8 +444,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         //MAIN_ACTIVITY_IS_RUNNING=false;
         WildbookApplication.getmInstance().setNetworkStatusChangeListener(null);
         WildbookApplication.getmInstance().setImageStatusChangedListener(null);
-
-        //ActivityUpdaterBroadcastReceiver.activeActivity = null;
     }
 
 
@@ -477,23 +455,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         startActivity(new Intent(MainActivity.this,LoginActivity.class));
     }
 
-    /*******************
-     * Method that displays a snackbar
-     * @param message to be displayed in the snackbar
-     * @param bgcolor background color of the snackbar
-     */
-    /*public void  displaySnackBar(int message,int bgcolor){
-        Snackbar snack=null;
-        View snackView;
-        if(message == com.ibeis.wildbook.wildbook.R.string.offline)
-            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_INDEFINITE);
-        else
-            snack=Snackbar.make(LAYOUT,message,Snackbar.LENGTH_SHORT);
-        snackView = snack.getView();
-        snackView.setBackgroundColor(bgcolor);
-        snack.show();
-    }*/
-
     /********************************************
      * Setup the LAYOUT
      * Configures the layout for the snackbar depending on the device orientation.
@@ -501,7 +462,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     public void setLAYOUT(){
         if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
             LAYOUT=findViewById(R.id.mainLinearLayout);//setupLayout;
-
         }
         else{
             LAYOUT=findViewById(R.id.myCoordinatorLayout);
@@ -513,7 +473,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
      *****************************************/
     protected void signOut() {
        final Context ctx = getApplicationContext();
-        //Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
         if(mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                     new ResultCallback<Status>() {
@@ -546,15 +505,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    /******************
+    /*****************************************************
      * Method to check if Location settings are satisfied
-     *****************/
+     ************************************************************/
     protected void checkLocationSettings(){
     createLocationRequest();
     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                                                 .addLocationRequest(mLocationRequest);
-
-    //SettingsClient client =
     //check whether current location services are satisfied.
     Task<LocationSettingsResponse> task =LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
     task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
@@ -600,7 +557,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     }
 
-    //????
+
     protected void onNewIntent(Intent newIntent){
         super.onNewIntent(newIntent);
         setIntent(newIntent);
@@ -629,6 +586,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     /***************************************
      *
      * Method to check if all filesPaths that are to be previewed/uploaded are valid and exist in the device.
+     * This method also ensures whether a file has been uploaded from Google drive etc.
      * @param selectedImages
      * @return
      *************************************/
@@ -666,6 +624,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         for(Uri aUri: selectedImages){
             mCount++;
             Bitmap bitmap=null;
+            //Displaying a notification to the user about the status of the file download.
             runOnUiThread(new Runnable (){
 
                 @Override
@@ -707,11 +666,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         ImageUploaderTaskRunnable task = new ImageUploaderTaskRunnable(this, mSelectedImages,new Utilities(this).getCurrentIdentity());
         Log.i(TAG, "Starting fileupload request using worker thread!!");
         new Thread(task).start();
-        Log.i(TAG, "redirecting....to mainActivity");
+        //Log.i(TAG, "redirecting....to mainActivity");
         //Toast.makeText(this,R.string.uploading_images,Toast.LENGTH_SHORT).show();
 
     }
-    //Method that stores the details of images to be uploaded in the device sqlite database instance.
+    //Method that stores the details of images to be uploaded in the device's sqlite database instance.
     public void saveToDb(){
         ImageRecorderDatabaseSQLiteOpenHelper dbHelper = new ImageRecorderDatabaseSQLiteOpenHelper(this);
         Utilities utility = new Utilities(this, mSelectedImages,dbHelper);
@@ -723,16 +682,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         else {
 
             utility.insertRecords();
-            Log.i(TAG,"Results saved to SQLite3");
-            runOnUiThread(new Runnable (){
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
-                }
-            });
-            /*startActivity(new Intent(GalleryUploadImagePreviewRecyclerViewActivity.this,MainActivity.class));
-            finish();*/
-            // redirect(0, 0);
+            Log.i(TAG,"Results will be saved to SQLite3");
+            Toast.makeText(getApplicationContext(),R.string.uploadRequestOnNoNetwork,Toast.LENGTH_LONG).show();
         }
     }
 
@@ -774,7 +725,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
     /**************************
-     * This method is deprecated.
+     * This method is deprecated. Android O onwards broadcasts have been made very strict.
      *************************/
     protected void localBroadcast(){
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
