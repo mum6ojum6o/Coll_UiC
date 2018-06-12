@@ -15,6 +15,18 @@
       },
       "oauth_client": [
         {
+          "client_id": "35467221317-4lcm0k5qv2cavk5qn311ihtkr8odi46s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mum6ojumbo.locateme",
+            "certificate_hash": "aa0143ac2a20982d1782b02b2df1a035678b59c5"
+          }
+        },
+        {
+          "client_id": "35467221317-t50urgv400ooimtlqodvc4ke96velvvv.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "35467221317-t50urgv400ooimtlqodvc4ke96velvvv.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35467221317-t50urgv400ooimtlqodvc4ke96velvvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

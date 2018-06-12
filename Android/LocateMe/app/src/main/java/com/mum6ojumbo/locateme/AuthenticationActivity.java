@@ -1,7 +1,5 @@
 package com.mum6ojumbo.locateme;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -16,7 +14,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -25,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class Authentication extends AppCompatActivity implements View.OnClickListener{
+public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int RC_SIGN_IN = 9072;
     private static final String TAG = "AutheticateAct";
     private GoogleSignInOptions mGso;
@@ -55,7 +52,8 @@ private FirebaseUser mCurrentUser;
             redirect();
     }
     private void redirect(){
-        startActivity(new Intent(Authentication.this,MainActivity.class));
+        startActivity(new Intent(AuthenticationActivity.this,MainActivity.class));
+        finish();
     }
     private void signIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -91,7 +89,7 @@ private FirebaseUser mCurrentUser;
                             redirect();
                         }else{
                             Log.w(TAG,"signInWithCredential:failure",task.getException());
-                            Toast.makeText(getApplicationContext(),"Authentication Failed!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"AuthenticationActivity Failed!",Toast.LENGTH_LONG).show();
                         }
                     }
                 });

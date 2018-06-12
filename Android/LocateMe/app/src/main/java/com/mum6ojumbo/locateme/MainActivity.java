@@ -5,21 +5,23 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -37,15 +39,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,6 +53,8 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,OnSuccessListener,OnFailureListener,
         GoogleApiClient.OnConnectionFailedListener,OnMapReadyCallback{
+    public static final String TAG="LocateMe";
+    public DrawerLayout mDrawerLayout;
     GoogleMap mGoogleMap;
     private SupportMapFragment mapFragment;
     private DatabaseReference mDatabase;
@@ -76,13 +76,42 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState !=null)
             updateSavedState(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_drawer_included);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        switch(menuItem.getItemId())
+                        {
+                            case R.id.username:
+                                Toast.makeText(getApplicationContext(),"You selected Username:",Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.share:
+                                Toast.makeText(getApplicationContext(),"You selected share option:",Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.signout_menu_item:
+                                signOutUser();
+                                break;
+                        }
+                        return true;
+                    }
+                }
+        );
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        //toolbar.bringToFront();
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black);
+        toolbar.setVisibility(View.VISIBLE);
         mFetchLocBtn = (Button)findViewById(R.id.SignOutBtn);
         mStartTransmittingBtn = (Button)findViewById(R.id.TransmittingLocBtn);
         mStoptransmitting= (Button)findViewById(R.id.StopLocBtn);
-        /*textViewLon = (TextView)findViewById(R.id.txtViewLon);
-        textViewLat = (TextView)findViewById(R.id.txtViewLat);
-        */
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mStartTransmittingBtn.setOnClickListener(this);
         mStoptransmitting.setOnClickListener(this);
@@ -156,13 +185,7 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.SignOutBtn:
-                stopLocationUpdates();
-                FirebaseAuth.getInstance()
-                        .signOut();
-                Authentication.getGoogleSignInClient().signOut();
-                mGoogleApiClient.disconnect();
-                startActivity(new Intent(MainActivity.this,Authentication.class));
-                finish();
+                signOutUser();
                 break;
             case R.id.TransmittingLocBtn:
                     startLocationUpdates();
@@ -173,6 +196,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void signOutUser(){
+        stopLocationUpdates();
+        FirebaseAuth.getInstance()
+                .signOut();
+        AuthenticationActivity.getGoogleSignInClient().signOut();
+        mGoogleApiClient.disconnect();
+        startActivity(new Intent(MainActivity.this,AuthenticationActivity.class));
+        finish();
+    }
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] result ){
         switch(requestCode){
             case LOC_REQ_CODE:
@@ -285,6 +317,7 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat formatter = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
         FireBaseDatabaseRec aRec=new  FireBaseDatabaseRec(FirebaseAuth.getInstance().getCurrentUser().getEmail(),
                 mCurrentLocation.getLongitude(),mCurrentLocation.getLatitude(),formatter.format(aDate));
+        Log.i(TAG,mCurrentLocation.getLongitude()+" "+mCurrentLocation.getLatitude());
         mDatabase.child("LocationsHistory").child(FirebaseAuth.getInstance().getUid()).setValue(aRec);
     }
 
@@ -299,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         Log.i("MainAct","update Marker");
         if(ContextCompat.checkSelfPermission(this,"android.permission.ACCESS_FINE_LOCATION")==PackageManager.PERMISSION_GRANTED) {
             if (mCurrentLocation != null) {
-
+                Log.i(TAG,"currentLocation retreived");
                 position = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                 mGoogleMap.addMarker(new MarkerOptions().position(position).title("Your current Location!"));
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15.0f));
@@ -315,11 +348,20 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,new String[]{"android.permission.ACCESS_FINE_LOCATION"},LOC_REQ_CODE);
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            }
+        return super.onOptionsItemSelected(item);
+    }
 }
 class FireBaseDatabaseRec{
-    String name;
-    double latitude,longitude;
-    String timestamp;
+    public String name;
+    public double latitude,longitude;
+    public String timestamp;
     FireBaseDatabaseRec(String name,double lon, double lat,String date){
         this.name=name;
         this.longitude=lon;
